@@ -20,6 +20,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ValidateComponent} from "./validate/validate.component";
 import {CovalentJsonFormatterModule} from "@covalent/core/json-formatter";
 import {MatTabsModule} from "@angular/material/tabs";
+import {MatSortModule} from "@angular/material/sort";
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {MatTabsModule} from "@angular/material/tabs";
     MatSelectModule,
     MatButtonModule,
     CovalentJsonFormatterModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]

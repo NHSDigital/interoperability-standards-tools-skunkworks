@@ -36,7 +36,36 @@
               <div class="right">
 
 
-                  <span> some other stuff. Ideally validation results</span>
+                  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+                         matSort #hrSort="matSort" (matSortChange)="announceSortChange($event)"
+                         matSortActive="date" matSortDirection="desc" matSortDisableClear>
+
+                    <ng-container matColumnDef="issue">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef style="width: 20%;"> Issue </th>
+                        <td mat-cell *matCellDef="let activity">
+                              {{activity.severity}}
+                                <br/>
+                              <span *ngIf="activity.location !== undefined">
+                                  <span *ngFor="let loc of activity.location">
+                                      <p>{{loc}}</p>
+                                  </span>
+                              </span>
+                        </td>
+                    </ng-container>
+                      <ng-container matColumnDef="diagnostic">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef style="width: 20%;"> Diagnostic </th>
+                        <td mat-cell *matCellDef="let activity">
+                            {{activity.diagnostics}}
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="7">No data matching the filter </td>
+                    </tr>
+                </table>
 
               </div>
           </div>

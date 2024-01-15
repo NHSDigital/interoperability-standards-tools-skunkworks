@@ -5,7 +5,9 @@ import { DatePipe } from '@angular/common';
 // @ts-ignore
 import {v4 as uuidv4} from 'uuid';
 import { TdDialogService } from '@covalent/core/dialogs';
-import {FhirResource} from "fhir/r4";
+import {FhirResource, OperationOutcome, OperationOutcomeIssue} from "fhir/r4";
+import {Sort} from "@angular/material/sort";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-validate',
@@ -18,12 +20,24 @@ export class ValidateComponent implements OnInit {
     markdown = `TODO`
     resource: any = undefined ;
 
-    constructor(private route: ActivatedRoute,
+    validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR/R4/$validate'
+
+    constructor(
                 private http: HttpClient,
                 private _dialogService: TdDialogService) { }
 
     validate() {
-        if (this.data !== undefined) this.resource = JSON.parse(this.data)
+        if (this.data !== undefined) {
+            this.resource = JSON.parse(this.data)
+            this.http.post(this.validateUrl, this.resource).subscribe(result => {
+                console.log(result)
+                if (result !== undefined) {
+                    var parameters = result as OperationOutcome
+
+                    this.dataSource = new MatTableDataSource<OperationOutcomeIssue>(parameters.issue)
+                }
+            })
+        }
     }
 
     ngOnInit(): void {
@@ -57,5 +71,11 @@ export class ValidateComponent implements OnInit {
 
     protected readonly JSON = JSON;
     data: any;
+    // @ts-ignore
+    dataSource: MatTableDataSource<OperationOutcomeIssue> ;
+    displayedColumns  = ['issue','diagnostic'];
 
+    announceSortChange($event: Sort) {
+
+    }
 }
