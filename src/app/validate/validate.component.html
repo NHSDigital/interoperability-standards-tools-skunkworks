@@ -15,13 +15,14 @@
 
 
             </div>
-          <button mat-raised-button color="accent" (click)="validate()">Validate</button>
+          <button mat-raised-button color="accent" (click)="validate()">Validate against UK Core</button>
+          <button disabled mat-raised-button color="accent" (click)="validateBase()">Validate against Base FHIR</button>
           <br/>
           <br/>
           <span  *ngIf="resource!=undefined">
-          <div class="split-view-container">
-              <div class="left">
-                  <mat-tab-group >
+              <div layout="row">
+                  <div style="width: 40%">
+                   <mat-tab-group >
 
                       <mat-tab label="JSON (Rendered)">
                           <td-json-formatter [data]="resource" key="root" [levelsOpen]="4">
@@ -31,44 +32,51 @@
                           <pre *ngIf="resource !== undefined">{{JSON.stringify(resource,null, 2)}}</pre>
                       </mat-tab>
                   </mat-tab-group>
+                  </div>
+                  <div style="width: 30%">
+                          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+                                              matSort #hrSort="matSort" (matSortChange)="announceSortChange($event)"
+                                              matSortActive="date" matSortDirection="desc" matSortDisableClear>
 
-              </div>
-              <div class="right">
+                        <ng-container matColumnDef="issue">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef > Issue </th>
+                            <td mat-cell *matCellDef="let activity">
+                                  <span *ngIf="activity.severity === 'error'">
+                                      <mat-icon color="warn" aria-hidden="false" aria-label="Error" fontIcon="error"></mat-icon>
 
-
-                  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
-                         matSort #hrSort="matSort" (matSortChange)="announceSortChange($event)"
-                         matSortActive="date" matSortDirection="desc" matSortDisableClear>
-
-                    <ng-container matColumnDef="issue">
-                        <th mat-header-cell mat-sort-header *matHeaderCellDef style="width: 20%;"> Issue </th>
-                        <td mat-cell *matCellDef="let activity">
-                              {{activity.severity}}
-                                <br/>
-                              <span *ngIf="activity.location !== undefined">
-                                  <span *ngFor="let loc of activity.location">
-                                      <p>{{loc}}</p>
                                   </span>
-                              </span>
-                        </td>
-                    </ng-container>
-                      <ng-container matColumnDef="diagnostic">
-                        <th mat-header-cell mat-sort-header *matHeaderCellDef style="width: 20%;"> Diagnostic </th>
-                        <td mat-cell *matCellDef="let activity">
-                            {{activity.diagnostics}}
-                        </td>
-                    </ng-container>
+                                <span *ngIf="activity.severity === 'warning'">
+                                    <mat-icon color="accent" aria-hidden="false" aria-label="Warning" fontIcon="warning"></mat-icon>
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                  </span>
+                                <span *ngIf="activity.severity === 'information'">
+                                    <mat-icon color="primary" aria-hidden="false" aria-label="Information" fontIcon="info"></mat-icon>
 
-                    <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="7">No data matching the filter </td>
-                    </tr>
-                </table>
+                                  </span>
 
+                                  <span *ngIf="activity.location !== undefined">
+                                      <span *ngIf="activity.location.length > 0">{{activity.location[0]}}</span>
+                                      <span *ngIf="activity.location.length > 1"><br/>{{activity.location[1]}}</span>
+                                  </span>
+                            </td>
+                        </ng-container>
+                          <ng-container matColumnDef="diagnostic">
+                            <th mat-header-cell mat-sort-header *matHeaderCellDef > Diagnostic </th>
+                            <td mat-cell *matCellDef="let activity">
+                                {{activity.diagnostics}}
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="7">No data matching the filter </td>
+                        </tr>
+                    </table>
+                  </div>
               </div>
-          </div>
+
               </span>
 
 

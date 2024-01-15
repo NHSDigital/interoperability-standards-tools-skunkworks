@@ -21,11 +21,23 @@ export class ValidateComponent implements OnInit {
     resource: any = undefined ;
 
     validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR/R4/$validate'
-
+    validateBaseUrl = 'https://validator.fhir.org/validate'
     constructor(
                 private http: HttpClient,
                 private _dialogService: TdDialogService) { }
+    validateBase() {
+        if (this.data !== undefined) {
+            this.resource = JSON.parse(this.data)
+            this.http.post(this.validateBaseUrl, this.resource).subscribe(result => {
+                console.log(result)
+                if (result !== undefined) {
+                    var parameters = result as OperationOutcome
 
+                    this.dataSource = new MatTableDataSource<OperationOutcomeIssue>(parameters.issue)
+                }
+            })
+        }
+    }
     validate() {
         if (this.data !== undefined) {
             this.resource = JSON.parse(this.data)
@@ -78,4 +90,5 @@ export class ValidateComponent implements OnInit {
     announceSortChange($event: Sort) {
 
     }
+
 }

@@ -18,20 +18,4 @@ table {
   align-items: flex-start;
 }
 
-.split-view-container {
-  display: flex;
-  justify-content: space-evenly;
-  height: 100%;
 
-  div {
-    width: 50%;
-  }
-
-  .left {
-
-  }
-
-  .right {
-    background: lightgray;
-  }
-}

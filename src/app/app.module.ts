@@ -21,6 +21,8 @@ import {ValidateComponent} from "./validate/validate.component";
 import {CovalentJsonFormatterModule} from "@covalent/core/json-formatter";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatSortModule} from "@angular/material/sort";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import {MatSortModule} from "@angular/material/sort";
     MatButtonModule,
     CovalentJsonFormatterModule,
     MatTabsModule,
-    MatSortModule
+    MatSortModule,
+    MatGridListModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
