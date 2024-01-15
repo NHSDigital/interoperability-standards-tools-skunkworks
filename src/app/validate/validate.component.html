@@ -1,0 +1,50 @@
+<mat-card xmlns="http://www.w3.org/1999/html">
+    <mat-card-header>
+        <h1>IOPS FHIR Validator (Proof of concept)</h1>
+    </mat-card-header>
+      <mat-card-content>
+          <td-markdown>{{ markdown }}</td-markdown>
+            <div class="example-form">
+              <mat-form-field class="example-full">
+                  <mat-label >Paste FHIR example (json)</mat-label>
+                  <textarea matInput [(ngModel)]="data" cdkTextareaAutosize
+                            #autosize="cdkTextareaAutosize"
+                            cdkAutosizeMinRows="1"
+                            cdkAutosizeMaxRows="30"></textarea>
+              </mat-form-field>
+
+
+            </div>
+          <button mat-raised-button color="accent" (click)="validate()">Validate</button>
+          <br/>
+          <br/>
+          <span  *ngIf="resource!=undefined">
+          <div class="split-view-container">
+              <div class="left">
+                  <mat-tab-group >
+
+                      <mat-tab label="JSON (Rendered)">
+                          <td-json-formatter [data]="resource" key="root" [levelsOpen]="4">
+                          </td-json-formatter>
+                      </mat-tab>
+                      <mat-tab label="JSON">
+                          <pre *ngIf="resource !== undefined">{{JSON.stringify(resource,null, 2)}}</pre>
+                      </mat-tab>
+                  </mat-tab-group>
+
+              </div>
+              <div class="right">
+
+
+                  <span> some other stuff. Ideally validation results</span>
+
+              </div>
+          </div>
+              </span>
+
+
+
+
+      </mat-card-content>
+
+</mat-card>

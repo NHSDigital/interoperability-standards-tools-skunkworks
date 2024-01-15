@@ -1,0 +1,37 @@
+.example-full {
+  width: 100%;
+  height: 500px
+}
+.example-third-width {
+  width: 30%;
+}
+.example-half-width {
+  width: 30%;
+}
+table {
+  width: 100%;
+}
+
+.example-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.split-view-container {
+  display: flex;
+  justify-content: space-evenly;
+  height: 100%;
+
+  div {
+    width: 50%;
+  }
+
+  .left {
+
+  }
+
+  .right {
+    background: lightgray;
+  }
+}
