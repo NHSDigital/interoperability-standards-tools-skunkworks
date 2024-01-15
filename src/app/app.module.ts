@@ -24,6 +24,7 @@ import {MatSortModule} from "@angular/material/sort";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatIconModule} from "@angular/material/icon";
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,17 +43,18 @@ import {MatIconModule} from "@angular/material/icon";
     CovalentMarkdownModule,
     CovalentMessageModule,
     CovalentDialogsModule,
+    CovalentJsonFormatterModule,
     MatCardModule,
     MatFormFieldModule,
     MatTableModule,
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    CovalentJsonFormatterModule,
     MatTabsModule,
     MatSortModule,
     MatGridListModule,
-    MatIconModule
+    MatIconModule,
+     // CovalentCodeEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
