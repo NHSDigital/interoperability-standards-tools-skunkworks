@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import { DatePipe } from '@angular/common';
@@ -6,8 +6,9 @@ import { DatePipe } from '@angular/common';
 import {v4 as uuidv4} from 'uuid';
 import { TdDialogService } from '@covalent/core/dialogs';
 import {FhirResource, OperationOutcome, OperationOutcomeIssue} from "fhir/r4";
-import {Sort} from "@angular/material/sort";
+import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
+import {switchAll} from "rxjs";
 
 @Component({
   selector: 'app-validate',
@@ -22,6 +23,14 @@ export class ValidateComponent implements OnInit {
 
     validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR/R4/$validate'
     validateBaseUrl = 'https://validator.fhir.org/validate'
+
+    protected readonly JSON = JSON;
+    data: any;
+    // @ts-ignore
+    dataSource: MatTableDataSource<OperationOutcomeIssue> ;
+    displayedColumns  = ['issue','location', 'diagnostic'];
+
+    @ViewChild('hrSort') hrSort: MatSort | null | undefined;
     constructor(
                 private http: HttpClient,
                 private _dialogService: TdDialogService) { }
@@ -47,6 +56,7 @@ export class ValidateComponent implements OnInit {
                     var parameters = result as OperationOutcome
 
                     this.dataSource = new MatTableDataSource<OperationOutcomeIssue>(parameters.issue)
+                    this.setSortHR()
                 }
             })
         }
@@ -81,11 +91,33 @@ export class ValidateComponent implements OnInit {
         });
     }
 
-    protected readonly JSON = JSON;
-    data: any;
-    // @ts-ignore
-    dataSource: MatTableDataSource<OperationOutcomeIssue> ;
-    displayedColumns  = ['issue','diagnostic'];
+    setSortHR() {
+
+        // @ts-ignore
+        this.dataSource.sort = this.hrSort
+
+        this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'issue': {
+                    switch(item.severity) {
+                        case "error": return 2
+                        case "fatal": return 3
+                        case "warning":return 1
+                        default: return 0
+                    }
+                }
+                case 'location': {
+                    if (item.location !== undefined) return item.location[0]
+                    return 0
+                }
+
+                default: {
+                    return 0
+                }
+            }
+        };
+    }
+
 
     announceSortChange($event: Sort) {
 
