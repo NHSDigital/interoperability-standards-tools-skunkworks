@@ -23,8 +23,8 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {MatSortModule} from "@angular/material/sort";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatIconModule} from "@angular/material/icon";
-import {MonacoEditorModule} from "ngx-monaco-editor-v2";
 import { TestingMainComponent } from './testing-main/testing-main.component';
+import {MonacoEditorModule} from "ngx-monaco-editor-v2";
 
 @NgModule({
   declarations: [

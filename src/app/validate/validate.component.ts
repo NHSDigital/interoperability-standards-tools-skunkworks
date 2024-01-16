@@ -216,7 +216,7 @@ export class ValidateComponent implements OnInit {
                         if (!found && (
                             (value.trim().replace('\"','').startsWith(location))
                             ||
-                            (inArray && value.trim().startsWith('{')))
+                            (inArray && value.startsWith('    {')))
                         ) {
                             if (arrayNumber === undefined) {
                                 found = true
