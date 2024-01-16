@@ -1,22 +1,24 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import { DatePipe } from '@angular/common';
-// @ts-ignore
-import {v4 as uuidv4} from 'uuid';
 import { TdDialogService } from '@covalent/core/dialogs';
-import {FhirResource, OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
+import {OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {switchAll} from "rxjs";
+import {EditorComponent} from "ngx-monaco-editor-v2";
+
+
 
 @Component({
   selector: 'app-validate',
   templateUrl: './validate.component.html',
   styleUrls: ['./validate.component.scss']
 })
-export class ValidateComponent implements OnInit {
+export class ValidateComponent implements OnInit, AfterViewInit {
+    @ViewChild(EditorComponent, { static: false }) monacoComponent:EditorComponent| undefined;
 
     editorOptions = {theme: 'vs-dark', language: 'json'};
+    editor: any;
 
     markdown = `Only JSON is currently supported.`
     resource: any = undefined ;
@@ -39,23 +41,16 @@ export class ValidateComponent implements OnInit {
     constructor(
                 private http: HttpClient,
                 private _dialogService: TdDialogService) { }
-   /* validateBase() {
-        if (this.data !== undefined) {
-            this.resource = JSON.parse(this.data)
-            this.data = JSON.stringify(this.resource)
-            console.log(this.data)
-            this.http.post(this.validateBaseUrl, this.resource).subscribe(result => {
-                console.log(result)
-                if (result !== undefined) {
-                    var parameters = result as OperationOutcome
 
-                    this.dataSource = new MatTableDataSource<OperationOutcomeIssue>(parameters.issue)
-                }
-            })
+    ngAfterViewInit(): void {
+        if (this.monacoComponent !== null) {
+            console.log(this.monacoComponent)
         }
     }
+    ngOnInit(): void {
+      //  if (this.monacoComponent !== null) console.log(this.monacoComponent)
+    }
 
-    */
     validate() {
         if (this.data !== undefined) {
 
@@ -90,9 +85,7 @@ export class ValidateComponent implements OnInit {
         }
     }
 
-    ngOnInit(): void {
 
-    }
 
     getFHIRDateString(date : Date) : string {
         var datePipe = new DatePipe('en-GB');
@@ -260,6 +253,8 @@ export class ValidateComponent implements OnInit {
 
         return issue
     }
+
+
 
 
 }
