@@ -52,6 +52,13 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     }
 
     validate() {
+        if (this.monacoComponent !== null && this.monacoComponent !== undefined) {
+                // @ts-ignore
+            var monaco = this.monacoComponent._editorContainer.nativeElement
+            console.log(monaco);
+            console.log(monaco.div)
+           // console.log(monaco.getModels())
+        }
         if (this.data !== undefined) {
 
             let headers = new HttpHeaders(
@@ -194,11 +201,8 @@ export class ValidateComponent implements OnInit, AfterViewInit {
                 var arrayNumber : number | undefined = undefined
                 if (location.split('[').length>1) {
                     arrayNumber = +(location.split('[')[1].split(']')[0])
-                    console.log(arrayNumber)
                 }
                 location = location.split('[')[0]
-                console.log(location)
-
 
                // console.log(location)
                 var found = false
