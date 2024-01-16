@@ -3,12 +3,7 @@
         <h1>IOPS FHIR Validator (Proof of concept)</h1>
     </mat-card-header>
       <mat-card-content>
-          <!-- <td-code-editor
-              #editor
-              class="editor"
-              theme="vs"
-              flex
-          ></td-code-editor> -->
+          <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
           <td-markdown>{{ markdown }}</td-markdown>
             <div class="example-form">
               <mat-form-field class="example-full">

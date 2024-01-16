@@ -17,7 +17,8 @@ import {switchAll} from "rxjs";
 })
 export class ValidateComponent implements OnInit {
 
-
+    editorOptions = {theme: 'vs-dark', language: 'javascript'};
+    code: string= 'function x() {\nconsole.log("Hello world!");\n}';
     markdown = `TODO`
     resource: any = undefined ;
 

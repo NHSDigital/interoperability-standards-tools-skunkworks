@@ -23,7 +23,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {MatSortModule} from "@angular/material/sort";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatIconModule} from "@angular/material/icon";
-
+import {MonacoEditorModule} from "ngx-monaco-editor-v2";
 
 @NgModule({
   declarations: [
@@ -54,7 +54,7 @@ import {MatIconModule} from "@angular/material/icon";
     MatSortModule,
     MatGridListModule,
     MatIconModule,
-     // CovalentCodeEditorModule
+    MonacoEditorModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
