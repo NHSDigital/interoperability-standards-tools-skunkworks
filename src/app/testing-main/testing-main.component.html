@@ -1,0 +1,26 @@
+<td-layout class="layout-nav-demo" sidenavWidth="280px">
+
+    <td-layout-nav-list navigationRoute="/" [opened]=false mode="side">
+
+
+        <div td-toolbar-content layout-align="space-between center" flex>
+            <div
+                    flex
+                    flex-order-xs="2"
+                    layout="row"
+                    layout-align="center center"
+            >
+                FHIR R4 and UKCore Testing
+
+
+                <span flex>
+            </span>
+                <button mat-icon-button routerLink="/about"><mat-icon>help</mat-icon></button>
+
+
+            </div>
+        </div>
+        <router-outlet></router-outlet>
+    </td-layout-nav-list>
+</td-layout>
+
