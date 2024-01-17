@@ -4,20 +4,12 @@
 
 
         <div td-toolbar-content layout-align="space-between center" flex>
-            <div
-                    flex
-                    flex-order-xs="2"
-                    layout="row"
-                    layout-align="center center"
-            >
+            <div flex flex-order-xs="2" layout="row" layout-align="center center">
                 FHIR R4 and UKCore Testing
-
-
                 <span flex>
             </span>
-                <button mat-icon-button routerLink="/about"><mat-icon>help</mat-icon></button>
-
-
+                <a mat-icon-button href="http://lb-fhir-validator-924628614.eu-west-2.elb.amazonaws.com/swagger-ui/index.html#/Validation/post_FHIR_R4__validate" target="_blank"><mat-icon>help</mat-icon></a>
+                <td-dynamic-menu [trigger]="trigger2" [items]="items2"></td-dynamic-menu>
             </div>
         </div>
         <router-outlet></router-outlet>

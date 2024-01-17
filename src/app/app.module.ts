@@ -25,6 +25,7 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {MatIconModule} from "@angular/material/icon";
 import { TestingMainComponent } from './testing-main/testing-main.component';
 import {MonacoEditorModule} from "ngx-monaco-editor-v2";
+import {CovalentDynamicMenuModule} from "@covalent/core/dynamic-menu";
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import {MonacoEditorModule} from "ngx-monaco-editor-v2";
     MatSortModule,
     MatGridListModule,
     MatIconModule,
-    MonacoEditorModule.forRoot()
+    MonacoEditorModule.forRoot(),
+    CovalentDynamicMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
