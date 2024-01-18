@@ -1,0 +1,76 @@
+<mat-card xmlns="http://www.w3.org/1999/html">
+    <mat-card-header>
+        <h3>FHIR Validation Server Configuration</h3>
+    </mat-card-header>
+    <mat-card-content>
+        <div  *ngIf="dataSource!==undefined">
+            <h2>Packages</h2>
+            <br/>
+            <mat-table [dataSource]="dataSourceIG" class="mat-elevation-z8"
+                       matSort #igSort="matSort" (matSortChange)="announceSortChange($event)"
+                       matSortActive="resource" matSortDirection="desc" matSortDisableClear>
+
+                <ng-container matColumnDef="package">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Package </th>
+                    <td mat-cell *matCellDef="let resource">
+                        {{resource.packageId}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="version">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Version </th>
+                    <td mat-cell *matCellDef="let resource">
+                        {{resource.version}}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsIG; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsIG;"></tr>
+
+                <mat-row *matNoDataRow>
+                    <td class="mat-cell" colspan="7">No data matching the filter </td>
+                </mat-row>
+            </mat-table>
+
+        </div>
+        <div  *ngIf="dataSource!==undefined">
+            <h2>Profiles</h2>
+            <br/>
+            <mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+                       matSort #hrSort="matSort" (matSortChange)="announceSortChange($event)"
+                       matSortActive="resource" matSortDirection="desc" matSortDisableClear>
+
+                <ng-container matColumnDef="resource">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Resource </th>
+                    <td mat-cell *matCellDef="let resource">
+                        {{resource.type}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="profile">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Resource </th>
+                    <td mat-cell *matCellDef="let resource">
+                        <a href="https://simplifier.net/resolve?fhirVersion=R4&scope=fhir.r4.ukcore.stu3.currentbuild&canonical={{resource.profile}}" target="_blank">{{resource.profile}}</a>
+
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="imposeProfile">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Impose Profile </th>
+                    <td mat-cell *matCellDef="let resource">
+                        <span *ngIf="resource.extension !== undefined">
+                            <span *ngFor="let extension of resource.extension">
+                                <a [href]="extension.valueCanonical" target="_blank">{{extension.valueCanonical}}</a>
+                            </span>
+                        </span>
+                    </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <mat-row *matNoDataRow>
+                    <td class="mat-cell" colspan="7">No data matching the filter </td>
+                </mat-row>
+            </mat-table>
+
+        </div>
+    </mat-card-content>
+</mat-card>

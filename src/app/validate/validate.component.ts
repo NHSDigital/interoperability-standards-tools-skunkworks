@@ -6,6 +6,7 @@ import {OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {EditorComponent} from "ngx-monaco-editor-v2";
+import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
 
 
 
@@ -35,12 +36,24 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     dataSource: MatTableDataSource<OperationOutcomeIssue> ;
     displayedColumns  = ['issue','location','details', 'diagnostic'];
 
+    imposeProfiles : any = false;
     @ViewChild('hrSort') hrSort: MatSort | null | undefined;
     profile: StructureDefinition | undefined;
     profiles: StructureDefinition[] = [];
+
+    loadingMode = LoadingMode;
+    loadingStrategy = LoadingStrategy;
+    loadingType = LoadingType;
+
+    information : number = 0
+    warning : number = 0
+    error : number = 0
+
+    overlayStarSyntax = false;
     constructor(
                 private http: HttpClient,
-                private _dialogService: TdDialogService) { }
+                private _dialogService: TdDialogService,
+                private _loadingService: TdLoadingService) { }
 
     ngAfterViewInit(): void {
         if (this.monacoComponent !== null) {
@@ -56,7 +69,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
                 // @ts-ignore
             var monaco = this.monacoComponent._editorContainer.nativeElement
             console.log(monaco);
-            console.log(monaco.div)
+           // console.log(monaco.div)
            // console.log(monaco.getModels())
         }
         if (this.data !== undefined) {
@@ -68,19 +81,46 @@ export class ValidateComponent implements OnInit, AfterViewInit {
             headers = headers.append('Content-Type', 'application/json');
             var url: string = this.validateUrl + '/$validate';
             if (this.profile !== undefined) url = url + '?profile='+this.profile.url
+            console.log(this.imposeProfiles)
+            if (this.imposeProfiles) {
+                if (url.endsWith('validate')) {
+                    url = url + '?imposeProfile=true'
+                } else{
+                    url = url + '&imposeProfile=true'
+                }
+            }
+            this._loadingService.register('overlayStarSyntax');
             this.http.post(url, this.data,{ headers}).subscribe(result => {
+                    this._loadingService.resolve('overlayStarSyntax');
                 if (result !== undefined) {
                     var parameters = result as OperationOutcome
-
+                    this.information= 0
+                    this.warning  = 0
+                    this.error = 0
                     for(let issue of parameters.issue) {
                         this.fixLocation(issue)
+                        switch (issue.severity) {
+                            case "information": {
+                                this.information++
+                                break
+                            }
+                            case "warning": {
+                                this.warning++
+                                break
+                            }
+                            default: {
+                                this.error++
+                            }
+                        }
                     }
 
                     this.dataSource = new MatTableDataSource<OperationOutcomeIssue>(parameters.issue)
                     this.setSortHR()
+
                 }
             },
                 error => {
+                    this._loadingService.resolve('overlayStarSyntax');
                     console.log(JSON.stringify(error))
                     this._dialogService.openAlert({
                         title: 'Alert',
@@ -184,7 +224,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         return errorMsg;
     }
 
-    protected readonly undefined = undefined;
+
 
 
 

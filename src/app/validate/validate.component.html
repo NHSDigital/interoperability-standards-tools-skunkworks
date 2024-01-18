@@ -4,9 +4,18 @@
     </mat-card-header>
       <mat-card-content>
           <td-markdown>{{ markdown }}</td-markdown>
-
+          <div
+                  *tdLoading="
+   'overlayStarSyntax';
+   mode: loadingMode.Indeterminate;
+   type: loadingType.Circular;
+   strategy: loadingStrategy.Overlay;
+   color: 'accent'
+ "
+          >
           <ngx-monaco-editor style="height: 600px;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()"></ngx-monaco-editor>
           <span *ngIf="resourceType !== undefined">
+                   <mat-checkbox class="example-margin" [(ngModel)]="imposeProfiles" matTooltip="Additionally check against imposeProfile listed in the CapabilityStatement. This normally includes FHIR International Patient Summary (IPS) and Structured Data Capture (SDC)">Impose Profiles</mat-checkbox>
                <form class="example-form">
                     <mat-form-field class="example-full">
                         <mat-label>Select additional {{resourceType}} Profiles</mat-label>
@@ -26,6 +35,12 @@
           <br/>
           <br/>
           <div  *ngIf="resource!=undefined">
+              <div layout="row" layout-align="start start">
+                  <mat-icon color="warn" aria-hidden="false" aria-label="Error" fontIcon="error"></mat-icon>&nbsp;{{error}} Errors
+                  <mat-icon color="accent" aria-hidden="false" aria-label="Warning" fontIcon="warning"></mat-icon>&nbsp;{{warning}} Warnings
+                  <mat-icon color="primary" aria-hidden="false" aria-label="Information" fontIcon="info"></mat-icon>&nbsp;{{information}} Info
+              </div>
+              <br/>
                 <mat-table [dataSource]="dataSource" class="mat-elevation-z8"
                        matSort #hrSort="matSort" (matSortChange)="announceSortChange($event)"
                        matSortActive="date" matSortDirection="desc" matSortDisableClear>
@@ -82,26 +97,9 @@
                             <td class="mat-cell" colspan="7">No data matching the filter </td>
                         </mat-row>
                     </mat-table>
-      <!--        <div layout="row">
-                  <div style="width: 40%">
-                   <mat-tab-group >
-
-                      <mat-tab label="JSON (Rendered)">
-                          <td-json-formatter [data]="resource" key="root" [levelsOpen]="4">
-                          </td-json-formatter>
-                      </mat-tab>
-                      <mat-tab label="JSON">
-                          <pre *ngIf="resource !== undefined">{{JSON.stringify(resource,null, 2)}}</pre>
-                      </mat-tab>
-                  </mat-tab-group>
-                  </div>
-                  <div style="width: 30%">
-
-                  </div>
-              </div> -->
 
               </div>
-
+          </div>
       </mat-card-content>
 
 </mat-card>

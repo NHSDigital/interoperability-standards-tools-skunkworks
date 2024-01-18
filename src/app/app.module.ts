@@ -26,12 +26,18 @@ import {MatIconModule} from "@angular/material/icon";
 import { TestingMainComponent } from './testing-main/testing-main.component';
 import {MonacoEditorModule} from "ngx-monaco-editor-v2";
 import {CovalentDynamicMenuModule} from "@covalent/core/dynamic-menu";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {CovalentLoadingModule} from "@covalent/core/loading";
+import { InformationComponent } from './information/information.component';
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
   declarations: [
     AppComponent,
     ValidateComponent,
-    TestingMainComponent
+    TestingMainComponent,
+    InformationComponent
   ],
   imports: [
     BrowserModule,
@@ -47,6 +53,7 @@ import {CovalentDynamicMenuModule} from "@covalent/core/dynamic-menu";
     CovalentMessageModule,
     CovalentDialogsModule,
     CovalentJsonFormatterModule,
+    CovalentLoadingModule,
     MatCardModule,
     MatFormFieldModule,
     MatTableModule,
@@ -58,7 +65,10 @@ import {CovalentDynamicMenuModule} from "@covalent/core/dynamic-menu";
     MatGridListModule,
     MatIconModule,
     MonacoEditorModule.forRoot(),
-    CovalentDynamicMenuModule
+    CovalentDynamicMenuModule,
+    MatCheckboxModule,
+    MatTooltipModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]
