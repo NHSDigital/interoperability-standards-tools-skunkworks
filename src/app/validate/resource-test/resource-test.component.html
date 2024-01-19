@@ -10,6 +10,15 @@
                 <mat-icon color="primary" aria-hidden="false" aria-label="Information" fontIcon="info"></mat-icon>&nbsp;{{information}} Info
             </mat-panel-description>
         </mat-expansion-panel-header>
+        <mat-form-field>
+            <mat-label>Select an option</mat-label>
+            <mat-select [(ngModel)]="selected" (ngModelChange)="applyFilter($event)">
+                <mat-option>None</mat-option>
+                <mat-option value="error">Error</mat-option>
+                <mat-option value="warning">Warning</mat-option>
+                <mat-option value="information">Information</mat-option>
+            </mat-select>
+        </mat-form-field>
         <mat-table [dataSource]="dataSource" class="mat-elevation-z8"
                    matSort #hrSort="matSort" (matSortChange)="announceSortChange($event)"
                    matSortActive="date" matSortDirection="desc" matSortDisableClear>
@@ -32,12 +41,29 @@
 
                 </td>
             </ng-container>
+            <ng-container matColumnDef="flag">
+                <th mat-header-cell style="width: 5%;" mat-sort-header *matHeaderCellDef > Level </th>
+                <td mat-cell *matCellDef="let activity">
+
+                  <span *ngIf="activity.diagnostics !== undefined ">
+                        <span *ngIf="activity.diagnostics.includes('https://fhir.nhs.uk/England/')">
+                             <span class="fi fi-gb-eng"></span>
+                        </span>
+                       <span *ngIf="activity.diagnostics.includes('https://fhir.hl7.org.uk/')">
+                             <span class="fi fi-gb"></span>
+                       </span>
+                      <span *ngIf="activity.diagnostics.includes('http://hl7.org/fhir/uv/')">
+                             <span class="fi fi-eu"></span>
+                       </span>
+                  </span>
+                </td>
+            </ng-container>
             <ng-container matColumnDef="location">
                 <th mat-header-cell style="width: 200px; max-width: 200px" mat-sort-header *matHeaderCellDef > Location </th>
                 <td mat-cell *matCellDef="let activity">
 
                                       <span *ngIf="activity.location !== undefined">
-                                          <span *ngIf="activity.location.length > 0">{{activity.location[0]}}</span>
+                                          <span *ngIf="activity.location.length > 0">{{activity.location[0].replaceAll('.',' .')}}</span>
                                         <span *ngIf="activity.location.length > 1"><br/>{{activity.location[1]}}</span>
                                       </span>
                 </td>

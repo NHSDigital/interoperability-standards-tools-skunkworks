@@ -18,7 +18,7 @@ export class ResourceTestComponent implements OnInit {
   error : number = 0
   // @ts-ignore
   dataSource: MatTableDataSource<OperationOutcomeIssue> ;
-  displayedColumns  = ['issue','location','details', 'diagnostic'];
+  displayedColumns  = ['issue','flag','location','details', 'diagnostic'];
   data: any;
 
   @Input()
@@ -43,6 +43,7 @@ export class ResourceTestComponent implements OnInit {
   loadingType = LoadingType;
 
   overlayStarSyntax = false;
+  selected: any;
   constructor(
       private http: HttpClient,
       private _dialogService: TdDialogService,
@@ -54,11 +55,22 @@ export class ResourceTestComponent implements OnInit {
       let headers = new HttpHeaders(
       );
       this.data = JSON.stringify(this.resource, undefined, 2)
-      this.resource = JSON.parse(this.data)
-      headers = headers.append('Content-Type', 'application/json');
+
+      if (this.data.startsWith('{')) {
+
+        this.resource = JSON.parse(this.data)
+        headers = headers.append('Content-Type', 'application/json');
+        headers = headers.append('Accept', 'application/json');
+
+      } else {
+
+        this.data = this.resource
+        headers = headers.append('Content-Type', 'application/xml');
+        headers = headers.append('Accept', 'application/json');
+      }
       var url: string = this.validateUrl + '/$validate';
       if (this.profile !== undefined) url = url + '?profile='+this.profile.url
-      console.log(this.imposeProfiles)
+
       if (this.imposeProfiles) {
         if (url.endsWith('validate')) {
           url = url + '?imposeProfile=true'
@@ -76,6 +88,7 @@ export class ResourceTestComponent implements OnInit {
               this.error = 0
               for(let issue of parameters.issue) {
                 this.fixLocation(issue)
+
                 switch (issue.severity) {
                   case "information": {
                     this.information++
@@ -129,6 +142,14 @@ export class ResourceTestComponent implements OnInit {
         case 'location': {
           if (item.location !== undefined) return item.location[0]
           return 0
+        }
+        case 'flag' :{
+          if (item.diagnostics !== undefined){
+            if (item.diagnostics.includes('https://fhir.nhs.uk/England/')) return 'England'
+            if (item.diagnostics.includes('https://fhir.hl7.org.uk/')) return 'UK'
+            if (item.diagnostics.includes('http://hl7.org/fhir/uv/')) return 'EU'
+          }
+         return ''
         }
         case 'details' : {
           if (item.details !== undefined
@@ -228,5 +249,9 @@ export class ResourceTestComponent implements OnInit {
     return issue
   }
 
+
+  applyFilter(event: Event) {
+    this.dataSource.filter = this.selected
+  }
 
 }

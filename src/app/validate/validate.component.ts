@@ -24,7 +24,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     editorOptions = {theme: 'vs-dark', language: 'json'};
     editor: any;
 
-    markdown = `Only JSON is currently supported.`
+    markdown = `Only JSON is fully supported.`
     resource: any = undefined ;
 
     resources: Resource[] = []
@@ -32,7 +32,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     resourceType: string | undefined = undefined
 
     //validateUrl = 'http://localhost:9001/FHIR/R4'
-    validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR/R4'
+    validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR'
     validateBaseUrl = 'https://validator.fhir.org/validate'
 
     protected readonly JSON = JSON;
@@ -41,7 +41,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     dataSource: MatTableDataSource<OperationOutcomeIssue> ;
     displayedColumns  = ['issue','location','details', 'diagnostic'];
 
-    imposeProfiles : any = false;
+    imposeProfiles : any = true;
     @ViewChild('hrSort') hrSort: MatSort | null | undefined;
     profile: StructureDefinition | undefined;
     profiles: StructureDefinition[] = [];
@@ -67,7 +67,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         if (this.monacoComponent !== null) {
-            console.log(this.monacoComponent)
+          //  console.log(this.monacoComponent)
         }
     }
     ngOnInit(): void {
@@ -78,9 +78,8 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         if (this.monacoComponent !== null && this.monacoComponent !== undefined) {
                 // @ts-ignore
             var monaco = this.monacoComponent._editorContainer.nativeElement
-            console.log(monaco);
-           // console.log(monaco.div)
-           // console.log(monaco.getModels())
+   //         console.log(monaco);
+
         }
         this.resources = []
 
@@ -157,13 +156,14 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     checkType() {
         try {
             this.resource = JSON.parse(this.data)
+            this.editorOptions = {theme: 'vs-dark', language: 'json'};
             // ensure previous results are cleared
             this.dataSource = new MatTableDataSource<OperationOutcomeIssue>()
             if (this.resource !== undefined
             && this.resource.resourceType !== undefined
             && this.resource.resourceType !== this.resourceType) {
                 this.resourceType = this.resource.resourceType
-                const url: string = this.validateUrl + '/StructureDefinition?type='+this.resourceType;
+                const url: string = this.validateUrl + '/R4/StructureDefinition?type='+this.resourceType;
                 const headers = new HttpHeaders();
 
                 this.http.get<any>(url, {headers}).subscribe(bundle => {
@@ -180,7 +180,10 @@ export class ValidateComponent implements OnInit, AfterViewInit {
             }
         }
         catch (e) {
-
+            this.resourceType = undefined
+            this.editorOptions = {theme: 'vs-dark', language: 'xml'};
+            this.resource = this.data
+            this.dataSource = new MatTableDataSource<OperationOutcomeIssue>()
         }
     }
 
@@ -228,5 +231,64 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     clearSelection() {
         this.fileList = undefined
+    }
+
+    convertJSON() {
+        let headers = new HttpHeaders(
+        );
+        headers = headers.append('Content-Type', 'application/xml');
+        headers = headers.append('Accept', 'application/json');
+        var url: string = this.validateUrl + '/R4/$convert';
+        this.http.post(url, this.data,{ headers}).subscribe(result => {
+
+                if (result !== undefined) {
+                    this.data = JSON.stringify(result, undefined, 2)
+                }
+            },
+            error => {
+
+                console.log(JSON.stringify(error))
+                this._dialogService.openAlert({
+                    title: 'Alert',
+                    disableClose: true,
+                    message:
+                        this.getErrorMessage(error),
+                });
+            })
+    }
+    getErrorMessage(error: any) {
+        var errorMsg = ''
+        if (error.error !== undefined){
+
+            if (error.error.issue !== undefined) {
+                errorMsg += ' ' + error.error.issue[0].diagnostics
+            }
+        }
+        errorMsg += '\n\n ' + error.message
+        return errorMsg;
+    }
+
+    convertSTU3JSON() {
+        let headers = new HttpHeaders(
+        );
+        headers = headers.append('Content-Type', 'application/xml');
+        headers = headers.append('Accept', 'application/json');
+        var url: string = this.validateUrl + '/STU3/$convertR4';
+        this.http.post(url, this.data,{ headers}).subscribe(result => {
+
+                if (result !== undefined) {
+                    this.data = JSON.stringify(result, undefined, 2)
+                }
+            },
+            error => {
+
+                console.log(JSON.stringify(error))
+                this._dialogService.openAlert({
+                    title: 'Alert',
+                    disableClose: true,
+                    message:
+                        this.getErrorMessage(error),
+                });
+            })
     }
 }
