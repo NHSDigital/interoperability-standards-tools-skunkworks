@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {TdDialogService} from "@covalent/core/dialogs";
 import {TdLoadingService} from "@covalent/core/loading";
 import {
-  CapabilityStatement,
+  CapabilityStatement, CapabilityStatementMessagingSupportedMessage,
   CapabilityStatementRestResource,
   ImplementationGuide,
   OperationOutcomeIssue
@@ -21,10 +21,13 @@ export class InformationComponent implements OnInit{
   @ViewChild('hrSort') hrSort: MatSort | null | undefined;
   // @ts-ignore
   dataSource: MatTableDataSource<CapabilityStatementRestResource> ;
-  displayedColumns  = ['resource','profile','imposeProfile'];
+  displayedColumns  = ['resource','profile','supportedProfile','imposeProfile'];
   // @ts-ignore
   dataSourceIG: MatTableDataSource<ImplementationGuide> ;
   displayedColumnsIG  = ['package','version'];
+  // @ts-ignore
+  dataSourceMessage: MatTableDataSource<CapabilityStatementMessagingSupportedMessage> ;
+  displayedColumnsMessage  = ['messageDefinition'];
   constructor(
       private http: HttpClient,
       private _dialogService: TdDialogService,
@@ -38,6 +41,10 @@ export class InformationComponent implements OnInit{
         if (cs.contained !== undefined) {
           // @ts-ignore
           this.dataSourceIG = new MatTableDataSource<ImplementationGuide>(cs.contained)
+        }
+        if (cs.messaging !== undefined && cs.messaging.length >0) {
+          this.dataSourceMessage = new MatTableDataSource<CapabilityStatementMessagingSupportedMessage>(cs.messaging[0].supportedMessage)
+
         }
         if (cs.rest !== undefined) {
           for (const rest of cs.rest) {

@@ -55,9 +55,19 @@
                     <th mat-header-cell mat-sort-header *matHeaderCellDef > Impose Profile </th>
                     <td mat-cell *matCellDef="let resource">
                         <span *ngIf="resource.extension !== undefined">
-                            <span *ngFor="let extension of resource.extension">
+                            <p *ngFor="let extension of resource.extension">
                                 <a [href]="extension.valueCanonical" target="_blank">{{extension.valueCanonical}}</a>
-                            </span>
+                            </p>
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="supportedProfile">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Supported Profile </th>
+                    <td mat-cell *matCellDef="let resource">
+                        <span *ngIf="resource.supportedProfile !== undefined">
+                            <p *ngFor="let profile of resource.supportedProfile">
+                                 <a href="https://simplifier.net/resolve?fhirVersion=R4&scope=fhir.r4.ukcore.stu3.currentbuild&canonical={{profile}}" target="_blank">{{profile}}</a>
+                            </p>
                         </span>
                     </td>
                 </ng-container>
@@ -72,5 +82,27 @@
             </mat-table>
 
         </div>
+        <div  *ngIf="dataSourceMessage !== undefined">
+            <h2>Supported Messages</h2>
+            <br/>
+            <mat-table [dataSource]="dataSourceMessage" class="mat-elevation-z8"
+                       matSort #msgSort="matSort" (matSortChange)="announceSortChange($event)"
+                       matSortActive="resource" matSortDirection="desc" matSortDisableClear>
+
+                <ng-container matColumnDef="messageDefinition">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Message Definition </th>
+                    <td mat-cell *matCellDef="let resource">
+                        <a href="https://simplifier.net/resolve?fhirVersion=R4&scope=uk.nhsengland.r4&canonical={{resource.definition}}" target="_blank">{{resource.definition}}</a>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsMessage; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsMessage;"></tr>
+
+                <mat-row *matNoDataRow>
+                    <td class="mat-cell" colspan="7">No data matching the filter </td>
+                </mat-row>
+            </mat-table>
+            </div>
     </mat-card-content>
 </mat-card>
