@@ -32,13 +32,16 @@ import {CovalentLoadingModule} from "@covalent/core/loading";
 import { InformationComponent } from './information/information.component';
 import {MatListModule} from "@angular/material/list";
 import {CovalentFileModule} from "@covalent/core/file";
+import { ResourceTestComponent } from './validate/resource-test/resource-test.component';
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
     AppComponent,
     ValidateComponent,
     TestingMainComponent,
-    InformationComponent
+    InformationComponent,
+    ResourceTestComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +73,8 @@ import {CovalentFileModule} from "@covalent/core/file";
     MatCheckboxModule,
     MatTooltipModule,
     MatListModule,
-    CovalentFileModule
+    CovalentFileModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,14 +1,17 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import { DatePipe } from '@angular/common';
 import { TdDialogService } from '@covalent/core/dialogs';
-import {OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
+import {OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {EditorComponent} from "ngx-monaco-editor-v2";
 import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
 
-
+class Resource {
+    fileName : string = 'Not specified'
+    resource : any
+}
 
 @Component({
   selector: 'app-validate',
@@ -23,6 +26,8 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     markdown = `Only JSON is currently supported.`
     resource: any = undefined ;
+
+    resources: Resource[] = []
 
     resourceType: string | undefined = undefined
 
@@ -51,6 +56,9 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     files: any;
 
+    fileList : FileList | undefined
+    fileLoadedFile: EventEmitter<any> = new EventEmitter();
+
     overlayStarSyntax = false;
     constructor(
                 private http: HttpClient,
@@ -74,63 +82,58 @@ export class ValidateComponent implements OnInit, AfterViewInit {
            // console.log(monaco.div)
            // console.log(monaco.getModels())
         }
+
+
         if (this.data !== undefined) {
 
-            let headers = new HttpHeaders(
-            );
-            this.data = JSON.stringify(this.resource, undefined, 2)
-            this.resource = JSON.parse(this.data)
-            headers = headers.append('Content-Type', 'application/json');
-            var url: string = this.validateUrl + '/$validate';
-            if (this.profile !== undefined) url = url + '?profile='+this.profile.url
-            console.log(this.imposeProfiles)
-            if (this.imposeProfiles) {
-                if (url.endsWith('validate')) {
-                    url = url + '?imposeProfile=true'
-                } else{
-                    url = url + '&imposeProfile=true'
-                }
+           var res : Resource = {
+               resource: this.resource,
+               fileName: 'Not Specified'
+           }
+           this.resources = []
+            this.resources.push(res)
+        } else if (this.fileList !== undefined) {
+            this.resources = []
+            for (let i = 0; i < this.fileList.length; i++) {
+                this.processFile(this.fileList.item(i))
             }
-            this._loadingService.register('overlayStarSyntax');
-            this.http.post(url, this.data,{ headers}).subscribe(result => {
-                    this._loadingService.resolve('overlayStarSyntax');
-                if (result !== undefined) {
-                    var parameters = result as OperationOutcome
-                    this.information= 0
-                    this.warning  = 0
-                    this.error = 0
-                    for(let issue of parameters.issue) {
-                        this.fixLocation(issue)
-                        switch (issue.severity) {
-                            case "information": {
-                                this.information++
-                                break
-                            }
-                            case "warning": {
-                                this.warning++
-                                break
-                            }
-                            default: {
-                                this.error++
-                            }
-                        }
+        }
+    }
+    processFile(file: File | null) {
+        if (file !== null) {
+            var fileLoaded: EventEmitter<any> = new EventEmitter();
+            const reader = new FileReader();
+            reader.readAsBinaryString(file);
+            fileLoaded.subscribe((data: any) => {
+                    this.data = data
+                    var res : Resource = {
+                        resource: JSON.parse(data),
+                        fileName: file.name
                     }
-
-                    this.dataSource = new MatTableDataSource<OperationOutcomeIssue>(parameters.issue)
-                    this.setSortHR()
-
+                    this.resources.push(res)
                 }
-            },
-                error => {
-                    this._loadingService.resolve('overlayStarSyntax');
-                    console.log(JSON.stringify(error))
-                    this._dialogService.openAlert({
-                        title: 'Alert',
-                        disableClose: true,
-                        message:
-                            this.getErrorMessage(error),
-                    });
-                })
+            );
+            const me = this;
+            reader.onload = (event: Event) => {
+                if (reader.result instanceof ArrayBuffer) {
+                    console.log('array buffer');
+
+                    // @ts-ignore
+                    fileLoaded.emit(String.fromCharCode.apply(null, reader.result));
+                } else {
+                    console.log('not a buffer');
+                    if (reader.result !== null) fileLoaded.emit(reader.result);
+                }
+            };
+            reader.onerror = function (error) {
+                console.log('Error: ', error);
+                me._dialogService.openAlert({
+                    title: 'Alert',
+                    disableClose: true,
+                    message:
+                        'Failed to process file. Try smaller example?',
+                });
+            };
         }
     }
 
@@ -146,39 +149,6 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
 
 
-    setSortHR() {
-
-        // @ts-ignore
-        this.dataSource.sort = this.hrSort
-
-        this.dataSource.sortingDataAccessor = (item, property) => {
-            switch (property) {
-                case 'issue': {
-                    switch(item.severity) {
-                        case "error": return 2
-                        case "fatal": return 3
-                        case "warning":return 1
-                        default: return 0
-                    }
-                }
-                case 'location': {
-                    if (item.location !== undefined) return item.location[0]
-                    return 0
-                }
-                case 'details' : {
-                    if (item.details !== undefined
-                        && item.details.coding !== undefined
-                        && item.details.coding.length > 0
-                        && item.details.coding[0].code !== undefined) return item.details.coding[0].code
-                    return 0
-                }
-
-                default: {
-                    return 0
-                }
-            }
-        };
-    }
 
 
     announceSortChange($event: Sort) {
@@ -214,93 +184,50 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
         }
     }
-    getErrorMessage(error: any) {
-        var errorMsg = ''
-        if (error.error !== undefined){
-
-            if (error.error.issue !== undefined) {
-                errorMsg += ' ' + error.error.issue[0].diagnostics
-            }
-        }
-        errorMsg += '\n\n ' + error.message
-        return errorMsg;
-    }
 
 
+    protected readonly undefined = undefined;
 
+    selectFileEvent(file: File | FileList) {
 
+        if (file instanceof FileList) {
+            this.fileList = file
+            this.data = undefined
 
-
-    private fixLocation( issue: OperationOutcomeIssue) :OperationOutcomeIssue {
-        /*
-        * THIS IS GOING TO BE REALLY COARSE but better than nothing */
-        var newRow : number | undefined = undefined
-        var newCol : number | undefined = undefined
-        var lines = this.data.split(/\r?\n|\r|\n/g);
-        if (issue.location !== undefined && issue.location.length>0) {
-            var location = issue.location[0].split(".")[1]
-            if (location !== undefined) {
-                var arrayNumber : number | undefined = undefined
-                if (location.split('[').length>1) {
-                    arrayNumber = +(location.split('[')[1].split(']')[0])
+        } else {
+            this.fileList = undefined
+            const reader = new FileReader();
+            reader.readAsBinaryString(file);
+            this.fileLoadedFile.subscribe( (data: any) => {
+                   this.data = data
                 }
-                location = location.split('[')[0]
+            );
+            const me = this;
+            reader.onload = (event: Event) => {
+                if (reader.result instanceof ArrayBuffer) {
+                    console.log('array buffer');
 
-               // console.log(location)
-                var found = false
-                var inArray = false
-                lines.forEach(( value: string,index: number) => {
-                        //console.log(value.trim().replace('\"',''))
-
-                        if (!found && (
-                            (value.trim().replace('\"','').startsWith(location))
-                            ||
-                            (inArray && value.startsWith('    {')))
-                        ) {
-                            if (arrayNumber === undefined) {
-                                found = true
-                                newRow = index + 1
-                                newCol = 0
-                            } else {
-                                if (0 === arrayNumber) {
-                                    found = true
-                                    newRow = index + 1
-                                    newCol = 0
-                                } else {
-                                    inArray = true
-                                    if (value.includes('{')) arrayNumber--
-
-                                }
-                            }
-                        }
-                    }
-                )
-                if (issue.extension !== undefined) {
-                    if (newRow !== undefined && newCol !== undefined) {
-                        for (let extension of issue.extension) {
-                            if (extension.url === 'http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col') {
-                                extension.valueInteger = newCol
-                            }
-                            if (extension.url === 'http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-row') {
-                                extension.valueInteger = newRow
-                            }
-                        }
-                        if (issue.location !== undefined && issue.location.length > 1) {
-                            issue.location[1] = 'Line[' + newRow + '] Col[' + newCol + ']'
-                        }
-                    } else {
-                        if (issue.location !== undefined && issue.location.length > 1) {
-                            issue.location[1] = ''
-                        }
-                    }
+                    // @ts-ignore
+                    me.fileLoaded.emit(String.fromCharCode.apply(null, reader.result));
+                } else {
+                    console.log('not a buffer');
+                    if (reader.result !== null) me.fileLoadedFile.emit(reader.result);
                 }
-            }
+            };
+            reader.onerror = function (error) {
+                console.log('Error: ', error);
+                me._dialogService.openAlert({
+                    title: 'Alert',
+                    disableClose: true,
+                    message:
+                        'Failed to process file. Try smaller example?',
+                });
+            };
         }
 
-        return issue
     }
 
-
-
-
+    clearSelection() {
+        this.fileList = undefined
+    }
 }

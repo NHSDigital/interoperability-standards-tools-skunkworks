@@ -1,0 +1,71 @@
+
+    <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{fileName}}
+            </mat-panel-title>
+            <mat-panel-description>
+                <mat-icon color="warn" aria-hidden="false" aria-label="Error" fontIcon="error"></mat-icon>&nbsp;{{error}} Errors
+                <mat-icon color="accent" aria-hidden="false" aria-label="Warning" fontIcon="warning"></mat-icon>&nbsp;{{warning}} Warnings
+                <mat-icon color="primary" aria-hidden="false" aria-label="Information" fontIcon="info"></mat-icon>&nbsp;{{information}} Info
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+                   matSort #hrSort="matSort" (matSortChange)="announceSortChange($event)"
+                   matSortActive="date" matSortDirection="desc" matSortDisableClear>
+
+            <ng-container matColumnDef="issue">
+                <th mat-header-cell style="width: 5%;" mat-sort-header *matHeaderCellDef > Issue </th>
+                <td mat-cell *matCellDef="let activity">
+                                      <span *ngIf="activity.severity === 'error'">
+                                          <mat-icon color="warn" aria-hidden="false" aria-label="Error" fontIcon="error"></mat-icon>
+
+                                      </span>
+                    <span *ngIf="activity.severity === 'warning'">
+                                        <mat-icon color="accent" aria-hidden="false" aria-label="Warning" fontIcon="warning"></mat-icon>
+
+                                      </span>
+                    <span *ngIf="activity.severity === 'information'">
+                                        <mat-icon color="primary" aria-hidden="false" aria-label="Information" fontIcon="info"></mat-icon>
+
+                                      </span>
+
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="location">
+                <th mat-header-cell style="width: 200px; max-width: 200px" mat-sort-header *matHeaderCellDef > Location </th>
+                <td mat-cell *matCellDef="let activity">
+
+                                      <span *ngIf="activity.location !== undefined">
+                                          <span *ngIf="activity.location.length > 0">{{activity.location[0]}}</span>
+                                        <span *ngIf="activity.location.length > 1"><br/>{{activity.location[1]}}</span>
+                                      </span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="diagnostic">
+                <th mat-header-cell *matHeaderCellDef > Diagnostic </th>
+                <td mat-cell *matCellDef="let activity">
+                    {{activity.diagnostics}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="details">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header > Details </th>
+                <td mat-cell *matCellDef="let activity">
+                                    <span *ngIf="activity.details !== undefined && activity.details.coding !== undefined">
+                                        <span *ngFor="let code of activity.details.coding">
+                                            {{code.code}}
+                                        </span>
+                                    </span>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <mat-row *matNoDataRow>
+                <td class="mat-cell" colspan="7">No data matching the filter </td>
+            </mat-row>
+        </mat-table>
+
+    </mat-expansion-panel>
+

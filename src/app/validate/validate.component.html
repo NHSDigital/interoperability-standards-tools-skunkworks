@@ -4,27 +4,31 @@
     </mat-card-header>
       <mat-card-content>
           <td-markdown>{{ markdown }}</td-markdown>
-          <div
-                  *tdLoading="
-   'overlayStarSyntax';
-   mode: loadingMode.Indeterminate;
-   type: loadingType.Circular;
-   strategy: loadingStrategy.Overlay;
-   color: 'accent'
- "
-          >
+
               <td-file-input
                       class="push-left-sm push-right-sm"
                       #fileInput
                       [(ngModel)]="files"
+                      (selectFile)="selectFileEvent($event)"
+                      accept=".json,.txt"
                       multiple
               >
                   <mat-icon>folder</mat-icon>
                   <span class="text-upper">Browse...</span>
               </td-file-input>
+          <div *ngIf="fileList == undefined">
           <ngx-monaco-editor style="height: 600px;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()"></ngx-monaco-editor>
+          </div>
+          <div *ngIf="fileList !== undefined">
+              <p>Files Selected</p>
+              <button mat-raised-button color="accent" (click)="clearSelection()">Clear File List</button>
+          </div>
+          <span *ngIf="fileList !== undefined || resourceType !== undefined">
+               <mat-checkbox class="example-margin" [(ngModel)]="imposeProfiles" matTooltip="Additionally check against imposeProfile listed in the CapabilityStatement. This normally includes FHIR International Patient Summary (IPS) and Structured Data Capture (SDC)">Impose Profiles</mat-checkbox>
+                <br/>
+          </span>
           <span *ngIf="resourceType !== undefined">
-                   <mat-checkbox class="example-margin" [(ngModel)]="imposeProfiles" matTooltip="Additionally check against imposeProfile listed in the CapabilityStatement. This normally includes FHIR International Patient Summary (IPS) and Structured Data Capture (SDC)">Impose Profiles</mat-checkbox>
+
                <form class="example-form">
                     <mat-form-field class="example-full">
                         <mat-label>Select additional {{resourceType}} Profiles</mat-label>
@@ -43,71 +47,13 @@
         <!--  <button disabled mat-raised-button color="accent" (click)="validateBase()">Validate against Base FHIR</button> -->
           <br/>
           <br/>
-          <div  *ngIf="resource!=undefined">
-              <div layout="row" layout-align="start start">
-                  <mat-icon color="warn" aria-hidden="false" aria-label="Error" fontIcon="error"></mat-icon>&nbsp;{{error}} Errors
-                  <mat-icon color="accent" aria-hidden="false" aria-label="Warning" fontIcon="warning"></mat-icon>&nbsp;{{warning}} Warnings
-                  <mat-icon color="primary" aria-hidden="false" aria-label="Information" fontIcon="info"></mat-icon>&nbsp;{{information}} Info
-              </div>
-              <br/>
-                <mat-table [dataSource]="dataSource" class="mat-elevation-z8"
-                       matSort #hrSort="matSort" (matSortChange)="announceSortChange($event)"
-                       matSortActive="date" matSortDirection="desc" matSortDisableClear>
-
-                        <ng-container matColumnDef="issue">
-                            <th mat-header-cell style="width: 5%;" mat-sort-header *matHeaderCellDef > Issue </th>
-                            <td mat-cell *matCellDef="let activity">
-                                  <span *ngIf="activity.severity === 'error'">
-                                      <mat-icon color="warn" aria-hidden="false" aria-label="Error" fontIcon="error"></mat-icon>
-
-                                  </span>
-                                <span *ngIf="activity.severity === 'warning'">
-                                    <mat-icon color="accent" aria-hidden="false" aria-label="Warning" fontIcon="warning"></mat-icon>
-
-                                  </span>
-                                <span *ngIf="activity.severity === 'information'">
-                                    <mat-icon color="primary" aria-hidden="false" aria-label="Information" fontIcon="info"></mat-icon>
-
-                                  </span>
-
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="location">
-                            <th mat-header-cell style="width: 200px; max-width: 200px" mat-sort-header *matHeaderCellDef > Location </th>
-                            <td mat-cell *matCellDef="let activity">
-
-                                  <span *ngIf="activity.location !== undefined">
-                                      <span *ngIf="activity.location.length > 0">{{activity.location[0]}}</span>
-                                    <span *ngIf="activity.location.length > 1"><br/>{{activity.location[1]}}</span>
-                                  </span>
-                            </td>
-                        </ng-container>
-                          <ng-container matColumnDef="diagnostic">
-                            <th mat-header-cell *matHeaderCellDef > Diagnostic </th>
-                            <td mat-cell *matCellDef="let activity">
-                                {{activity.diagnostics}}
-                            </td>
-                        </ng-container>
-                       <ng-container matColumnDef="details">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header > Details </th>
-                            <td mat-cell *matCellDef="let activity">
-                                <span *ngIf="activity.details !== undefined && activity.details.coding !== undefined">
-                                    <span *ngFor="let code of activity.details.coding">
-                                        {{code.code}}
-                                    </span>
-                                </span>
-                            </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                        <mat-row *matNoDataRow>
-                            <td class="mat-cell" colspan="7">No data matching the filter </td>
-                        </mat-row>
-                    </mat-table>
-
-              </div>
+          <div *ngIf="resources.length>0">
+              <mat-accordion class="example-headers-align" multi>
+                  <span *ngFor="let res of resources">
+                      {{res.fileName}}
+                    <app-resource-test [resource]="res.resource" [fileName]="res.fileName" [imposeProfiles]="imposeProfiles" [profile]="profile"></app-resource-test>
+                  </span>
+              </mat-accordion>
           </div>
       </mat-card-content>
 
