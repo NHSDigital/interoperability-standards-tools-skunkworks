@@ -82,7 +82,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
            // console.log(monaco.div)
            // console.log(monaco.getModels())
         }
-
+        this.resources = []
 
         if (this.data !== undefined) {
 
@@ -90,10 +90,10 @@ export class ValidateComponent implements OnInit, AfterViewInit {
                resource: this.resource,
                fileName: 'Not Specified'
            }
-           this.resources = []
+
             this.resources.push(res)
         } else if (this.fileList !== undefined) {
-            this.resources = []
+
             for (let i = 0; i < this.fileList.length; i++) {
                 this.processFile(this.fileList.item(i))
             }
@@ -105,7 +105,6 @@ export class ValidateComponent implements OnInit, AfterViewInit {
             const reader = new FileReader();
             reader.readAsBinaryString(file);
             fileLoaded.subscribe((data: any) => {
-                    this.data = data
                     var res : Resource = {
                         resource: JSON.parse(data),
                         fileName: file.name

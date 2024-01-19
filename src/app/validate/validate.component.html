@@ -24,10 +24,10 @@
               <button mat-raised-button color="accent" (click)="clearSelection()">Clear File List</button>
           </div>
           <span *ngIf="fileList !== undefined || resourceType !== undefined">
-               <mat-checkbox class="example-margin" [(ngModel)]="imposeProfiles" matTooltip="Additionally check against imposeProfile listed in the CapabilityStatement. This normally includes FHIR International Patient Summary (IPS) and Structured Data Capture (SDC)">Impose Profiles</mat-checkbox>
+               <mat-checkbox class="example-margin" [(ngModel)]="imposeProfiles" matTooltip="Additionally check against imposeProfile listed in the CapabilityStatement. This normally includes FHIR International Patient Summary (IPS) and Structured Data Capture (SDC)">Impose Profiles (IPS and SDC)</mat-checkbox>
                 <br/>
           </span>
-          <span *ngIf="resourceType !== undefined">
+          <span *ngIf="resourceType !== undefined && fileList== undefined">
 
                <form class="example-form">
                     <mat-form-field class="example-full">
@@ -50,7 +50,6 @@
           <div *ngIf="resources.length>0">
               <mat-accordion class="example-headers-align" multi>
                   <span *ngFor="let res of resources">
-                      {{res.fileName}}
                     <app-resource-test [resource]="res.resource" [fileName]="res.fileName" [imposeProfiles]="imposeProfiles" [profile]="profile"></app-resource-test>
                   </span>
               </mat-accordion>
