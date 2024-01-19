@@ -59,6 +59,7 @@ export class InformationComponent implements OnInit{
     // @ts-ignore
     this.dataSource.sort = this.hrSort
 
+    // @ts-ignore
     this.dataSource.sortingDataAccessor = (item , property) => {
       console.log(property)
       switch (property) {

@@ -31,6 +31,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {CovalentLoadingModule} from "@covalent/core/loading";
 import { InformationComponent } from './information/information.component';
 import {MatListModule} from "@angular/material/list";
+import {CovalentFileModule} from "@covalent/core/file";
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import {MatListModule} from "@angular/material/list";
     CovalentDynamicMenuModule,
     MatCheckboxModule,
     MatTooltipModule,
-    MatListModule
+    MatListModule,
+    CovalentFileModule
   ],
   providers: [],
   bootstrap: [AppComponent]

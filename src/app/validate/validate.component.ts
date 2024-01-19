@@ -49,6 +49,8 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     warning : number = 0
     error : number = 0
 
+    files: any;
+
     overlayStarSyntax = false;
     constructor(
                 private http: HttpClient,
