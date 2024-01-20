@@ -53,6 +53,9 @@
                              <span class="fi fi-gb"></span>
                        </span>
                       <span *ngIf="activity.diagnostics.includes('http://hl7.org/fhir/uv/')">
+                             <mat-icon>public</mat-icon>
+                       </span>
+                      <span *ngIf="activity.diagnostics.includes('https://hl7.eu/fhir')">
                              <span class="fi fi-eu"></span>
                        </span>
                   </span>

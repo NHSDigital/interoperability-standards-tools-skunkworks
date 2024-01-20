@@ -153,7 +153,8 @@ export class ResourceTestComponent implements OnInit {
           if (item.diagnostics !== undefined){
             if (item.diagnostics.includes('https://fhir.nhs.uk/England/')) return 'England'
             if (item.diagnostics.includes('https://fhir.hl7.org.uk/')) return 'UK'
-            if (item.diagnostics.includes('http://hl7.org/fhir/uv/')) return 'EU'
+            if (item.diagnostics.includes('http://hl7.org/fhir/uv/')) return 'AQ'
+            if (item.diagnostics.includes('https://hl7.eu/fhir')) return 'EU'
           }
          return ''
         }
@@ -296,6 +297,9 @@ export class ResourceTestComponent implements OnInit {
           useUrl = true
         }
         if (url.includes('http://hl7.org/fhir/uv/sdc')) {
+          useUrl = true
+        }
+        if (url.includes('https://hl7.eu/fhir')) {
           useUrl = true
         }
         if (useUrl) return '<a href="'+ url + '" target="_blank">'+url+'</a>'

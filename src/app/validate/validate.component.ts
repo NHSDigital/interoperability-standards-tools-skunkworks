@@ -2,7 +2,7 @@ import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild} from '@angula
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import { DatePipe } from '@angular/common';
 import { TdDialogService } from '@covalent/core/dialogs';
-import {OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
+import {CapabilityStatement, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
@@ -35,7 +35,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     resourceType: string | undefined = undefined
 
-    //validateUrl = 'http://localhost:9001/FHIR/R4'
+    //validateUrl = 'http://localhost:9001/FHIR'
     validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR'
     validateBaseUrl = 'https://validator.fhir.org/validate'
 
@@ -57,6 +57,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     information : number = 0
     warning : number = 0
     error : number = 0
+    cs : CapabilityStatement | undefined
 
     files: any;
 
@@ -75,15 +76,17 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     }
     ngOnInit(): void {
-      //  if (this.monacoComponent !== null) console.log(this.monacoComponent)
+        this.http.get(this.validateUrl + '/R4/metadata').subscribe((result) => {
+            if (result !== undefined) {
+                this.cs = result as CapabilityStatement
+            }
+        })
     }
 
     validate() {
         if (this.test !== undefined) {
             this.test.nativeElement.scrollIntoView({behavior: 'smooth'});
         }
-
-        this.clearResults()
 
         if (this.data !== undefined) {
 
@@ -137,9 +140,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         }
     }
 
-    clearResults(){
-        this.resources = []
-    }
+
 
 
 
@@ -160,6 +161,8 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     }
 
     checkType() {
+        this.resources = []
+        this.fileList= undefined
         try {
             this.resource = JSON.parse(this.data)
             this.editorOptions = {theme: 'vs-dark', language: 'json'};
@@ -174,12 +177,29 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
                 this.http.get<any>(url, {headers}).subscribe(bundle => {
                     if (bundle.entry !== undefined) {
+                        var defaultProfile : string | undefined
+                        if (this.cs !== undefined && this.cs.rest !== undefined){
+                            this.cs.rest.forEach(value =>{
+                                if (value.resource !== undefined) {
+                                    value.resource.forEach(resource => {
+                                        if (resource.type === this.resourceType) {
+                                            defaultProfile = resource.profile
+                                            this.profileUrl = this.fixUrl(defaultProfile)
+                                        }
+                                    })
+                                }
+                            })
+                        }
                         this.profiles = []
                         for (const entry of bundle.entry) {
                             if (entry.resource !== undefined && entry.resource.resourceType === 'StructureDefinition') {
                                 this.profiles.push(entry.resource as StructureDefinition);
+                                if (defaultProfile !== undefined && defaultProfile === entry.resource.url) {
+                                    this.profile = entry.resource
+                                }
                             }
                         }
+
                     }
                 }
                 )
@@ -194,7 +214,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     }
 
     selectFileEvent(file: File | FileList) {
-        this.clearResults()
+        this.clearSelection()
         if (file instanceof FileList) {
             this.fileList = file
             this.data = undefined
@@ -233,11 +253,15 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     }
 
     clearSelection() {
+        this.resourceType = undefined
+        this.profile = undefined
+        this.profileUrl = undefined
         this.fileList = undefined
+        this.resources = []
     }
 
     convertJSON() {
-        this.clearResults()
+        this.clearSelection()
         let headers = new HttpHeaders(
         );
         headers = headers.append('Content-Type', 'application/xml');
@@ -277,7 +301,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     }
 
     convertSTU3JSON() {
-        this.clearResults()
+        this.clearSelection()
         let headers = new HttpHeaders(
         );
         headers = headers.append('Content-Type', 'application/xml');
@@ -310,14 +334,16 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
 
     applyProfile(event: any) {
-        console.log(event)
-        console.log(this.profile)
+
         this.profileUrl = this.fixUrl(this.profile?.url)
         
     }
 
     fixUrl(url): string {
         if (url.includes('http://hl7.org/fhir')) {
+            return url
+        }
+        if (url.includes('http://hl7.eu/fhir')) {
             return url
         }
         let packageStr = 'fhir.r4.nhsengland.stu1'
