@@ -24,24 +24,21 @@
 
                     <button mat-raised-button  (click)="convertJSON()">Convert to JSON</button>
                     <button mat-raised-button  (click)="convertSTU3JSON()">Convert STU3 to JSON</button>
+
                 </div>
+                <span *ngIf="fileList !== undefined || resource !== undefined">
+                        <mat-checkbox class="example-margin" color="primary" [(ngModel)]="imposeProfiles" matTooltip="Additionally check against imposeProfile listed in the CapabilityStatement. This normally includes FHIR International Patient Summary (IPS), International Patient Access (IPA) and Structured Data Capture (SDC)">Impose Profiles (IPS, IPA and SDC)</mat-checkbox>
+                </span>
+                <span *ngIf="fileList !== undefined || resource !== undefined">
+                   &nbsp; <button mat-raised-button color="primary" (click)="validate()">Validate</button>
+                </span>
             </div>
-          <br/>
-          <div *ngIf="fileList == undefined">
-          <ngx-monaco-editor style="height: 600px;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()"></ngx-monaco-editor>
-          </div>
-
-          <span *ngIf="fileList !== undefined || resource !== undefined">
-               <mat-checkbox class="example-margin" [(ngModel)]="imposeProfiles" matTooltip="Additionally check against imposeProfile listed in the CapabilityStatement. This normally includes FHIR International Patient Summary (IPS), International Patient Access (IPA) and Structured Data Capture (SDC)">Impose Profiles (IPS, IPA and SDC)</mat-checkbox>
-                <br/>
-          </span>
-          <span *ngIf="resourceType !== undefined && fileList== undefined">
-
-               <form class="example-form">
-                    <mat-form-field class="example-full">
+          <div *ngIf="resourceType !== undefined && fileList== undefined" layout="row" layout-align="space-between center">
+               <form class="example-form" flex="90">
+                    <mat-form-field class="example-full" >
                         <mat-label>Select additional {{resourceType}} Profiles</mat-label>
-                        <mat-select required name="status" [(ngModel)]="profile">
-                            <mat-option *ngFor="let profile of profiles" [value]="profile.name">
+                        <mat-select required name="status" [(ngModel)]="profile" (ngModelChange)="applyProfile($event)">
+                            <mat-option *ngFor="let profile of profiles" [value]="profile">
                                 <span *ngIf="profile.title !== undefined">{{profile.title}}</span>
                                 <span *ngIf="profile.title === undefined">{{profile.name}}</span>
                                       ({{profile.url}})
@@ -49,21 +46,36 @@
                         </mat-select>
                          <mat-hint>Base FHIR and UK Core are automatically included in the validation. If you wish to include an extra profile, select from the list above.</mat-hint>
                     </mat-form-field>
+
                </form>
-          </span>
-          <span *ngIf="fileList !== undefined || resource !== undefined">
-            <button mat-raised-button color="accent" (click)="validate()">Validate</button>
-          </span>
+              &nbsp;
+                <a *ngIf="profileUrl!== undefined" mat-raised-button href="{{profileUrl}}" target="_blank">View Profile</a>
+          </div>
+
+          <br/>
+          <div #editorComponent>
+          <div *ngIf="fileList == undefined" style="height: 500px" >
+            <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
+          </div>
+          </div>
         <!--  <button disabled mat-raised-button color="accent" (click)="validateBase()">Validate against Base FHIR</button> -->
+
           <br/>
-          <br/>
-          <div *ngIf="resources.length>0">
+
+          <div #test>
+              <h2>FHIR Validation Results</h2>
+          </div>
+          <span *ngIf="resources.length>0">
               <mat-accordion class="example-headers-align" multi>
                   <span *ngFor="let res of resources">
-                    <app-resource-test [resource]="res.resource" [fileName]="res.fileName" [imposeProfiles]="imposeProfiles" [profile]="profile"></app-resource-test>
+                    <app-resource-test  [resource]="res.resource" [fileName]="res.fileName" [imposeProfiles]="imposeProfiles" [profile]="profile" (position)="setPosition($event)"></app-resource-test>
                   </span>
               </mat-accordion>
-          </div>
+          </span>
+          <span *ngIf="resources.length==0">
+              <p>No results at present</p>
+          </span>
+
       </mat-card-content>
 
 </mat-card>

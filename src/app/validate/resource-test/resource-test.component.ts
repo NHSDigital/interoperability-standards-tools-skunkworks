@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {OperationOutcome, OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
 import {MatSort, Sort} from "@angular/material/sort";
@@ -6,6 +6,10 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
 import {TdDialogService} from "@covalent/core/dialogs";
 
+class Position {
+  lineNumber: number = 1
+  column: number = 1
+}
 @Component({
   selector: 'app-resource-test',
   templateUrl: './resource-test.component.html',
@@ -32,6 +36,8 @@ export class ResourceTestComponent implements OnInit {
 
   @Input()
   profile: StructureDefinition | undefined;
+
+  @Output() position: EventEmitter<Position> = new EventEmitter();
 
   @ViewChild('hrSort') hrSort: MatSort | null | undefined;
 
@@ -228,9 +234,11 @@ export class ResourceTestComponent implements OnInit {
           if (newRow !== undefined && newCol !== undefined) {
             for (let extension of issue.extension) {
               if (extension.url === 'http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col') {
+
                 extension.valueInteger = newCol
               }
-              if (extension.url === 'http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-row') {
+              if (extension.url === 'http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line') {
+
                 extension.valueInteger = newRow
               }
             }
@@ -254,4 +262,46 @@ export class ResourceTestComponent implements OnInit {
     this.dataSource.filter = this.selected
   }
 
+  onClick(issue) {
+    var position : Position = {
+      lineNumber: 1,
+      column: 1
+    }
+    for (let extension of issue.extension) {
+      if (extension.url === 'http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col') {
+        position.column = extension.valueInteger + 1
+      }
+      if (extension.url === 'http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line') {
+        position.lineNumber = extension.valueInteger + 1
+      }
+    }
+    this.position.emit(position)
+  }
+
+  urlify(text: string): string {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function(url) {
+      function getSimplifierUrl(url: string) {
+        url = url.replace(')','')
+        url = url.replace(/'/g, '')
+        url = url.replace(']', '')
+        url = url.replace(',', '')
+        var packageStr = 'fhir.r4.nhsengland.stu1'
+        var useUrl = false
+        if (url.includes('https://fhir.hl7.org.uk')) packageStr='fhir.r4.ukcore.stu3.currentbuild'
+        if (url.includes('http://hl7.org/fhir/uv/ips')) {
+          useUrl = true
+        }
+        if (url.includes('http://hl7.org/fhir/uv/ipa')) {
+          useUrl = true
+        }
+        if (url.includes('http://hl7.org/fhir/uv/sdc')) {
+          useUrl = true
+        }
+        if (useUrl) return '<a href="'+ url + '" target="_blank">'+url+'</a>'
+        return '<a href="'+ 'https://simplifier.net/resolve?fhirVersion=R4&scope='+ packageStr  + '&canonical='+url + '" target="_blank">'+url+'</a>'
+      }
+      return getSimplifierUrl(url);
+    })
+  }
 }

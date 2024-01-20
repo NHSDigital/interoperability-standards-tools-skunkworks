@@ -64,14 +64,17 @@
 
                                       <span *ngIf="activity.location !== undefined">
                                           <span *ngIf="activity.location.length > 0">{{activity.location[0].replaceAll('.',' .')}}</span>
-                                        <span *ngIf="activity.location.length > 1"><br/>{{activity.location[1]}}</span>
+                                        <span *ngIf="activity.location.length > 1">
+                                            <br/><button mat-button color="primary" (click)="onClick(activity)" >{{activity.location[1]}}</button>
+                                        </span>
                                       </span>
                 </td>
             </ng-container>
             <ng-container matColumnDef="diagnostic">
                 <th mat-header-cell *matHeaderCellDef > Diagnostic </th>
                 <td mat-cell *matCellDef="let activity">
-                    {{activity.diagnostics}}
+                    <td-markdown> {{urlify(activity.diagnostics)}}</td-markdown>
+
                 </td>
             </ng-container>
             <ng-container matColumnDef="details">

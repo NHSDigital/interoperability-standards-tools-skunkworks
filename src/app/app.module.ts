@@ -34,6 +34,7 @@ import {MatListModule} from "@angular/material/list";
 import {CovalentFileModule} from "@covalent/core/file";
 import { ResourceTestComponent } from './validate/resource-test/resource-test.component';
 import {MatExpansionModule} from "@angular/material/expansion";
+import {A11yModule} from "@angular/cdk/a11y";
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
     MatTooltipModule,
     MatListModule,
     CovalentFileModule,
-    MatExpansionModule
+    MatExpansionModule,
+    A11yModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -5,8 +5,8 @@ import { TdDialogService } from '@covalent/core/dialogs';
 import {OperationOutcomeIssue, StructureDefinition} from "fhir/r4";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {EditorComponent} from "ngx-monaco-editor-v2";
 import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
+
 
 class Resource {
     fileName : string = 'Not specified'
@@ -19,7 +19,9 @@ class Resource {
   styleUrls: ['./validate.component.scss']
 })
 export class ValidateComponent implements OnInit, AfterViewInit {
-    @ViewChild(EditorComponent, { static: false }) monacoComponent:EditorComponent| undefined;
+
+    @ViewChild('test') test: any | null | undefined;
+    @ViewChild('editorComponent') editorComponent: any | null | undefined;
 
     editorOptions = {theme: 'vs-dark', language: 'json'};
     editor: any;
@@ -28,6 +30,8 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     resource: any = undefined ;
 
     resources: Resource[] = []
+
+    monacoEditor : any
 
     resourceType: string | undefined = undefined
 
@@ -60,28 +64,26 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     fileLoadedFile: EventEmitter<any> = new EventEmitter();
 
     overlayStarSyntax = false;
+    profileUrl: string | undefined;
+
     constructor(
                 private http: HttpClient,
                 private _dialogService: TdDialogService,
                 private _loadingService: TdLoadingService) { }
 
     ngAfterViewInit(): void {
-        if (this.monacoComponent !== null) {
-          //  console.log(this.monacoComponent)
-        }
+
     }
     ngOnInit(): void {
       //  if (this.monacoComponent !== null) console.log(this.monacoComponent)
     }
 
     validate() {
-        if (this.monacoComponent !== null && this.monacoComponent !== undefined) {
-                // @ts-ignore
-            var monaco = this.monacoComponent._editorContainer.nativeElement
-   //         console.log(monaco);
-
+        if (this.test !== undefined) {
+            this.test.nativeElement.scrollIntoView({behavior: 'smooth'});
         }
-        this.resources = []
+
+        this.clearResults()
 
         if (this.data !== undefined) {
 
@@ -133,6 +135,10 @@ export class ValidateComponent implements OnInit, AfterViewInit {
                 });
             };
         }
+    }
+
+    clearResults(){
+        this.resources = []
     }
 
 
@@ -187,11 +193,8 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         }
     }
 
-
-    protected readonly undefined = undefined;
-
     selectFileEvent(file: File | FileList) {
-
+        this.clearResults()
         if (file instanceof FileList) {
             this.fileList = file
             this.data = undefined
@@ -207,12 +210,12 @@ export class ValidateComponent implements OnInit, AfterViewInit {
             const me = this;
             reader.onload = (event: Event) => {
                 if (reader.result instanceof ArrayBuffer) {
-                    console.log('array buffer');
+                    ///console.log('array buffer');
 
                     // @ts-ignore
                     me.fileLoaded.emit(String.fromCharCode.apply(null, reader.result));
                 } else {
-                    console.log('not a buffer');
+                   // console.log('not a buffer');
                     if (reader.result !== null) me.fileLoadedFile.emit(reader.result);
                 }
             };
@@ -234,6 +237,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     }
 
     convertJSON() {
+        this.clearResults()
         let headers = new HttpHeaders(
         );
         headers = headers.append('Content-Type', 'application/xml');
@@ -256,6 +260,10 @@ export class ValidateComponent implements OnInit, AfterViewInit {
                 });
             })
     }
+
+    onInit(editor) {
+        this.monacoEditor = editor
+    }
     getErrorMessage(error: any) {
         var errorMsg = ''
         if (error.error !== undefined){
@@ -269,6 +277,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     }
 
     convertSTU3JSON() {
+        this.clearResults()
         let headers = new HttpHeaders(
         );
         headers = headers.append('Content-Type', 'application/xml');
@@ -281,7 +290,6 @@ export class ValidateComponent implements OnInit, AfterViewInit {
                 }
             },
             error => {
-
                 console.log(JSON.stringify(error))
                 this._dialogService.openAlert({
                     title: 'Alert',
@@ -290,5 +298,29 @@ export class ValidateComponent implements OnInit, AfterViewInit {
                         this.getErrorMessage(error),
                 });
             })
+    }
+
+    setPosition(position) {
+        this.monacoEditor.setPosition(position)
+        if (this.editorComponent !== undefined) {
+            this.editorComponent.nativeElement.scrollIntoView({behavior: 'smooth'});
+            //this.monacoEditor.focus()
+        }
+    }
+
+
+    applyProfile(event: any) {
+        console.log(event)
+        console.log(this.profile)
+        this.profileUrl = this.fixUrl(this.profile?.url)
+        
+    }
+
+    fixUrl(url): string {
+        if (url.includes('http://hl7.org/fhir')) {
+            return url
+        }
+        let packageStr = 'fhir.r4.nhsengland.stu1'
+        return 'https://simplifier.net/resolve?fhirVersion=R4&scope='+ packageStr  + '&canonical='+url
     }
 }
