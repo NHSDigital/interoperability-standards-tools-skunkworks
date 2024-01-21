@@ -94,7 +94,13 @@ export class ResourceTestComponent implements OnInit {
               this.error = 0
               for(let issue of parameters.issue) {
                 this.fixLocation(issue)
-
+                if (issue.diagnostics !== undefined
+                   && issue.diagnostics.includes('Validation failed')
+                    && issue.diagnostics.includes('loinc')
+                    ) {
+                  issue.severity = "information"
+                  issue.diagnostics += '. Unable to test due to CodeSystem not being present on NHS England Terminology Server.'
+                }
                 switch (issue.severity) {
                   case "information": {
                     this.information++

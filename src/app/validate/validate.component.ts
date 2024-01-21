@@ -161,7 +161,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     }
 
     checkType() {
-        this.resources = []
+        this.clearReources()
         this.fileList= undefined
         try {
             this.resource = JSON.parse(this.data)
@@ -257,6 +257,9 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         this.profile = undefined
         this.profileUrl = undefined
         this.fileList = undefined
+        this.clearReources()
+    }
+    clearReources(){
         this.resources = []
     }
 
