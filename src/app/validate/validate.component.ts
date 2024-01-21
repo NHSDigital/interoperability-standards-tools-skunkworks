@@ -337,7 +337,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
 
     applyProfile(event: any) {
-
+        this.clearReources()
         this.profileUrl = this.fixUrl(this.profile?.url)
         
     }
