@@ -35,6 +35,7 @@ import {CovalentFileModule} from "@covalent/core/file";
 import { ResourceTestComponent } from './validate/resource-test/resource-test.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {A11yModule} from "@angular/cdk/a11y";
+import {MatRadioModule} from "@angular/material/radio";
 
 @NgModule({
   declarations: [
@@ -44,40 +45,41 @@ import {A11yModule} from "@angular/cdk/a11y";
     InformationComponent,
     ResourceTestComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    CovalentLayoutModule,
-    FormsModule,
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        CovalentLayoutModule,
+        FormsModule,
 
-    // (optional) Additional Covalent Modules imports
-    CovalentDynamicFormsModule,
-    CovalentHighlightModule,
-    CovalentMarkdownModule,
-    CovalentMessageModule,
-    CovalentDialogsModule,
-    CovalentJsonFormatterModule,
-    CovalentLoadingModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatTabsModule,
-    MatSortModule,
-    MatGridListModule,
-    MatIconModule,
-    MonacoEditorModule.forRoot(),
-    CovalentDynamicMenuModule,
-    MatCheckboxModule,
-    MatTooltipModule,
-    MatListModule,
-    CovalentFileModule,
-    MatExpansionModule,
-    A11yModule
-  ],
+        // (optional) Additional Covalent Modules imports
+        CovalentDynamicFormsModule,
+        CovalentHighlightModule,
+        CovalentMarkdownModule,
+        CovalentMessageModule,
+        CovalentDialogsModule,
+        CovalentJsonFormatterModule,
+        CovalentLoadingModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatInputModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatTabsModule,
+        MatSortModule,
+        MatGridListModule,
+        MatIconModule,
+        MonacoEditorModule.forRoot(),
+        CovalentDynamicMenuModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        MatListModule,
+        CovalentFileModule,
+        MatExpansionModule,
+        A11yModule,
+        MatRadioModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

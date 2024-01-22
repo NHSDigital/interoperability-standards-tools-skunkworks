@@ -49,7 +49,7 @@ export class ResourceTestComponent implements OnInit {
   loadingType = LoadingType;
 
   overlayStarSyntax = false;
-  selected: any;
+  selected= 'all'
   constructor(
       private http: HttpClient,
       private _dialogService: TdDialogService,
