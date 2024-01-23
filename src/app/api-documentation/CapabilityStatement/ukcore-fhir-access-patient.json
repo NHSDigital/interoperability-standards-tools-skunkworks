@@ -1,0 +1,166 @@
+{
+  "resourceType" : "CapabilityStatement",
+  "id" : "UKCoreAccessPatientIndexProvider",
+  "text" : {
+    "status" : "extensions",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><h2/><div><p>Provider supports read-only access to a patient index for the purposes of direct care and subject of care access.</p>\n</div><table><tr><td>Mode</td><td>SERVER</td></tr><tr><td>Description</td><td/></tr><tr><td>Transaction</td><td></td></tr><tr><td>System History</td><td></td></tr><tr><td>System Search</td><td></td></tr></table><table><tr><th><b>Resource Type</b></th><th><b>Profile</b></th><th><b title=\"GET a resource (read interaction)\">Read</b></th><th><b title=\"GET all set of resources of the type (search interaction)\">Search</b></th><th><b title=\"PUT a new resource version (update interaction)\">Update</b></th><th><b title=\"POST a new resource (create interaction)\">Create</b></th></tr><tr><td>Patient</td><td><a href=\"https://fhir.hl7.org.uk/uk-core-access/StructureDefinition/UKCoreAccessPatientIndexPatient\">https://fhir.hl7.org.uk/uk-core-access/StructureDefinition/UKCoreAccessPatientIndexPatient</a></td><td></td><td>y</td><td></td><td></td></tr></table></div>"
+  },
+  "url" : "https://fhir.hl7.org.uk/uk-core-access/CapabilityStatement/UKCoreAccessPatientIndexProvider",
+  "version" : "0.1.0",
+  "title" : "UKCore Access Patient Index Provider",
+  "status" : "active",
+  "date" : "2023-02-01",
+  "publisher" : "HL7 UK",
+  "contact" : [{
+    "name" : "HL7 UK",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "https://www.hl7.org.uk/"
+    }]
+  }],
+  "description" : "Provider supports read-only access to a patient index for the purposes of direct care and subject of care access.",
+  "jurisdiction" : [{
+    "coding" : [{
+      "system" : "urn:iso:std:iso:3166",
+      "code" : "GB",
+      "display" : "United Kingdom of Great Britain and Northern Ireland"
+    }]
+  }],
+  "kind" : "requirements",
+  "fhirVersion" : "4.0.1",
+  "format" : ["json"],
+  "rest" : [{
+    "mode" : "server",
+    "resource" : [{
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+        "valueCode" : "SHALL"
+      },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHOULD"
+          },
+            {
+              "url" : "required",
+              "valueString" : "birthdate"
+            },
+            {
+              "url" : "required",
+              "valueString" : "family"
+            }],
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHOULD"
+          },
+            {
+              "url" : "required",
+              "valueString" : "birthdate"
+            },
+            {
+              "url" : "required",
+              "valueString" : "name"
+            }],
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHOULD"
+          },
+            {
+              "url" : "required",
+              "valueString" : "gender"
+            },
+            {
+              "url" : "required",
+              "valueString" : "family"
+            }],
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHOULD"
+          },
+            {
+              "url" : "required",
+              "valueString" : "gender"
+            },
+            {
+              "url" : "required",
+              "valueString" : "name"
+            }],
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+        }],
+      "type" : "Patient",
+      "profile" : "https://fhir.hl7.org.uk/uk-core-access/StructureDefinition/UKCoreAccessPatientIndexPatient",
+      "interaction" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+          "valueCode" : "SHALL"
+        }],
+        "code" : "search-type"
+      }],
+      "searchParam" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+          "valueCode" : "SHOULD"
+        }],
+        "name" : "_id",
+        "type" : "token"
+      },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHOULD"
+          }],
+          "name" : "birthdate",
+          "type" : "date"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHOULD"
+          }],
+          "name" : "family",
+          "type" : "string"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "gender",
+          "type" : "token"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHOULD"
+          }],
+          "name" : "given",
+          "type" : "string"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "identifier",
+          "type" : "token"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "name",
+          "type" : "string"
+        }]
+    }]
+  }]
+}

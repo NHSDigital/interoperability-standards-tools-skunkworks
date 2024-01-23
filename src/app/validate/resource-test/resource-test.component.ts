@@ -5,6 +5,7 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
 import {TdDialogService} from "@covalent/core/dialogs";
+import {ConfigService} from "../../service/config.service";
 
 class Position {
   lineNumber: number = 1
@@ -42,7 +43,6 @@ export class ResourceTestComponent implements OnInit {
   @ViewChild('hrSort') hrSort: MatSort | null | undefined;
 
   //validateUrl = 'http://localhost:9001/FHIR/R4'
-  validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR/R4'
 
   loadingMode = LoadingMode;
   loadingStrategy = LoadingStrategy;
@@ -52,6 +52,7 @@ export class ResourceTestComponent implements OnInit {
   selected= 'all'
   constructor(
       private http: HttpClient,
+      private config: ConfigService,
       private _dialogService: TdDialogService,
       private _loadingService: TdLoadingService) { }
 
@@ -74,7 +75,7 @@ export class ResourceTestComponent implements OnInit {
         headers = headers.append('Content-Type', 'application/xml');
         headers = headers.append('Accept', 'application/json');
       }
-      var url: string = this.validateUrl + '/$validate';
+      var url: string = this.config.validateUrl + '/R4/$validate';
       if (this.profile !== undefined) url = url + '?profile='+this.profile.url
 
       if (this.imposeProfiles) {
@@ -128,7 +129,7 @@ export class ResourceTestComponent implements OnInit {
               title: 'Alert',
               disableClose: true,
               message:
-                  this.getErrorMessage(error),
+                  this.config.getErrorMessage(error),
             });
           })
     }
@@ -179,17 +180,6 @@ export class ResourceTestComponent implements OnInit {
     };
   }
 
-  getErrorMessage(error: any) {
-    var errorMsg = ''
-    if (error.error !== undefined){
-
-      if (error.error.issue !== undefined) {
-        errorMsg += ' ' + error.error.issue[0].diagnostics
-      }
-    }
-    errorMsg += '\n\n ' + error.message
-    return errorMsg;
-  }
 
 
 

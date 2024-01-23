@@ -6,6 +6,7 @@ import {CapabilityStatement, OperationOutcomeIssue, StructureDefinition} from "f
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
+import {ConfigService} from "../service/config.service";
 
 
 class Resource {
@@ -36,7 +37,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     resourceType: string | undefined = undefined
 
     //validateUrl = 'http://localhost:9001/FHIR'
-    validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR'
+
     validateBaseUrl = 'https://validator.fhir.org/validate'
 
     protected readonly JSON = JSON;
@@ -69,6 +70,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     constructor(
                 private http: HttpClient,
+                private config: ConfigService,
                 private _dialogService: TdDialogService,
                 private _loadingService: TdLoadingService) { }
 
@@ -76,7 +78,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     }
     ngOnInit(): void {
-        this.http.get(this.validateUrl + '/R4/metadata').subscribe((result) => {
+        this.http.get(this.config.validateUrl + '/R4/metadata').subscribe((result) => {
             if (result !== undefined) {
                 this.cs = result as CapabilityStatement
             }
@@ -144,13 +146,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
 
 
-    getFHIRDateString(date : Date) : string {
-        var datePipe = new DatePipe('en-GB');
-        //2023-05-12T13:22:31.964Z
-        var utc = datePipe.transform(date, 'yyyy-MM-ddTHH:mm:ss.SSSZZZZZ');
-        if (utc!= null) return utc
-        return date.toISOString()
-    }
+
 
 
 
@@ -172,7 +168,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
             && this.resource.resourceType !== undefined
             && this.resource.resourceType !== this.resourceType) {
                 this.resourceType = this.resource.resourceType
-                const url: string = this.validateUrl + '/R4/StructureDefinition?type='+this.resourceType;
+                const url: string = this.config.validateUrl + '/R4/StructureDefinition?type='+this.resourceType;
                 const headers = new HttpHeaders();
 
                 this.http.get<any>(url, {headers}).subscribe(bundle => {
@@ -269,7 +265,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         );
         headers = headers.append('Content-Type', 'application/xml');
         headers = headers.append('Accept', 'application/json');
-        var url: string = this.validateUrl + '/R4/$convert';
+        var url: string = this.config.validateUrl + '/R4/$convert';
         this.http.post(url, this.data,{ headers}).subscribe(result => {
 
                 if (result !== undefined) {
@@ -283,7 +279,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
                     title: 'Alert',
                     disableClose: true,
                     message:
-                        this.getErrorMessage(error),
+                        this.config.getErrorMessage(error),
                 });
             })
     }
@@ -291,17 +287,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     onInit(editor) {
         this.monacoEditor = editor
     }
-    getErrorMessage(error: any) {
-        var errorMsg = ''
-        if (error.error !== undefined){
 
-            if (error.error.issue !== undefined) {
-                errorMsg += ' ' + error.error.issue[0].diagnostics
-            }
-        }
-        errorMsg += '\n\n ' + error.message
-        return errorMsg;
-    }
 
     convertSTU3JSON() {
         this.clearSelection()
@@ -309,7 +295,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         );
         headers = headers.append('Content-Type', 'application/xml');
         headers = headers.append('Accept', 'application/json');
-        var url: string = this.validateUrl + '/STU3/$convertR4';
+        var url: string = this.config.validateUrl + '/STU3/$convertR4';
         this.http.post(url, this.data,{ headers}).subscribe(result => {
 
                 if (result !== undefined) {
@@ -322,7 +308,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
                     title: 'Alert',
                     disableClose: true,
                     message:
-                        this.getErrorMessage(error),
+                        this.config.getErrorMessage(error),
                 });
             })
     }

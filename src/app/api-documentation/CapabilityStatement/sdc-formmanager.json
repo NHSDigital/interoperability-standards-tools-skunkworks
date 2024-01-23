@@ -1,0 +1,508 @@
+{
+  "resourceType" : "CapabilityStatement",
+  "id" : "sdc-form-manager",
+  "text" : {
+    "status" : "extensions",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><h2 id=\"title\">SDC Form Manager</h2><ul><li>Implementation Guide Version: 3.0.0</li><li>FHIR Version: 1.0.0</li><li>Supported Formats: <code>xml</code>, <code>json</code></li><li>Supported Patch Formats: </li><li>Published on: Sun Jul 06 00:00:00 UTC 2014</li><li>Published by: HL7 International / FHIR Infrastructure</li></ul><blockquote class=\"impl-note\"><p><strong>Note to Implementers: FHIR Capabilities</strong></p><p>Any FHIR capability may be 'allowed' by the system unless explicitly marked as &quot;SHALL NOT&quot;. A few items are marked as MAY in the Implementation Guide to highlight their potential relevance to the use case.</p></blockquote><h2 id=\"rest\">FHIR RESTful Capabilities</h2><div class=\"panel panel-default\"><div class=\"panel-heading\"><h3 id=\"mode1\" class=\"panel-title\">Mode: <code>server</code></h3></div><div class=\"panel-body\"><div><p>The primary focus of the repository is the definition of [[Questionnaire]]s.  However, [[ValueSet]]s and [[CodeSystem]]s must also be supported to allow definition of coded data elements.  Some data elements will choose to maintain value sets as 'contained' resources, meaning the value set exists only in the context of the data element and cannot be referenced or maintained without also updating the data element.  However, systems should support value set re-use across data elements.  (Version-specific referencing can be used to avoid value sets from changing independent of the referencing [[Questionnaire]].)</p>\n</div><div class=\"lead\"><em>Security</em></div><blockquote><div><p>Implementations must meet the general security requirements documented in the [[security.html|SDC implementation guide]].</p>\n</div></blockquote><div class=\"lead\"><em>Summary of System-wide Interactions</em></div></div></div><h3 id=\"resourcesCap1\">Capabilities by Resource/Profile</h3><h4 id=\"resourcesSummary1\">Summary</h4><p>The summary table lists the resources that are part of this configuration, and for each resource it lists:</p><ul><li>The relevant profiles (if any)</li><li>The interactions supported by each resource (<b><span class=\"bg-info\">R</span></b>ead, <b><span class=\"bg-info\">S</span></b>earch, <b><span class=\"bg-info\">U</span></b>pdate, and <b><span class=\"bg-info\">C</span></b>reate, are always shown, while <b><span class=\"bg-info\">VR</span></b>ead, <b><span class=\"bg-info\">P</span></b>atch, <b><span class=\"bg-info\">D</span></b>elete, <b><span class=\"bg-info\">H</span></b>istory on <b><span class=\"bg-info\">I</span></b>nstance, or <b><span class=\"bg-info\">H</span></b>istory on <b><span class=\"bg-info\">T</span></b>ype are only present if at least one of the resources has support for them.</li><li><span>The required, recommended, and some optional search parameters (if any). </span></li><li>The linked resources enabled for <code>_include</code></li><li>The other resources enabled for <code>_revinclude</code></li><li>The operations on the resource (if any)</li></ul><div class=\"table-responsive\"><table class=\"table table-condensed table-hover\"><thead><tr><th><b>Resource Type</b></th><th><b>Profile</b></th><th class=\"text-center\"><b title=\"GET a resource (read interaction)\">R</b></th><th class=\"text-center\"><b title=\"GET past versions of resources (vread interaction)\">V-R</b></th><th class=\"text-center\"><b title=\"GET all set of resources of the type (search interaction)\">S</b></th><th class=\"text-center\"><b title=\"PUT a new resource version (update interaction)\">U</b></th><th class=\"text-center\"><b title=\"POST a new resource (create interaction)\">C</b></th><th class=\"text-center\"><b title=\"DELETE a resource (delete interaction)\">D</b></th><th class=\"text-center\"><b title=\"GET changes to a resource (history interaction on instance)\">H-I</b></th><th><b title=\"Required and recommended search parameters\">Searches</b></th><th><code><b>_include</b></code></th><th><code><b>_revinclude</b></code></th><th><b>Operations</b></th></tr></thead><tbody><tr><td><a href=\"#Questionnaire1-1\">Questionnaire</a></td><td><a href=\"StructureDefinition-sdc-questionnaire.html\">http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire</a></td><td>y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td>code, context, date, identifier, publisher, status, title, version, definition</td><td><code>Questionnaire.group.question.options</code></td><td/><td/></tr><tr><td><a href=\"#CodeSystem1-2\">CodeSystem</a></td><td><a href=\"StructureDefinition-sdc-codesystem.html\">http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-codesystem</a></td><td>y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td>code, date, description, name, status, system, url, assembledFrom, assemble-expectation</td><td/><td/><td/></tr><tr><td><a href=\"#ValueSet1-3\">ValueSet</a></td><td><a href=\"StructureDefinition-sdc-valueset.html\">http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-valueset</a></td><td>y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td class=\"text-center\">y</td><td>date, description, name, reference, status</td><td><code>ValueSet.compose.import</code></td><td/><td/></tr></tbody></table></div><hr/><div class=\"panel panel-default\"><div class=\"panel-heading\"><h4 id=\"Questionnaire1-1\" class=\"panel-title\"><span style=\"float: right;\">Resource Conformance: SHALL</span>Questionnaire</h4></div><div class=\"panel-body\"><div class=\"container\"><div class=\"row\"><div class=\"col-lg-6\"><span class=\"lead\">Base System Profile</span><br/><a href=\"StructureDefinition-sdc-questionnaire.html\">http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire</a></div><div class=\"col-lg-3\"><span class=\"lead\">Profile Conformance</span><br/><b>SHALL</b></div><div class=\"col-lg-3\"><span class=\"lead\">Reference Policy</span><br/></div></div><p/><div class=\"row\"><div class=\"col-lg-6\"><span class=\"lead\">Interaction summary</span><br/><ul><li><strong>SHALL</strong> support <code>search-type</code>, <code>read</code>, <code>vread</code>, <code>history-instance</code>, <code>create</code>, <code>update</code>.</li><li><strong>MAY</strong> support <code>delete</code>.</li></ul></div></div><p/><div class=\"row\"><div class=\"col-lg-7\"><span class=\"lead\">Search Parameters</span><table class=\"table table-condensed table-hover\"><thead><tr><th>Conformance</th><th>Parameter</th><th>Type</th><th>Documentation</th></tr></thead><tbody><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/questionnaire.html#search\">code</a></td><td><code>token</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/questionnaire.html#search\">context</a></td><td><code>token</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/questionnaire.html#search\">date</a></td><td><code>date</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/questionnaire.html#search\">identifier</a></td><td><code>token</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/questionnaire.html#search\">publisher</a></td><td><code>string</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/questionnaire.html#search\">status</a></td><td><code>token</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/questionnaire.html#search\">title</a></td><td><code>string</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/questionnaire.html#search\">version</a></td><td><code>token</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"SearchParameter-questionnaire-definition.html\">definition</a></td><td><code>token</code></td><td><div></div></td></tr></tbody></table></div><div class=\"col-lg-5\">\u00a0</div></div></div></div></div><div class=\"panel panel-default\"><div class=\"panel-heading\"><h4 id=\"CodeSystem1-2\" class=\"panel-title\"><span style=\"float: right;\">Resource Conformance: SHALL</span>CodeSystem</h4></div><div class=\"panel-body\"><div class=\"container\"><div class=\"row\"><div class=\"col-lg-6\"><span class=\"lead\">Base System Profile</span><br/><a href=\"StructureDefinition-sdc-codesystem.html\">http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-codesystem</a></div><div class=\"col-lg-3\"><span class=\"lead\">Profile Conformance</span><br/><b>SHALL</b></div><div class=\"col-lg-3\"><span class=\"lead\">Reference Policy</span><br/></div></div><p/><div class=\"row\"><div class=\"col-lg-6\"><span class=\"lead\">Interaction summary</span><br/><ul><li><strong>SHALL</strong> support <code>search-type</code>, <code>read</code>, <code>vread</code>, <code>history-instance</code>, <code>create</code>, <code>update</code>.</li><li><strong>MAY</strong> support <code>delete</code>.</li></ul></div></div><p/><div class=\"row\"><div class=\"col-lg-7\"><span class=\"lead\">Search Parameters</span><table class=\"table table-condensed table-hover\"><thead><tr><th>Conformance</th><th>Parameter</th><th>Type</th><th>Documentation</th></tr></thead><tbody><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/codesystem.html#search\">code</a></td><td><code>token</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/codesystem.html#search\">date</a></td><td><code>date</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/codesystem.html#search\">description</a></td><td><code>string</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/codesystem.html#search\">name</a></td><td><code>string</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/codesystem.html#search\">status</a></td><td><code>token</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/codesystem.html#search\">system</a></td><td><code>uri</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/codesystem.html#search\">url</a></td><td><code>uri</code></td><td><div></div></td></tr><tr><td><b>SHOULD</b></td><td><a href=\"SearchParameter-questionnaire-assembledFrom.html\">assembledFrom</a></td><td><code>token</code></td><td><div></div></td></tr><tr><td><b>SHOULD</b></td><td><a href=\"SearchParameter-questionnaire-assemble-expectation.html\">assemble-expectation</a></td><td><code>token</code></td><td><div></div></td></tr></tbody></table></div><div class=\"col-lg-5\">\u00a0</div></div></div></div></div><div class=\"panel panel-default\"><div class=\"panel-heading\"><h4 id=\"ValueSet1-3\" class=\"panel-title\"><span style=\"float: right;\">Resource Conformance: SHALL</span>ValueSet</h4></div><div class=\"panel-body\"><div class=\"container\"><div class=\"row\"><div class=\"col-lg-6\"><span class=\"lead\">Base System Profile</span><br/><a href=\"StructureDefinition-sdc-valueset.html\">http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-valueset</a></div><div class=\"col-lg-3\"><span class=\"lead\">Profile Conformance</span><br/><b>SHALL</b></div><div class=\"col-lg-3\"><span class=\"lead\">Reference Policy</span><br/></div></div><p/><div class=\"row\"><div class=\"col-lg-6\"><span class=\"lead\">Interaction summary</span><br/><ul><li><strong>SHALL</strong> support <code>search-type</code>, <code>read</code>, <code>vread</code>, <code>history-instance</code>, <code>create</code>, <code>update</code>.</li><li><strong>MAY</strong> support <code>delete</code>.</li></ul></div></div><p/><div class=\"row\"><div class=\"col-lg-7\"><span class=\"lead\">Search Parameters</span><table class=\"table table-condensed table-hover\"><thead><tr><th>Conformance</th><th>Parameter</th><th>Type</th><th>Documentation</th></tr></thead><tbody><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/valueset.html#search\">date</a></td><td><code>date</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/valueset.html#search\">description</a></td><td><code>string</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/valueset.html#search\">name</a></td><td><code>string</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/valueset.html#search\">reference</a></td><td><code>uri</code></td><td><div></div></td></tr><tr><td><b>SHALL</b></td><td><a href=\"http://hl7.org/fhir/valueset.html#search\">status</a></td><td><code>token</code></td><td><div></div></td></tr></tbody></table></div><div class=\"col-lg-5\">\u00a0</div></div></div></div></div></div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
+    "valueCode" : "fhir"
+  },
+    {
+      "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
+      "valueInteger" : 3,
+      "_valueInteger" : {
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-conformance-derivedFrom",
+          "valueCanonical" : "http://hl7.org/fhir/uv/sdc/ImplementationGuide/hl7.fhir.uv.sdc"
+        }]
+      }
+    },
+    {
+      "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
+      "valueCode" : "trial-use",
+      "_valueCode" : {
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-conformance-derivedFrom",
+          "valueCanonical" : "http://hl7.org/fhir/uv/sdc/ImplementationGuide/hl7.fhir.uv.sdc"
+        }]
+      }
+    }],
+  "url" : "http://hl7.org/fhir/uv/sdc/CapabilityStatement/sdc-form-manager",
+  "version" : "3.0.0",
+  "name" : "SDCFormManager",
+  "title" : "SDC Form Manager",
+  "status" : "draft",
+  "date" : "2014-07-06",
+  "publisher" : "HL7 International / FHIR Infrastructure",
+  "contact" : [{
+    "name" : "HL7 International / FHIR Infrastructure",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/fiwg"
+    }]
+  },
+    {
+      "telecom" : [{
+        "system" : "url",
+        "value" : "http://www.hl7.org/Special/committees/fiwg"
+      }]
+    }],
+  "description" : "This profile defines the expected capabilities of the ''SDC Form Manager'' role when conforming to the S&I Framework's [[index.html|Structured Data Capture FHIR implementation guide]].  This role is responsible for maintaining a repository of form definitions and also of performing pre-population of form data.",
+  "jurisdiction" : [{
+    "coding" : [{
+      "system" : "http://unstats.un.org/unsd/methods/m49/m49.htm",
+      "code" : "001",
+      "display" : "World"
+    }]
+  }],
+  "kind" : "requirements",
+  "fhirVersion" : "1.0.0",
+  "format" : ["xml",
+    "json"],
+  "rest" : [{
+    "mode" : "server",
+    "documentation" : "The primary focus of the repository is the definition of [[Questionnaire]]s.  However, [[ValueSet]]s and [[CodeSystem]]s must also be supported to allow definition of coded data elements.  Some data elements will choose to maintain value sets as 'contained' resources, meaning the value set exists only in the context of the data element and cannot be referenced or maintained without also updating the data element.  However, systems should support value set re-use across data elements.  (Version-specific referencing can be used to avoid value sets from changing independent of the referencing [[Questionnaire]].)",
+    "security" : {
+      "description" : "Implementations must meet the general security requirements documented in the [[security.html|SDC implementation guide]]."
+    },
+    "resource" : [{
+      "type" : "Questionnaire",
+      "profile" : "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire",
+      "interaction" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+          "valueCode" : "SHALL"
+        }],
+        "code" : "search-type",
+        "documentation" : "Allows a user to search for existing forms"
+      },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "code" : "read",
+          "documentation" : "Allows retrieval of a specific known form"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "code" : "vread",
+          "documentation" : "Allows retrieval of a specific version of a form"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "code" : "history-instance",
+          "documentation" : "Allows review of changes to a form over time"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "code" : "create",
+          "documentation" : "Allows defining a new form.  Repositories requiring curation of submitted forms may require all new data elements to have a status of 'draft'."
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "code" : "update",
+          "documentation" : "Allows an existing form to be updated.  Servers may choose to prohibit certain types of edits, instead requiring the creation of a new questionnaire (and potentially the retiring of the existing questionnaire).  Servers may also limit who can change particular forms."
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "MAY"
+          }],
+          "code" : "delete",
+          "documentation" : "Allows removal of an existing form.  Servers may choose to not support deletions and instead require that the form's status be changed to 'retired'.  Other systems support deletions but limit them to forms meeting certain requirements.  E.g. only forms with a status of draft or only forms that have been retired for at least two years, etc."
+        }],
+      "searchInclude" : ["Questionnaire.group.question.options"],
+      "searchParam" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+          "valueCode" : "SHALL"
+        }],
+        "name" : "code",
+        "definition" : "http://hl7.org/fhir/SearchParameter/Questionnaire-code",
+        "type" : "token"
+      },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "context",
+          "definition" : "http://hl7.org/fhir/SearchParameter/Questionnaire-context",
+          "type" : "token"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "date",
+          "definition" : "http://hl7.org/fhir/SearchParameter/Questionnaire-date",
+          "type" : "date"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "identifier",
+          "definition" : "http://hl7.org/fhir/SearchParameter/Questionnaire-identifier",
+          "type" : "token"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "publisher",
+          "definition" : "http://hl7.org/fhir/SearchParameter/Questionnaire-publisher",
+          "type" : "string"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "status",
+          "definition" : "http://hl7.org/fhir/SearchParameter/Questionnaire-status",
+          "type" : "token"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "title",
+          "definition" : "http://hl7.org/fhir/SearchParameter/Questionnaire-title",
+          "type" : "string"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "version",
+          "definition" : "http://hl7.org/fhir/SearchParameter/Questionnaire-version",
+          "type" : "token"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "definition",
+          "definition" : "http://hl7.org/fhir/uv/sdc/SearchParameter/questionnaire-definition",
+          "type" : "token"
+        }]
+    },
+      {
+        "type" : "CodeSystem",
+        "profile" : "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-codesystem",
+        "interaction" : [{
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "code" : "search-type",
+          "documentation" : "Allows discovery of existing code systems for use in authoring questionnaires"
+        },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "read",
+            "documentation" : "Allows retrieval of a specific code system referenced within a questionnaire"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "vread",
+            "documentation" : "Allows retrieval of a historical version of a code system as referenced within a questionnaire"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "history-instance",
+            "documentation" : "Allows review of changes to a code system over time"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "create",
+            "documentation" : "Allows definition of a new code system used by one or more questionnaires"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "update",
+            "documentation" : "Allows existing code systems referenced by one or more questionnaires to be maintained"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "MAY"
+            }],
+            "code" : "delete",
+            "documentation" : "Not all servers will support deletion of code systems.  Status change to 'retired' will be more typical, though deletion of draft code systems may keep repositories cleaner."
+          }],
+        "searchParam" : [{
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "code",
+          "definition" : "http://hl7.org/fhir/SearchParameter/CodeSystem-code",
+          "type" : "token"
+        },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "date",
+            "definition" : "http://hl7.org/fhir/SearchParameter/conformance-date",
+            "type" : "date"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "description",
+            "definition" : "http://hl7.org/fhir/SearchParameter/conformance-description",
+            "type" : "string"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "name",
+            "definition" : "http://hl7.org/fhir/SearchParameter/conformance-name",
+            "type" : "string"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "status",
+            "definition" : "http://hl7.org/fhir/SearchParameter/conformance-status",
+            "type" : "token"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "system",
+            "definition" : "http://hl7.org/fhir/SearchParameter/CodeSystem-system",
+            "type" : "uri"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "url",
+            "definition" : "http://hl7.org/fhir/SearchParameter/conformance-url",
+            "type" : "uri"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHOULD"
+            }],
+            "name" : "assembledFrom",
+            "definition" : "http://hl7.org/fhir/uv/sdc/SearchParameter/questionnaire-assembledFrom",
+            "type" : "token"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHOULD"
+            }],
+            "name" : "assemble-expectation",
+            "definition" : "http://hl7.org/fhir/uv/sdc/SearchParameter/questionnaire-assemble-expectation",
+            "type" : "token"
+          }]
+      },
+      {
+        "type" : "ValueSet",
+        "profile" : "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-valueset",
+        "interaction" : [{
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "code" : "search-type",
+          "documentation" : "Allows discovery of existing value sets for use in authoring questionnaires"
+        },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "read",
+            "documentation" : "Allows retrieval of a specific value set referenced within a questionnaire"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "vread",
+            "documentation" : "Allows retrieval of a historical version of a value set as referenced within a questionnaire"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "history-instance",
+            "documentation" : "Allows review of changes to a value set over time"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "create",
+            "documentation" : "Allows definition of a new value set used by one or more questionnaires"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "code" : "update",
+            "documentation" : "Allows existing value sets referenced by one or more questionnaires to be maintained"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "MAY"
+            }],
+            "code" : "delete",
+            "documentation" : "Not all servers will support deletion of value sets.  Status change to 'retired' will be more typical, though deletion of draft value sets may keep repositories cleaner."
+          }],
+        "searchInclude" : ["ValueSet.compose.import"],
+        "searchParam" : [{
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
+          "name" : "date",
+          "definition" : "http://hl7.org/fhir/SearchParameter/conformance-date",
+          "type" : "date"
+        },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "description",
+            "definition" : "http://hl7.org/fhir/SearchParameter/conformance-description",
+            "type" : "string"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "name",
+            "definition" : "http://hl7.org/fhir/SearchParameter/conformance-name",
+            "type" : "string"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "reference",
+            "definition" : "http://hl7.org/fhir/SearchParameter/ValueSet-reference",
+            "type" : "uri"
+          },
+          {
+            "extension" : [{
+              "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode" : "SHALL"
+            }],
+            "name" : "status",
+            "definition" : "http://hl7.org/fhir/SearchParameter/conformance-status",
+            "type" : "token"
+          }]
+      }],
+    "operation" : [{
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+        "valueCode" : "SHOULD"
+      }],
+      "name" : "expand",
+      "definition" : "http://hl7.org/fhir/OperationDefinition/ValueSet-expand"
+    },
+      {
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+          "valueCode" : "SHOULD"
+        }],
+        "name" : "validate code",
+        "definition" : "http://hl7.org/fhir/OperationDefinition/ValueSet-validate-code"
+      },
+      {
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+          "valueCode" : "MAY"
+        }],
+        "name" : "populate",
+        "definition" : "http://hl7.org/fhir/uv/sdc/OperationDefinition/Questionnaire-populate"
+      },
+      {
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+          "valueCode" : "MAY"
+        }],
+        "name" : "populatehtml",
+        "definition" : "http://hl7.org/fhir/uv/sdc/OperationDefinition/Questionnaire-populatehtml"
+      },
+      {
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+          "valueCode" : "MAY"
+        }],
+        "name" : "populatelink",
+        "definition" : "http://hl7.org/fhir/uv/sdc/OperationDefinition/Questionnaire-populatelink"
+      },
+      {
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+          "valueCode" : "MAY"
+        }],
+        "name" : "assemble",
+        "definition" : "http://hl7.org/fhir/uv/sdc/OperationDefinition/Questionnaire-assemble"
+      }]
+  }]
+}
