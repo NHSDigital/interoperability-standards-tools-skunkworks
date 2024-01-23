@@ -1,0 +1,12 @@
+<mat-card xmlns="http://www.w3.org/1999/html">
+    <mat-card-header>
+        <h3>API Testing</h3>
+    </mat-card-header>
+    <mat-card-content>
+        <div style="height: 500px" >
+            <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
+        </div>
+        <div id="swagger-ui"></div>
+        <div #swagger id="swagger"></div>
+    </mat-card-content>
+</mat-card>

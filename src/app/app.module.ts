@@ -36,6 +36,7 @@ import { ResourceTestComponent } from './validate/resource-test/resource-test.co
 import {MatExpansionModule} from "@angular/material/expansion";
 import {A11yModule} from "@angular/cdk/a11y";
 import {MatRadioModule} from "@angular/material/radio";
+import {ApiDocumentationComponent} from "./api-documentation/api-documentation.component";
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {MatRadioModule} from "@angular/material/radio";
     ValidateComponent,
     TestingMainComponent,
     InformationComponent,
-    ResourceTestComponent
+    ResourceTestComponent,
+    ApiDocumentationComponent
   ],
     imports: [
         BrowserModule,
