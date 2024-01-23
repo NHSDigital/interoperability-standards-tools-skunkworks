@@ -7,7 +7,7 @@ import {DatePipe} from "@angular/common";
 export class ConfigService {
 
   public validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR'
-
+//  public validateUrl = 'http://localhost:9001/FHIR'
   getErrorMessage(error: any) {
     var errorMsg = ''
     if (error.error !== undefined){

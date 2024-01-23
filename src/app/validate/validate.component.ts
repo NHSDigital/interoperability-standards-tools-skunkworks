@@ -36,7 +36,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     resourceType: string | undefined = undefined
 
-    //validateUrl = 'http://localhost:9001/FHIR'
+
 
     validateBaseUrl = 'https://validator.fhir.org/validate'
 

@@ -20,6 +20,9 @@
             <span *ngIf="data !== undefined">
                  <button mat-raised-button color="primary" (click)="showOAS()">Generate OAS</button>
             </span>
+            <span *ngIf="oasInput">
+                 <button mat-raised-button color="primary" (click)="convertoFHIR()">Convert to FHIR</button>
+            </span>
         </div>
         <div style="height: 500px" >
             <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
