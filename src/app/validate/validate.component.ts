@@ -161,7 +161,8 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         this.fileList= undefined
         try {
             this.resource = JSON.parse(this.data)
-            this.editorOptions = {theme: 'vs-dark', language: 'json'};
+            if (this.editorOptions.language !== 'json') this.editorOptions.language = 'json';
+
             // ensure previous results are cleared
             this.dataSource = new MatTableDataSource<OperationOutcomeIssue>()
             if (this.resource !== undefined
@@ -203,7 +204,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         }
         catch (e) {
             this.resourceType = undefined
-            this.editorOptions = {theme: 'vs-dark', language: 'xml'};
+            if (this.editorOptions.language !== 'xml') this.editorOptions.language = 'xml';
             this.resource = this.data
             this.dataSource = new MatTableDataSource<OperationOutcomeIssue>()
         }
