@@ -86,6 +86,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     }
 
     validate() {
+        this.clearReources()
         if (this.test !== undefined) {
             this.test.nativeElement.scrollIntoView({behavior: 'smooth'});
         }
