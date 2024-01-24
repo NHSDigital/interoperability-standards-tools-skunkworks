@@ -28,6 +28,7 @@ export class InformationComponent implements OnInit{
   // @ts-ignore
   dataSourceMessage: MatTableDataSource<CapabilityStatementMessagingSupportedMessage> ;
   displayedColumnsMessage  = ['messageDefinition'];
+  cs : CapabilityStatement | undefined
   constructor(
       private http: HttpClient,
       private _dialogService: TdDialogService,
@@ -37,17 +38,17 @@ export class InformationComponent implements OnInit{
     this.http.get(this.validateUrl + '/metadata').subscribe((result) => {
       console.log(result)
       if (result !== undefined) {
-        var cs = result as CapabilityStatement
-        if (cs.contained !== undefined) {
+        this.cs = result as CapabilityStatement
+        if (this.cs.contained !== undefined) {
           // @ts-ignore
-          this.dataSourceIG = new MatTableDataSource<ImplementationGuide>(cs.contained)
+          this.dataSourceIG = new MatTableDataSource<ImplementationGuide>(this.cs.contained)
         }
-        if (cs.messaging !== undefined && cs.messaging.length >0) {
-          this.dataSourceMessage = new MatTableDataSource<CapabilityStatementMessagingSupportedMessage>(cs.messaging[0].supportedMessage)
+        if (this.cs.messaging !== undefined && this.cs.messaging.length >0) {
+          this.dataSourceMessage = new MatTableDataSource<CapabilityStatementMessagingSupportedMessage>(this.cs.messaging[0].supportedMessage)
 
         }
-        if (cs.rest !== undefined) {
-          for (const rest of cs.rest) {
+        if (this.cs.rest !== undefined) {
+          for (const rest of this.cs.rest) {
              if (rest.resource !== undefined) {
                 this.dataSource = new MatTableDataSource<CapabilityStatementRestResource>(rest.resource)
                this.setSort()

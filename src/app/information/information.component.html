@@ -4,6 +4,9 @@
     </mat-card-header>
     <mat-card-content>
         <div  *ngIf="dataSource!==undefined">
+            <span *ngIf="cs !== undefined && cs.software !== undefined">
+                {{cs.software.name}} ver. {{cs.software.version}}
+            </span>
             <h2>Packages</h2>
             <br/>
             <mat-table [dataSource]="dataSourceIG" class="mat-elevation-z8"
