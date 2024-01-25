@@ -85,6 +85,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
       } else {
         this.capabilityStatements = []
         this.capabilityStatements.push(pdqm as CapabilityStatement)
+        this.capabilityStatements.push(mhdDocumentResponder as CapabilityStatement)
         this.capabilityStatements.push(mcsd as CapabilityStatement)
         this.capabilityStatements.push(ukcoreClinical as CapabilityStatement)
         this.capabilityStatements.push(ukcorePatient as CapabilityStatement)
