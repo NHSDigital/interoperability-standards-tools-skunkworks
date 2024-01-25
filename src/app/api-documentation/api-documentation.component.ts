@@ -2,6 +2,7 @@ import {AfterContentInit, Component, ElementRef, OnInit, ViewChild} from '@angul
 import pdqm from './CapabilityStatement/pdqm-uk.json'
 import mhdDocumentResponder from './CapabilityStatement/mhd-documentresponder.uk.json'
 import mcsd from './CapabilityStatement/mcsd-selective-supplier-uk.json'
+import england from './CapabilityStatement/england-server.json'
 import ukcoreClinical from './CapabilityStatement/ukcore-fhir-access-clinical.json'
 import ukcorePatient from './CapabilityStatement/ukcore-fhir-access-patient.json'
 import SwaggerUI from 'swagger-ui';
@@ -86,6 +87,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
         this.capabilityStatements = []
         this.capabilityStatements.push(pdqm as CapabilityStatement)
         this.capabilityStatements.push(mhdDocumentResponder as CapabilityStatement)
+        this.capabilityStatements.push(england as CapabilityStatement)
         this.capabilityStatements.push(mcsd as CapabilityStatement)
         this.capabilityStatements.push(ukcoreClinical as CapabilityStatement)
         this.capabilityStatements.push(ukcorePatient as CapabilityStatement)
