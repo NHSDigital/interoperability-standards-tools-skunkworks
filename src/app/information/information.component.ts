@@ -10,6 +10,7 @@ import {
 } from "fhir/r4";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
+import {ConfigService} from "../service/config.service";
 
 @Component({
   selector: 'app-information',
@@ -17,7 +18,7 @@ import {MatSort, Sort} from "@angular/material/sort";
   styleUrls: ['./information.component.scss']
 })
 export class InformationComponent implements OnInit{
-  validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR/R4'
+
   @ViewChild('hrSort') hrSort: MatSort | null | undefined;
   // @ts-ignore
   dataSource: MatTableDataSource<CapabilityStatementRestResource> ;
@@ -31,11 +32,12 @@ export class InformationComponent implements OnInit{
   cs : CapabilityStatement | undefined
   constructor(
       private http: HttpClient,
+      private config: ConfigService,
       private _dialogService: TdDialogService,
       private _loadingService: TdLoadingService) { }
 
   ngOnInit(): void {
-    this.http.get(this.validateUrl + '/metadata').subscribe((result) => {
+    this.http.get(this.config.validateUrl + '/R4/metadata').subscribe((result) => {
       console.log(result)
       if (result !== undefined) {
         this.cs = result as CapabilityStatement

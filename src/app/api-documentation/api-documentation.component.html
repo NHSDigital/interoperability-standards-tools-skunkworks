@@ -3,30 +3,32 @@
         <h3>API</h3>
     </mat-card-header>
     <mat-card-content>
-        <td-markdown>{{ markdown }}</td-markdown>
-        <div layout="row" layout-align="space-between center">
-            <mat-form-field class="example-full" flex="90">
-                <mat-label>Select a starter CapabilityStatement</mat-label>
-                <mat-select name="status" [(ngModel)]="capabilityStatement" (ngModelChange)="applyStatement($event)">
-                    <mat-option value="ukcoreClinical">UK Core FHIR Access Clinical Provider</mat-option>
-                    <mat-option value="ukcorePatient">UK Core FHIR Access Patient Provider</mat-option>
-                    <mat-option value="PDQm">Patient Demographic Queries (IHE PDQm)</mat-option>
-                    <mat-option value="mcsd">Mobile Care Services Discovery (IHE mCSD)</mat-option>
-                    <mat-option value="SDCFormManager">Form Manager - Structured Data Capture (FHIR SDC)</mat-option>
-                    <mat-option value="MHDDocumentResponder">MHD Document Responder (IHE MHD)</mat-option>
-                </mat-select>
-                <mat-hint>See Enterprise Integration for descriptions</mat-hint>
-            </mat-form-field>
-            <span *ngIf="data !== undefined">
-                 <button mat-raised-button color="primary" (click)="showOAS()">Generate OAS</button>
-            </span>
-            <span *ngIf="oasInput">
-                 <button mat-raised-button color="primary" (click)="convertoFHIR()">Convert to FHIR</button>
-            </span>
-        </div>
-        <div style="height: 500px" >
-            <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
-        </div>
+        <span *ngIf="!oasOnly">
+            <td-markdown>{{ markdown }}</td-markdown>
+            <div layout="row" layout-align="space-between center">
+                <mat-form-field class="example-full" flex="90">
+                    <mat-label>Select a starter CapabilityStatement</mat-label>
+                    <mat-select name="status" [(ngModel)]="capabilityStatement" (ngModelChange)="applyStatement($event)">
+                        <mat-option value="ukcoreClinical">UK Core FHIR Access Clinical Provider</mat-option>
+                        <mat-option value="ukcorePatient">UK Core FHIR Access Patient Provider</mat-option>
+                        <mat-option value="PDQm">Patient Demographic Queries (IHE PDQm)</mat-option>
+                        <mat-option value="mcsd">Mobile Care Services Discovery (IHE mCSD)</mat-option>
+                        <mat-option value="SDCFormManager">Form Manager - Structured Data Capture (FHIR SDC)</mat-option>
+                        <mat-option value="MHDDocumentResponder">MHD Document Responder (IHE MHD)</mat-option>
+                    </mat-select>
+                    <mat-hint>See Enterprise Integration for descriptions</mat-hint>
+                </mat-form-field>
+                <span *ngIf="data !== undefined">
+                     <button mat-raised-button color="primary" (click)="showOAS()">Generate OAS</button>
+                </span>
+                <span *ngIf="oasInput">
+                     <button mat-raised-button color="primary" (click)="convertoFHIR()">Convert to FHIR</button>
+                </span>
+            </div>
+            <div style="height: 500px" >
+                <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
+            </div>
+        </span>
         <span *ngIf="oas !== undefined">
                 <a mat-raised-button  color="primary"  [href]="downloadOAS()" download="file-oas.json">Download OAS</a>
             </span>

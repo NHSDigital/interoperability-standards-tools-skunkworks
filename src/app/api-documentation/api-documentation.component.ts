@@ -10,23 +10,31 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {TdDialogService} from "@covalent/core/dialogs";
 import {ConfigService} from "../service/config.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {ActivatedRoute, NavigationStart, Router} from "@angular/router";
+import {
+  Bundle,
+  CapabilityStatement,
+  CapabilityStatementMessagingSupportedMessage,
+  CapabilityStatementRestResource,
+  ImplementationGuide
+} from "fhir/r4";
+import {MatTableDataSource} from "@angular/material/table";
 @Component({
   selector: 'app-api-documentation',
   templateUrl: './api-documentation.component.html',
   styleUrls: ['./api-documentation.component.scss']
 })
 export class ApiDocumentationComponent implements AfterContentInit, OnInit {
-  ngOnInit(): void {
 
-  }
   @ViewChild('editorComponent') editorComponent: any | null | undefined;
   data: any;
   oas: any;
+  oasOnly=false;
   oasInput = false;
   monacoEditor : any
   editorOptions = {theme: 'vs-dark', language: 'json'};
 
-  markdown = `This page is only designed for CapabilityStatements which include [FHIR Interactions](https://hl7.org/fhir/R4/exchange-module.html). Either paste in the JSON/XML resource or select a starter from the list below.`
+  markdown = `This page is only designed for CapabilityStatements which include [FHIR Interactions](https://hl7.org/fhir/R4/exchange-module.html) or Open API Specification (OAS). \nEither paste in the JSON/XML/YAML resource or select a starter from the list below.`
   onInit(editor) {
     this.monacoEditor = editor
   }
@@ -40,13 +48,53 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
 
   constructor(
       private http: HttpClient,
+      private route: ActivatedRoute,
+      private router: Router,
       private config: ConfigService,
       private _dialogService: TdDialogService,
       private sanitizer: DomSanitizer
   ) { }
 
+  ngOnInit(): void {
+    this.router.events.forEach((event) => {
+      if(event instanceof NavigationStart
+      ) {
+        console.log('CHANGE')
+        this.oasOnly = false
+      }
+      // NavigationEnd
+      // NavigationCancel
+      // NavigationError
+      // RoutesRecognized
+    });
+    this.route.queryParamMap.subscribe(params => {
+      const urlParam = params.get('url');
+
+      if (urlParam !== undefined) {
+        this.http.get(this.config.validateUrl + '/R4/CapabilityStatement?url='+decodeURI(urlParam as string)).subscribe((result) => {
+
+              if (result !== undefined) {
+                let bundle = result as Bundle
+                if (bundle.entry !== undefined && bundle.entry.length>0) {
+                   this.data = JSON.stringify(bundle.entry[0].resource, undefined,2)
+                  this.oasOnly = true
+                  if (this.data !== undefined) this.showOAS()
+                }
+              }
+            }
+        )
+      } else {
+        this.oasOnly = false
+      }
+    });
+  }
+
   ngAfterContentInit(): void {
-    this.applyStatement('ukcorePatient')
+    if (!this.oasOnly) {
+      this.applyStatement('ukcoreClinical')
+    } else {
+
+    }
   }
 
   checkType() {
