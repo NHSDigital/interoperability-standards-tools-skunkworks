@@ -3,12 +3,12 @@
         <h3>API</h3>
     </mat-card-header>
     <mat-card-content>
-        <div layout="row">
-        <div *ngIf="!oasOnly" class="split left">
+        <div layout="row" class="container">
+        <div *ngIf="!oasOnly" class="div1" >
             <td-markdown>{{ markdown }}</td-markdown>
             <div layout="row" layout-align="space-between center">
                 <mat-form-field class="example-full" flex="100">
-                    <mat-label>Select a starter CapabilityStatement</mat-label>
+                    <mat-label>Select a starter API (FHIR CapabilityStatement)</mat-label>
                     <mat-select name="status" [(ngModel)]="capabilityStatement" (ngModelChange)="applyStatement($event)">
                         <mat-option *ngFor="let profile of capabilityStatements" [value]="profile">
                                 <span *ngIf="profile.title !== undefined">{{profile.title}}</span>
@@ -27,7 +27,7 @@
                 <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
             </div>
         </div>
-        <div class="split right">
+        <div class="div2"  >
             <div layout="row">
                 <span *ngIf="data !== undefined">
                      <button mat-raised-button color="primary" (click)="showOAS()">Refresh OAS</button>

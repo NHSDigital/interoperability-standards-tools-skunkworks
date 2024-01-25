@@ -1,0 +1,30 @@
+<mat-card>
+    <mat-card-header>Questionnaire</mat-card-header>
+    <mat-card-content>
+        <div layout="row" class="container">
+            <div class="div1" >
+                <td-markdown>{{ markdown }}</td-markdown>
+                <div layout="row" layout-align="space-between center">
+                    <mat-form-field class="example-full" flex="100">
+                        <mat-label>Select a starter API (FHIR CapabilityStatement)</mat-label>
+                        <mat-select name="status" [(ngModel)]="questionnaire" (ngModelChange)="applyQuestionnaire($event)">
+                            <mat-option *ngFor="let profile of questionnaires" [value]="profile">
+                                <span *ngIf="profile.title !== undefined">{{profile.title}}</span>
+                                <span *ngIf="profile.title === undefined">{{profile.name}}</span>
+                                ({{profile.url}})
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint>See Enterprise Integration for descriptions</mat-hint>
+                    </mat-form-field>
+
+                </div>
+                <div style="height: calc(100vh - 280px)" >
+                    <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
+                </div>
+            </div>
+            <div class="div2" >
+                <div #myFormContainer ></div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

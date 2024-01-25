@@ -211,7 +211,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     const ui = SwaggerUI({
       spec: spec,
       domNode: this.swagger?.nativeElement,
-      deepLinking: true,
+      deepLinking: false,
       presets: [
         SwaggerUI.presets.apis
       ],
