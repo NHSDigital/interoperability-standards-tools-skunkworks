@@ -170,6 +170,8 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     }
     headers = headers.append('Accept', 'application/json');
     var url: string = this.config.validateUrl + '/R4/$convertOAS';
+
+
     this.http.post(url, this.data,{ headers}).subscribe(result => {
 
           this.viewOAS(result)
@@ -188,8 +190,26 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
 
   viewOAS(result : Object) {
     this.oas = result
+
+    var spec = result
+    console.log(spec)
+    try {
+      var fixServer = spec as any
+      console.log(fixServer)
+      if (fixServer.openapi !== undefined && (fixServer.servers === undefined || fixServer.servers.length ===0 || fixServer.servers[0].url === undefined)) {
+        fixServer.servers = [
+          {
+            "url": "https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/clinicaldatasharing/FHIR/R4",
+            "description": "Proof of Concept FHIR Reference Implementation Server (AWS FHIRWorks)"
+          }
+        ]
+        spec = fixServer
+      }
+    } catch (e) {
+
+    }
     const ui = SwaggerUI({
-      spec: result,
+      spec: spec,
       domNode: this.swagger?.nativeElement,
       deepLinking: true,
       presets: [
