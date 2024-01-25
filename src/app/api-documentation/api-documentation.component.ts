@@ -1,7 +1,6 @@
 import {AfterContentInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import pdqm from './CapabilityStatement/pdqm-uk.json'
 import mhdDocumentResponder from './CapabilityStatement/mhd-documentresponder.uk.json'
-import sdcFormManager from './CapabilityStatement/sdc-formmanager.json'
 import mcsd from './CapabilityStatement/mcsd-selective-supplier-uk.json'
 import ukcoreClinical from './CapabilityStatement/ukcore-fhir-access-clinical.json'
 import ukcorePatient from './CapabilityStatement/ukcore-fhir-access-patient.json'
@@ -32,6 +31,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
   oasOnly=false;
   oasInput = false;
   monacoEditor : any
+  capabilityStatements: CapabilityStatement[] =[]
   editorOptions = {theme: 'vs-dark', language: 'json'};
 
   markdown = `This page is only designed for CapabilityStatements which include [FHIR Interactions](https://hl7.org/fhir/R4/exchange-module.html) or Open API Specification (OAS). \nEither paste in the JSON/XML/YAML resource or select a starter from the list below.`
@@ -42,7 +42,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
   @ViewChild('swagger',{static: true}) swagger: ElementRef | undefined
 
   apiDocumentation = pdqm
-  capabilityStatement: any;
+  capabilityStatement: CapabilityStatement | undefined;
 
   fileUrl;
 
@@ -70,28 +70,47 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     this.route.queryParamMap.subscribe(params => {
       const urlParam = params.get('url');
 
-      if (urlParam !== undefined) {
+      if (urlParam !== undefined && urlParam !== null) {
         this.http.get(this.config.validateUrl + '/R4/CapabilityStatement?url='+decodeURI(urlParam as string)).subscribe((result) => {
 
               if (result !== undefined) {
                 let bundle = result as Bundle
                 if (bundle.entry !== undefined && bundle.entry.length>0) {
-                   this.data = JSON.stringify(bundle.entry[0].resource, undefined,2)
                   this.oasOnly = true
-                  if (this.data !== undefined) this.showOAS()
+                  if (this.data !== undefined) this.applyStatement(bundle.entry[0].resource as CapabilityStatement)
                 }
               }
             }
         )
       } else {
+        this.capabilityStatements = []
+        this.capabilityStatements.push(pdqm as CapabilityStatement)
+        this.capabilityStatements.push(mcsd as CapabilityStatement)
+        this.capabilityStatements.push(ukcoreClinical as CapabilityStatement)
+        this.capabilityStatements.push(ukcorePatient as CapabilityStatement)
+
         this.oasOnly = false
+        this.http.get(this.config.validateUrl + '/R4/CapabilityStatement').subscribe((result) => {
+
+              if (result !== undefined) {
+                let bundle = result as Bundle
+                if (bundle.entry !== undefined) {
+                   for(let entry of bundle.entry) {
+                     if (entry.resource !== undefined && entry.resource.resourceType ==='CapabilityStatement') {
+                       this.capabilityStatements.push(entry.resource)
+                     }
+                  }
+                }
+              }
+            }
+        )
       }
     });
   }
 
   ngAfterContentInit(): void {
     if (!this.oasOnly) {
-      this.applyStatement('ukcoreClinical')
+      this.applyStatement(pdqm as CapabilityStatement)
     } else {
 
     }
@@ -117,34 +136,8 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
   }
 
 
-  applyStatement(option: string) {
-    console.log(option)
-    switch (option) {
-      case 'PDQm': {
-        this.data = JSON.stringify(pdqm,undefined,2)
-        break
-      }
-      case 'SDCFormManager': {
-        this.data = JSON.stringify(sdcFormManager,undefined,2)
-        break
-      }
-      case 'MHDDocumentResponder': {
-        this.data = JSON.stringify(mhdDocumentResponder,undefined,2)
-        break
-      }
-      case 'mcsd': {
-        this.data = JSON.stringify(mcsd,undefined,2)
-        break
-      }
-      case 'ukcoreClinical': {
-        this.data = JSON.stringify(ukcoreClinical,undefined,2)
-        break
-      }
-      case 'ukcorePatient': {
-        this.data = JSON.stringify(ukcorePatient,undefined,2)
-        break
-      }
-    }
+  applyStatement(option: CapabilityStatement) {
+    this.data = JSON.stringify(option,undefined,2)
     this.showOAS()
   }
   showOAS() {
@@ -192,15 +185,19 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     this.oas = result
 
     var spec = result
-    console.log(spec)
+
     try {
       var fixServer = spec as any
-      console.log(fixServer)
+
       if (fixServer.openapi !== undefined && (fixServer.servers === undefined || fixServer.servers.length ===0 || fixServer.servers[0].url === undefined)) {
         fixServer.servers = [
           {
             "url": "https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/clinicaldatasharing/FHIR/R4",
-            "description": "Proof of Concept FHIR Reference Implementation Server (AWS FHIRWorks)"
+            "description": "Proof of Concept for EPR FHIR Reference Implementation Server (AWS FHIRWorks)"
+          },
+          {
+            "url": "https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/events/FHIR/R4",
+            "description": "Proof of Concept for Orchestration/TIE FHIR Reference Implementation Server (AWS FHIRWorks)"
           }
         ]
         spec = fixServer

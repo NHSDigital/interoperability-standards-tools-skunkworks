@@ -39,7 +39,7 @@
                <form class="example-form" flex="90">
                     <mat-form-field class="example-full" >
                         <mat-label>Select additional {{resourceType}} Profiles</mat-label>
-                        <mat-select required name="status" [(ngModel)]="profile" (ngModelChange)="applyProfile($event)">
+                        <mat-select name="status" [(ngModel)]="profile" (ngModelChange)="applyProfile($event)">
                             <mat-option *ngFor="let profile of profiles" [value]="profile">
                                 <span *ngIf="profile.title !== undefined">{{profile.title}}</span>
                                 <span *ngIf="profile.title === undefined">{{profile.name}}</span>

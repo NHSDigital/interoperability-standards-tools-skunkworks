@@ -38,7 +38,6 @@ export class InformationComponent implements OnInit{
 
   ngOnInit(): void {
     this.http.get(this.config.validateUrl + '/R4/metadata').subscribe((result) => {
-      console.log(result)
       if (result !== undefined) {
         this.cs = result as CapabilityStatement
         if (this.cs.contained !== undefined) {

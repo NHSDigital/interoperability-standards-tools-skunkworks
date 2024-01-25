@@ -9,12 +9,11 @@
                 <mat-form-field class="example-full" flex="90">
                     <mat-label>Select a starter CapabilityStatement</mat-label>
                     <mat-select name="status" [(ngModel)]="capabilityStatement" (ngModelChange)="applyStatement($event)">
-                        <mat-option value="ukcoreClinical">UK Core FHIR Access Clinical Provider</mat-option>
-                        <mat-option value="ukcorePatient">UK Core FHIR Access Patient Provider</mat-option>
-                        <mat-option value="PDQm">Patient Demographic Queries (IHE PDQm)</mat-option>
-                        <mat-option value="mcsd">Mobile Care Services Discovery (IHE mCSD)</mat-option>
-                        <mat-option value="SDCFormManager">Form Manager - Structured Data Capture (FHIR SDC)</mat-option>
-                        <mat-option value="MHDDocumentResponder">MHD Document Responder (IHE MHD)</mat-option>
+                        <mat-option *ngFor="let profile of capabilityStatements" [value]="profile">
+                                <span *ngIf="profile.title !== undefined">{{profile.title}}</span>
+                                <span *ngIf="profile.title === undefined">{{profile.name}}</span>
+                                      ({{profile.url}})
+                            </mat-option>
                     </mat-select>
                     <mat-hint>See Enterprise Integration for descriptions</mat-hint>
                 </mat-form-field>
