@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterContentInit, Component, ElementRef, EventEmitter, OnInit, ViewChild} from '@angular/core';
 import pdqm from './CapabilityStatement/pdqm-uk.json'
 import mhdDocumentResponder from './CapabilityStatement/mhd-documentresponder.uk.json'
 import mcsd from './CapabilityStatement/mcsd-selective-supplier-uk.json'
@@ -34,6 +34,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
   monacoEditor : any
   capabilityStatements: CapabilityStatement[] =[]
   editorOptions = {theme: 'vs-dark', language: 'json'};
+  fileLoadedFile: EventEmitter<any> = new EventEmitter();
 
   markdown = `This page is only designed for CapabilityStatements which include [FHIR Interactions](https://hl7.org/fhir/R4/exchange-module.html) or Open API Specification (OAS). \nEither paste in the JSON/XML/YAML resource or select a starter from the list below.`
   onInit(editor) {
@@ -46,6 +47,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
   capabilityStatement: CapabilityStatement | undefined;
 
   fileUrl;
+  file: any;
 
   constructor(
       private http: HttpClient,
@@ -319,4 +321,37 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
           });
         })
   }
+
+  selectFileEvent(file: File | FileList) {
+    if (file instanceof File) {
+      const reader = new FileReader();
+      reader.readAsBinaryString(file);
+      this.fileLoadedFile.subscribe((data: any) => {
+            this.data = data
+          }
+      );
+      const me = this;
+      reader.onload = (event: Event) => {
+        if (reader.result instanceof ArrayBuffer) {
+          ///console.log('array buffer');
+
+          // @ts-ignore
+          me.fileLoaded.emit(String.fromCharCode.apply(null, reader.result));
+        } else {
+          // console.log('not a buffer');
+          if (reader.result !== null) me.fileLoadedFile.emit(reader.result);
+        }
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+        me._dialogService.openAlert({
+          title: 'Alert',
+          disableClose: true,
+          message:
+              'Failed to process file. Try smaller example?',
+        });
+      };
+    }
+  }
+
 }

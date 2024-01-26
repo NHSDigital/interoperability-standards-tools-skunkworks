@@ -29,12 +29,22 @@
         </div>
         <div class="div2"  >
             <div layout="row">
+                <td-file-input
+                        class="push-left-sm push-right-sm"
+                        #fileInput
+                        [(ngModel)]="file"
+                        (selectFile)="selectFileEvent($event)"
+                        accept=".json,.xml"
+                >
+                    <mat-icon>folder</mat-icon>
+                    <span class="text-upper">Browse...</span>
+                </td-file-input>
                 <span *ngIf="data !== undefined">
-                     <button mat-raised-button color="primary" (click)="showOAS()">Refresh OAS</button>
+                     <button mat-raised-button (click)="showOAS()">Refresh OAS</button>
                 </span>
                 &nbsp;
                 <span *ngIf="oas !== undefined">
-                    <a mat-raised-button  color="primary"  [href]="downloadOAS()" download="oas3.json">Download OAS</a>
+                    <a mat-raised-button [href]="downloadOAS()" download="oas3.json">Save OAS</a>
                 </span>
             </div>
                 <div id="swagger-ui"></div>

@@ -35,10 +35,8 @@
                         <span class="text-upper">Browse...</span>
                     </td-file-input>
                     <span *ngIf="data !== undefined">
-                     <button mat-raised-button color="primary" (click)="refresh()">Refresh</button>
-                        &nbsp;
+                     <button mat-raised-button color="primary" (click)="refresh()">Refresh</button>&nbsp;
                         <span *ngIf="form !== undefined">
-
                             <button mat-raised-button [matMenuTriggerFor]="menu">Save</button>
                             <mat-menu #menu="matMenu">
                                 <a mat-menu-item color="primary"  [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire</a>
