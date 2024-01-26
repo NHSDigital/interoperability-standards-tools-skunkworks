@@ -143,9 +143,17 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
       if (this.editorOptions.language !== 'json') this.editorOptions.language = 'json';
     } catch (e) {
       console.log('swapped to XML')
-      if ((this.data as string).startsWith('openapi')) {
+      var strs = (this.data as string).split('\n')
+      var isYaml=false
+      for (let str of strs) {
+        if (str.startsWith('openapi')) {
+          isYaml = true
+          this.oasInput = true
+        }
+        if (str.includes('"openapi":')) this.oasInput = true
+      }
+      if (isYaml) {
         if (this.editorOptions.language !== 'yaml') this.editorOptions.language = 'yaml';
-        this.oasInput = true
       } else {
         if (this.editorOptions.language !== 'xml') this.editorOptions.language = 'xml';
       }
