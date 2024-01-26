@@ -6,15 +6,13 @@
                 <td-markdown>{{ markdown }}</td-markdown>
                 <div layout="row" layout-align="space-between center">
                     <mat-form-field class="example-full" flex="100">
-                        <mat-label>Select a starter API (FHIR CapabilityStatement)</mat-label>
+                        <mat-label>Select a FHIR Questionnaire</mat-label>
                         <mat-select name="status" [(ngModel)]="questionnaire" (ngModelChange)="applyQuestionnaire($event)">
                             <mat-option *ngFor="let profile of questionnaires" [value]="profile">
                                 <span *ngIf="profile.title !== undefined">{{profile.title}}</span>
                                 <span *ngIf="profile.title === undefined">{{profile.name}}</span>
-                                ({{profile.url}})
                             </mat-option>
                         </mat-select>
-                        <mat-hint>See Enterprise Integration for descriptions</mat-hint>
                     </mat-form-field>
 
                 </div>
@@ -23,6 +21,30 @@
                 </div>
             </div>
             <div class="div2" >
+                <div layout="row">
+                    <td-file-input
+                            class="push-left-sm push-right-sm"
+                            #fileInput
+                            [(ngModel)]="file"
+                            (selectFile)="selectFileEvent($event)"
+                            accept=".json,.xml"
+                    >
+                        <mat-icon>folder</mat-icon>
+                        <span class="text-upper">Browse...</span>
+                    </td-file-input>
+                    <span *ngIf="data !== undefined">
+                     <button mat-raised-button color="primary" (click)="refresh()">Refresh</button>
+                        &nbsp;
+                        <span *ngIf="form !== undefined">
+
+                            <button mat-raised-button [matMenuTriggerFor]="menu">Save</button>
+                            <mat-menu #menu="matMenu">
+                                <a mat-menu-item color="primary"  [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire</a>
+                                <a mat-raised-button color="primary"  [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse</a>
+                            </mat-menu>
+                          </span>
+                    </span>
+                </div>
                 <div #myFormContainer ></div>
             </div>
         </div>

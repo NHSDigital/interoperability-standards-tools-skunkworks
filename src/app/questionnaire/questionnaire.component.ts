@@ -1,8 +1,14 @@
-import {Component, ElementRef, OnInit, signal, ViewChild} from '@angular/core';
+import {AfterContentInit, Component, ElementRef, EventEmitter, OnInit, signal, ViewChild} from '@angular/core';
 import {ConfigService} from "../service/config.service";
 import {client} from "fhirclient";
-import {Bundle, Questionnaire} from "fhir/r4";
+import {Bundle, CapabilityStatement, Questionnaire} from "fhir/r4";
 import {HttpClient} from "@angular/common/http";
+import Client from "fhirclient/lib/Client";
+import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {TdDialogService} from "@covalent/core/dialogs";
+import vitals from '../questionnaire/Questionnaire/vital-signs.json'
+import nominations from '../questionnaire/Questionnaire/prescription-nomination.json'
+import {ActivatedRoute, Router} from "@angular/router";
 
 declare var LForms: any;
 @Component({
@@ -10,31 +16,79 @@ declare var LForms: any;
   templateUrl: './questionnaire.component.html',
   styleUrls: ['./questionnaire.component.scss']
 })
-export class QuestionnaireComponent implements OnInit{
+export class QuestionnaireComponent implements AfterContentInit,OnInit {
   editorOptions = {theme: 'vs-dark', language: 'json'};
-  monacoEditor : any
-  @ViewChild('myFormContainer', { static: false }) mydiv: ElementRef | undefined;
+  monacoEditor: any
+  @ViewChild('myFormContainer', {static: false}) mydiv: ElementRef | undefined;
   data: any;
+  ctx: Client | undefined
   questionnaire: Questionnaire | undefined;
   questionnaires: Questionnaire[] = [];
+  form: any;
+  fileLoadedFile: EventEmitter<any> = new EventEmitter();
+
   constructor(private config: ConfigService,
               private http: HttpClient,
+              private sanitizer: DomSanitizer,
+              private _dialogService: TdDialogService,
+              private route: ActivatedRoute,
+              private router: Router,
   ) {
   }
-  ngOnInit(): void {
 
-    this.http.get('https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/events/FHIR/R4/Questionnaire').subscribe((result) => {
+  ngAfterContentInit(): void {
+
+
+  }
+
+  ngOnInit(): void {
+    this.ctx = client({
+      serverUrl: this.config.sdcServer
+    });
+    this.questionnaires.push(vitals as Questionnaire)
+    this.questionnaires.push(nominations as Questionnaire)
+
+
+    this.http.get(this.config.sdcServer + '/Questionnaire').subscribe((result) => {
 
           if (result !== undefined) {
             let bundle = result as Bundle
             if (bundle.entry !== undefined) {
-              for(let entry of bundle.entry) {
-                if (entry.resource !== undefined && entry.resource.resourceType ==='Questionnaire') {
+              for (let entry of bundle.entry) {
+                if (entry.resource !== undefined && entry.resource.resourceType === 'Questionnaire') {
                   this.questionnaires.push(entry.resource)
                 }
               }
             }
           }
+      this.route.queryParamMap.subscribe(params => {
+        const urlParam = params.get('url');
+
+        if (urlParam !== undefined && urlParam !== null) {
+          var found = false
+          for (let questionnaire of this.questionnaires) {
+            if (decodeURI(urlParam as string) === questionnaire.url) {
+              found = true
+              console.log(questionnaire)
+              this.data = JSON.stringify(questionnaire, undefined, 2)
+              this.applyQuestionnaire(questionnaire)
+            }
+          }
+          if (!found) {
+            this.http.get(this.config.sdcServer + '/Questionnaire?url=' + decodeURI(urlParam as string)).subscribe((result) => {
+                  if (result !== undefined) {
+                    let bundle = result as Bundle
+                    if (bundle.entry !== undefined && bundle.entry.length > 0) {
+                      if (this.data !== undefined) this.applyQuestionnaire(bundle.entry[0].resource as Questionnaire)
+                    }
+                  }
+                }
+            )
+          }
+        }
+      })
+
+
         }
     )
 
@@ -42,35 +96,95 @@ export class QuestionnaireComponent implements OnInit{
   }
 
   checkType = signal<any | null>(null);
-  markdown: string = "Copy FHIR Questionnaire json or XML here";
+  markdown: string = "A tool for creating Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/) and the address of this FHIR server is `" + this.config.sdcServer + "`. For detailed description on using Questionnairs see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/)";
+  file: any;
 
-  
 
   onInit(editor) {
     this.monacoEditor = editor
+
   }
 
   applyStatement($event: any) {
-    
+
   }
 
   applyQuestionnaire(questionnaire: Questionnaire) {
-    this.data = JSON.stringify(questionnaire,undefined,2)
-    const ctx = client({
-      serverUrl: this.config.validateUrl +'/R4'
-    });
-    LForms.Util.setFHIRContext(ctx)
+    this.data = JSON.stringify(questionnaire, undefined, 2)
+    this.refresh()
+  }
 
-    let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(questionnaire, "R4");
+  refresh() {
+    this.form = JSON.parse(this.data)
+
+    LForms.Util.setFHIRContext(this.ctx)
+
+    let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.form, "R4");
     var newFormData = (new LForms.LFormsData(formDef));
     try {
-     // formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', questionnaireResponse, newFormData, "R4");
+      // formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', questionnaireResponse, newFormData, "R4");
       LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
     } catch (e) {
       console.log(e)
       formDef = null;
     }
-
-
   }
+
+  downloadQuestionnaire(): SafeResourceUrl {
+    const data = JSON.stringify(this.form, undefined, 2);
+    const blob = new Blob([data], {
+      type: 'application/octet-stream'
+    });
+
+    return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+  }
+
+
+  downloadQuestionnaireResponse(): SafeResourceUrl | undefined {
+    let results =  LForms.Util.getFormFHIRData("QuestionnaireResponse", "R4", this.mydiv?.nativeElement)
+
+    if (results.resourceType === "QuestionnaireResponse") {
+      const data = JSON.stringify(results, undefined, 2);
+      const blob = new Blob([data], {
+        type: 'application/octet-stream'
+      });
+      return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+    }
+    return undefined
+  }
+
+  selectFileEvent(file: File | FileList) {
+    if (file instanceof File) {
+      const reader = new FileReader();
+      reader.readAsBinaryString(file);
+      this.fileLoadedFile.subscribe((data: any) => {
+            this.data = data
+          }
+      );
+      const me = this;
+      reader.onload = (event: Event) => {
+        if (reader.result instanceof ArrayBuffer) {
+          ///console.log('array buffer');
+
+          // @ts-ignore
+          me.fileLoaded.emit(String.fromCharCode.apply(null, reader.result));
+        } else {
+          // console.log('not a buffer');
+          if (reader.result !== null) me.fileLoadedFile.emit(reader.result);
+        }
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+        me._dialogService.openAlert({
+          title: 'Alert',
+          disableClose: true,
+          message:
+              'Failed to process file. Try smaller example?',
+        });
+      };
+    }
+  }
+
+
+
 }

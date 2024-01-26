@@ -38,6 +38,7 @@ import {A11yModule} from "@angular/cdk/a11y";
 import {MatRadioModule} from "@angular/material/radio";
 import {ApiDocumentationComponent} from "./api-documentation/api-documentation.component";
 import { QuestionnaireComponent } from './questionnaire/questionnaire.component';
+import {MatMenuModule} from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { QuestionnaireComponent } from './questionnaire/questionnaire.component'
         CovalentFileModule,
         MatExpansionModule,
         A11yModule,
-        MatRadioModule
+        MatRadioModule,
+        MatMenuModule
     ],
   providers: [],
   bootstrap: [AppComponent]

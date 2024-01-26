@@ -68,54 +68,66 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
       // NavigationError
       // RoutesRecognized
     });
+    this.capabilityStatements = []
+    this.capabilityStatements.push(pdqm as CapabilityStatement)
+    this.capabilityStatements.push(mhdDocumentResponder as CapabilityStatement)
+    this.capabilityStatements.push(england as CapabilityStatement)
+    this.capabilityStatements.push(mcsd as CapabilityStatement)
+    this.capabilityStatements.push(ukcoreClinical as CapabilityStatement)
+    this.capabilityStatements.push(ukcorePatient as CapabilityStatement)
+    this.oasOnly = false
+    this.http.get(this.config.validateUrl + '/CapabilityStatement').subscribe((result) => {
+
+          if (result !== undefined) {
+            let bundle = result as Bundle
+            if (bundle.entry !== undefined) {
+              for(let entry of bundle.entry) {
+                if (entry.resource !== undefined && entry.resource.resourceType ==='CapabilityStatement') {
+                  this.capabilityStatements.push(entry.resource)
+                }
+              }
+            }
+          }
+        }
+    )
+
     this.route.queryParamMap.subscribe(params => {
-      const urlParam = params.get('url');
+          const urlParam = params.get('url');
 
-      if (urlParam !== undefined && urlParam !== null) {
-        this.http.get(this.config.validateUrl + '/R4/CapabilityStatement?url='+decodeURI(urlParam as string)).subscribe((result) => {
+          if (urlParam !== undefined && urlParam !== null) {
 
-              if (result !== undefined) {
-                let bundle = result as Bundle
-                if (bundle.entry !== undefined && bundle.entry.length>0) {
-                  this.oasOnly = true
-                  if (this.data !== undefined) this.applyStatement(bundle.entry[0].resource as CapabilityStatement)
-                }
+            var found = false
+            for (let capabilityStatement of this.capabilityStatements) {
+              if (decodeURI(urlParam as string) === capabilityStatement.url) {
+                found = true
+                console.log(capabilityStatement)
+                this.capabilityStatement = capabilityStatement
+                this.data = JSON.stringify(capabilityStatement, undefined, 2)
+                this.applyStatement(capabilityStatement)
               }
             }
-        )
-      } else {
-        this.capabilityStatements = []
-        this.capabilityStatements.push(pdqm as CapabilityStatement)
-        this.capabilityStatements.push(mhdDocumentResponder as CapabilityStatement)
-        this.capabilityStatements.push(england as CapabilityStatement)
-        this.capabilityStatements.push(mcsd as CapabilityStatement)
-        this.capabilityStatements.push(ukcoreClinical as CapabilityStatement)
-        this.capabilityStatements.push(ukcorePatient as CapabilityStatement)
-
-        this.oasOnly = false
-        this.http.get(this.config.validateUrl + '/R4/CapabilityStatement').subscribe((result) => {
-
-              if (result !== undefined) {
-                let bundle = result as Bundle
-                if (bundle.entry !== undefined) {
-                   for(let entry of bundle.entry) {
-                     if (entry.resource !== undefined && entry.resource.resourceType ==='CapabilityStatement') {
-                       this.capabilityStatements.push(entry.resource)
-                     }
+            if (!found) {
+              this.http.get(this.config.validateUrl + '/CapabilityStatement?url=' + decodeURI(urlParam as string)).subscribe((result) => {
+                    console.log(result)
+                    if (result !== undefined) {
+                      let bundle = result as Bundle
+                      if (bundle.entry !== undefined && bundle.entry.length > 0) {
+                        this.capabilityStatement = bundle.entry[0].resource as CapabilityStatement
+                        this.data = JSON.stringify(bundle.entry[0].resource as CapabilityStatement, undefined, 2)
+                        if (this.data !== undefined) this.applyStatement(bundle.entry[0].resource as CapabilityStatement)
+                      }
+                    }
                   }
-                }
-              }
+              )
             }
-        )
-      }
-    });
+          }
+        }
+    )
   }
 
   ngAfterContentInit(): void {
-    if (!this.oasOnly) {
+    if (this.capabilityStatement === undefined) {
       this.applyStatement(pdqm as CapabilityStatement)
-    } else {
-
     }
   }
 
@@ -165,7 +177,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
       headers = headers.append('Content-Type', 'application/json');
     }
     headers = headers.append('Accept', 'application/json');
-    var url: string = this.config.validateUrl + '/R4/$convertOAS';
+    var url: string = this.config.validateUrl + '/$convertOAS';
 
 
     this.http.post(url, this.data,{ headers}).subscribe(result => {
@@ -223,7 +235,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     );
     headers = headers.append('Content-Type', 'application/json');
     headers = headers.append('Accept', 'application/json');
-    var url: string = this.config.validateUrl + '/R4/CapabilityStatement/$openapi';
+    var url: string = this.config.validateUrl + '/CapabilityStatement/$openapi';
 
     this.http.post(url, this.data,{ headers}).subscribe(result => {
           this.viewOAS(result)
@@ -243,7 +255,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     );
     headers = headers.append('Content-Type', 'application/xml');
     headers = headers.append('Accept', 'application/json');
-    var url: string = this.config.validateUrl + '/R4/$convert';
+    var url: string = this.config.validateUrl + '/$convert';
     this.http.post(url, this.data,{ headers}).subscribe(result => {
 
           if (result !== undefined) {
@@ -288,7 +300,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
       headers = headers.append('Content-Type', 'application/json');
     }
     headers = headers.append('Accept', 'application/json');
-    var url: string = this.config.validateUrl + '/R4/$convertOAStoFHIR';
+    var url: string = this.config.validateUrl + '/$convertOAStoFHIR';
     this.http.post(url, this.data,{ headers}).subscribe(result => {
 
           if (result !== undefined) {
