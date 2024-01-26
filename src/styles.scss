@@ -35,3 +35,21 @@ table {
 .example-headers-align .mat-mdc-form-field + .mat-mdc-form-field {
   margin-left: 8px;
 }
+
+.container {
+  height: auto;
+  overflow: hidden;
+  position: relative;
+}
+.div1{
+  width:50%;
+  margin-top: 16px;
+  margin-bottom:-16px;
+}
+.div2{
+  width:50%;
+  margin-top: 16px;
+  float: right;
+  overflow: hidden;
+
+}
