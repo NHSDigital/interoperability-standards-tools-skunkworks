@@ -26,6 +26,9 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   questionnaires: Questionnaire[] = [];
   form: any;
   fileLoadedFile: EventEmitter<any> = new EventEmitter();
+  markdown: string = "A tool for creating Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/) and the address of this FHIR server is `" + this.config.sdcServer + "`. For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/)";
+  file: any;
+
 
   constructor(private config: ConfigService,
               private http: HttpClient,
@@ -96,8 +99,6 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
 
   checkType = signal<any | null>(null);
-  markdown: string = "A tool for creating Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/) and the address of this FHIR server is `" + this.config.sdcServer + "`. For detailed description on using Questionnairs see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/)";
-  file: any;
 
 
   onInit(editor) {
