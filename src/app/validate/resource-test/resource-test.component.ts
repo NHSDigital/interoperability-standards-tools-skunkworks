@@ -5,7 +5,7 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
 import {TdDialogService} from "@covalent/core/dialogs";
-import {ConfigService} from "../../service/config.service";
+import {ConfigService} from "../../config.service";
 
 class Position {
   lineNumber: number = 1

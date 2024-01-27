@@ -69,7 +69,6 @@
       "resource": [
         {
           "type": "Patient",
-          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Patient",
           "interaction": [
             {
               "code": "read"

@@ -6,6 +6,7 @@ import {InformationComponent} from "./information/information.component";
 import {ApiDocumentationComponent} from "./api-documentation/api-documentation.component";
 import {QuestionnaireComponent} from "./questionnaire/questionnaire.component";
 import {DocumentComponent} from "./document/document.component";
+import {MarkdownComponent} from "./markdown/markdown.component";
 
 const routes: Routes = [ {
 
@@ -15,7 +16,8 @@ const routes: Routes = [ {
         { path: 'information', component: InformationComponent},
         { path: 'api', component: ApiDocumentationComponent},
          { path: 'questionnaire', component: QuestionnaireComponent},
-        { path: 'document', component: DocumentComponent}
+        { path: 'document', component: DocumentComponent},
+         { path: 'markdown', component: MarkdownComponent }
       ]
 }];
 

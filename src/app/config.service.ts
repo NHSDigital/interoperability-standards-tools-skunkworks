@@ -5,9 +5,8 @@ import {DatePipe} from "@angular/common";
   providedIn: 'root'
 })
 export class ConfigService {
-
   public validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR/R4'
-  // public validateUrl = 'http://localhost:9001/FHIR/R4'
+  //public validateUrl = 'http://localhost:9001/FHIR/R4'
 
   public sdcServer = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/events/FHIR/R4'
 

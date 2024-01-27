@@ -43,6 +43,8 @@ import { DocumentComponent } from './document/document.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import { InfoDiaglogComponent } from './info-diaglog/info-diaglog.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import { MarkdownComponent } from './markdown/markdown.component';
+import {CovalentFlavoredMarkdownModule} from "@covalent/flavored-markdown";
 
 @NgModule({
   declarations: [
@@ -54,7 +56,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     ApiDocumentationComponent,
     QuestionnaireComponent,
     DocumentComponent,
-    InfoDiaglogComponent
+    InfoDiaglogComponent,
+    MarkdownComponent
   ],
     imports: [
         BrowserModule,
@@ -92,7 +95,8 @@ import {MatDialogModule} from "@angular/material/dialog";
         MatRadioModule,
         MatMenuModule,
         MatSidenavModule,
-        MatDialogModule
+        MatDialogModule,
+        CovalentFlavoredMarkdownModule
     ],
   providers: [],
   bootstrap: [AppComponent]

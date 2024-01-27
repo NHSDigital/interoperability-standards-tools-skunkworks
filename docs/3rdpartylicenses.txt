@@ -149,6 +149,9 @@ MIT
 @covalent/dynamic-forms
 MIT
 
+@covalent/flavored-markdown
+MIT
+
 @covalent/highlight
 MIT
 

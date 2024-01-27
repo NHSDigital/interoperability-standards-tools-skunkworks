@@ -1,0 +1,563 @@
+{
+  "resourceType": "CapabilityStatement",
+  "status": "draft",
+  "publisher": "NHS Digital and INTEROPen",
+  "title": "Care Connect RESTful API",
+  "url": "https://fhir.nhs.uk/CapabilityStatement/INTEROPen-CareConnect-API-server",
+  "date":"2019-03-26",
+  "description": "### This is NOT an official R4 version of the Care Connect RESTful API. This is experimental only.\n\n For official guidance on interoperability Open API standards including *NHS Standard Contract requirements* see [https://www.england.nhs.uk/digitaltechnology/connecteddigitalsystems/interoperability/](https://www.england.nhs.uk/digitaltechnology/connecteddigitalsystems/interoperability/) \n\n The Care Connect RESTful APIs within this site have been developed collaboratively by NHS Digital and the INTEROPen community. These APIs aim to better support the delivery of care by opening up information and data held across different clinical care settings through the use of nationally defined INTEROPen FHIR® resources. \n\n The INTEROPen vision is to create a library of nationally defined HL7® FHIR® resources and interaction patterns that implementers can adopt to simplify integration and interoperability within UK health and social care.",
+  "kind": "requirements",
+  "fhirVersion": "4.0.1",
+  "format": [
+    "application/fhir+json",
+    "application/fhir+xml"
+  ],
+  "implementationGuide": [
+    "https://nhsconnect.github.io/CareConnectAPI/"
+  ],
+  "rest": [
+    {
+      "mode": "server",
+      "resource": [
+        {
+          "type": "AllergyIntolerance",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-AllergyIntolerance-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+            {
+              "code": "search-type"
+            }
+          ],
+          "searchParam": [
+            {
+              "name": "clinical-status",
+              "type": "token",
+              "documentation": "active | inactive | resolved"
+            },
+            {
+              "name": "date",
+              "type": "date",
+              "documentation": "Date record was believed accurate"
+            },
+            {
+              "name": "patient",
+              "type": "reference",
+              "documentation": "Who the sensitivity is for"
+            }
+          ]
+        },
+
+
+        {
+          "type": "CodeSystem",
+          "profile": "http://hl7.org/fhir/Profile/CodeSystem",
+          "interaction": [
+            {
+              "code": "read"
+            }
+          ]
+        },
+
+        {
+
+          "type": "Condition",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Condition-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+            {
+              "name": "recorded-date",
+              "type": "date",
+              "documentation": "Date record was believed accurate"
+            },
+            {
+              "name": "category",
+              "type": "token",
+              "documentation": "The category of the condition"
+            },
+            {
+              "name": "clinical-status",
+              "type": "token",
+              "documentation": "The clinical status of the condition"
+            },
+
+            {
+              "name": "patient",
+              "type": "reference",
+              "documentation": "Who has the condition?"
+            }
+          ]
+        },
+        {
+
+          "type": "DocumentReference",
+          "profile": "https://fhir.nhs.uk/STU3/StructureDefinition/GPConnect-DocumentReference-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "patient",
+              "type": "reference",
+              "documentation": "Who/what is the subject of the document"
+            },
+            {
+              "name": "period",
+              "type": "date",
+              "documentation": "Time of service that is being documented"
+            },
+            {
+              "name": "setting",
+              "type": "token",
+              "documentation": "Additional details about where the content was created (e.g. clinical specialty)"
+            },
+            {
+              "name": "type",
+              "type": "token",
+              "documentation": "Kind of document (LOINC if possible)"
+            }
+          ]
+        },
+        {
+
+          "type": "Encounter",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Encounter-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "date",
+              "type": "date",
+              "documentation": "A date within the period the Encounter lasted"
+            },
+
+            {
+              "name": "patient",
+              "type": "reference",
+              "documentation": "The patient ro group present at the encounter"
+            }
+          ]
+        },
+
+        {
+          "type": "Immunization",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Immunization-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "date",
+              "type": "date",
+              "documentation": "Vaccination  (non)-Administration Date"
+            },
+
+            {
+              "name": "patient",
+              "type": "reference",
+              "documentation": "The patient for the vaccination record"
+            },
+            {
+              "name": "status",
+              "type": "token",
+              "documentation": "Immunization event status"
+            }
+          ]
+        },
+
+        {
+
+          "type": "Location",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Location-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "address-postalcode",
+              "type": "string",
+              "documentation": "A postal code specified in an address"
+            },
+            {
+              "name": "identifier",
+              "type": "token",
+              "documentation": "An identifier for the location"
+            }
+          ]
+        },
+        {
+
+          "type": "Medication",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Medication-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "code",
+              "type": "token",
+              "documentation": "Codes that identify this medication"
+            }
+          ]
+        },
+
+        {
+
+          "type": "MedicationRequest",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-MedicationRequest-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "authoredon",
+              "type": "date",
+              "documentation": "Return prescriptions written on this date"
+            },
+
+
+            {
+              "name": "medication",
+              "type": "reference",
+              "documentation": "Return prescriptions of this medication reference"
+            },
+            {
+              "name": "patient",
+              "type": "reference",
+              "documentation": "Returns prescriptions for a specific patient"
+            },
+            {
+              "name": "status",
+              "type": "token",
+              "documentation": "Status of the prescription"
+            }
+          ]
+        },
+        {
+
+          "type": "MedicationStatement",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-MedicationStatement-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "effective",
+              "type": "date",
+              "documentation": "Date when patient was taking (or not taking) the medication"
+            },
+            {
+              "name": "patient",
+              "type": "reference",
+              "documentation": "Returns statements for a specific patient."
+            },
+            {
+              "name": "status",
+              "type": "token",
+              "documentation": "Return statements that match the given status"
+            }
+          ]
+        },
+
+        {
+
+          "type": "Observation",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Observation-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+            {
+              "code": "search-type"
+            }
+          ],
+
+
+          "searchParam": [
+
+            {
+              "name": "category",
+              "type": "token",
+              "documentation": "The classification of the type of observation"
+            },
+            {
+              "name": "code",
+              "type": "token",
+              "documentation": "The code of the observation type"
+            },
+            {
+              "name": "date",
+              "type": "date",
+              "documentation": "Obtained date/time. If the obtained element is a period, a date that falls in the period"
+            },
+
+            {
+              "name": "patient",
+              "type": "reference",
+              "documentation": "The subject that the observation is about (if patient)"
+            }
+          ]
+        },
+        {
+
+          "type": "Organization",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Organization-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "identifier",
+              "type": "token",
+              "documentation": "Any identifier for the organization (not the accreditation issuer's identifier)"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "documentation": "A portion of the organization's name or alias"
+            }
+          ]
+        },
+        {
+
+          "type": "Patient",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Patient-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "address-postalcode",
+              "type": "string",
+              "documentation": "A postalCode specified in an address"
+            },
+            {
+              "name": "birthdate",
+              "type": "date",
+              "documentation": "The patient's date of birth"
+            },
+            {
+              "name": "email",
+              "type": "token",
+              "documentation": "A value in an email contact"
+            },
+            {
+              "name": "family",
+              "type": "string",
+              "documentation": "A portion of the family name of the patient"
+            },
+            {
+              "name": "gender",
+              "type": "token",
+              "documentation": "Gender of the patient"
+            },
+            {
+              "name": "given",
+              "type": "string",
+              "documentation": "A portion of the given name of the patient"
+            },
+            {
+              "name": "identifier",
+              "type": "token",
+              "documentation": "A patient identifier"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "documentation": "A server defined search that may match any of the string fields in the HumanName, including family, give, prefix, suffix, suffix, and/or text"
+            },
+            {
+              "name": "phone",
+              "type": "token",
+              "documentation": "A value in a phone contact"
+            }
+          ]
+        },
+        {
+
+          "type": "Practitioner",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Practitioner-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "address-postalcode",
+              "type": "string",
+              "documentation": "A postalCode specified in an address"
+            },
+            {
+              "name": "identifier",
+              "type": "token",
+              "documentation": "A practitioner's Identifier"
+            }
+          ]
+        },
+        {
+
+          "type": "PractitionerRole",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-PractitionerRole-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "identifier",
+              "type": "token",
+              "documentation": "A practitioner's Identifier"
+            },
+            {
+              "name": "organization",
+              "type": "reference",
+              "documentation": "The identity of the organization the practitioner represents / acts on behalf of"
+            },
+            {
+              "name": "practitioner",
+              "type": "reference",
+              "documentation": "Practitioner that is able to provide the defined services for the organation"
+            }
+          ]
+        },
+        {
+
+          "type": "Procedure",
+          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Procedure-1",
+          "interaction": [
+            {
+              "code": "read"
+            },
+            {
+              "code": "search-type"
+            }
+          ],
+
+          "searchParam": [
+
+            {
+              "name": "date",
+              "type": "date",
+              "documentation": "Date/Period the procedure was performed"
+            },
+
+            {
+              "name": "patient",
+              "type": "reference",
+              "documentation": "Search by subject - a patient"
+            },
+            {
+              "name": "subject",
+              "type": "reference",
+              "documentation": "Search by subject"
+            }
+          ]
+        },
+
+        {
+
+          "type": "ValueSet",
+          "profile": "http://hl7.org/fhir/Profile/ValueSet",
+          "interaction": [
+            {
+              "code": "read"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

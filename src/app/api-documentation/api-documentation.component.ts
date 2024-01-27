@@ -1,21 +1,20 @@
 import {AfterContentInit, Component, ElementRef, EventEmitter, OnInit, ViewChild} from '@angular/core';
-import pdqm from './CapabilityStatement/pdqm-uk.json'
-import mhdDocumentResponder from './CapabilityStatement/mhd-documentresponder.uk.json'
-import mcsd from './CapabilityStatement/mcsd-selective-supplier-uk.json'
-import england from './CapabilityStatement/england-server.json'
-import ukcoreClinical from './CapabilityStatement/ukcore-fhir-access-clinical.json'
-import ukcorePatient from './CapabilityStatement/ukcore-fhir-access-patient.json'
+import pdqm from './CapabilityStatement/ihe-pdqm.json'
+import mhdDocumentResponder from './CapabilityStatement/ihe-mhd-documentresponder.uk.json'
+import mcsd from './CapabilityStatement/ihe-mcsd-selective-supplier-uk.json'
+import careconnectAPI from './CapabilityStatement/careconnect-api-server.json'
+import ukcoreClinical from './CapabilityStatement/hl7uk-ukcore-fhir-access-clinical.json'
+import ukcorePatient from './CapabilityStatement/hl7uk-ukcore-fhir-access-patient.json'
 import SwaggerUI from 'swagger-ui';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {TdDialogService} from "@covalent/core/dialogs";
-import {ConfigService} from "../service/config.service";
+import {ConfigService} from "../config.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {ActivatedRoute, NavigationStart, Router} from "@angular/router";
 import {
   Bundle,
   CapabilityStatement
 } from "fhir/r4";
-import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {InfoDiaglogComponent} from "../info-diaglog/info-diaglog.component";
 @Component({
@@ -42,7 +41,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
 
   @ViewChild('swagger',{static: true}) swagger: ElementRef | undefined
 
-  apiDocumentation = pdqm
+  apiDocumentation = careconnectAPI
   capabilityStatement: CapabilityStatement | undefined;
 
   fileUrl;
@@ -65,17 +64,14 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
         console.log('CHANGE')
         this.oasOnly = false
       }
-      // NavigationEnd
-      // NavigationCancel
-      // NavigationError
-      // RoutesRecognized
+
     });
     this.capabilityStatements = []
-    this.capabilityStatements.push(pdqm as CapabilityStatement)
     this.capabilityStatements.push(mhdDocumentResponder as CapabilityStatement)
-    this.capabilityStatements.push(england as CapabilityStatement)
-    this.capabilityStatements.push(mcsd as CapabilityStatement)
     this.capabilityStatements.push(ukcoreClinical as CapabilityStatement)
+    this.capabilityStatements.push(pdqm as CapabilityStatement)
+    this.capabilityStatements.push(mcsd as CapabilityStatement)
+    this.capabilityStatements.push(careconnectAPI as CapabilityStatement)
     this.capabilityStatements.push(ukcorePatient as CapabilityStatement)
     this.oasOnly = false
     this.http.get(this.config.validateUrl + '/CapabilityStatement').subscribe((result) => {
@@ -129,7 +125,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
 
   ngAfterContentInit(): void {
     if (this.capabilityStatement === undefined) {
-      this.applyStatement(pdqm as CapabilityStatement)
+      this.applyStatement(careconnectAPI as CapabilityStatement)
     }
   }
 

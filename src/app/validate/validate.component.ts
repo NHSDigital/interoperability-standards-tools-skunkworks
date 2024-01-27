@@ -6,7 +6,7 @@ import {CapabilityStatement, OperationOutcomeIssue, StructureDefinition} from "f
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
-import {ConfigService} from "../service/config.service";
+import {ConfigService} from "../config.service";
 
 
 class Resource {

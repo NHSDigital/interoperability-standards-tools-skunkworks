@@ -1,5 +1,5 @@
 import {AfterContentInit, Component, ElementRef, EventEmitter, OnInit, signal, ViewChild} from '@angular/core';
-import {ConfigService} from "../service/config.service";
+import {ConfigService} from "../config.service";
 import {client} from "fhirclient";
 import {Bundle, Questionnaire} from "fhir/r4";
 import {HttpClient} from "@angular/common/http";

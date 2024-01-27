@@ -5,6 +5,7 @@
 @import '../node_modules/@covalent/core/theming/all-theme';
 @import '../node_modules/@covalent/markdown/markdown-theme';
 @import '../node_modules/@covalent/highlight/highlight-theme';
+@import '../node_modules/@covalent/flavored-markdown/flavored-markdown-theme';
 
 // TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
 //  The following line adds:
@@ -39,13 +40,15 @@ $theme: mat.define-light-theme((
 ));
 
 @include mat.legacy-core-theme($theme);
-@include mat.all-legacy-component-themes($theme);
+@include mat.all-component-themes($theme);
 @include angular-material-theme($theme);
 @include covalent-theme($theme, $typography);
+
 
 // (optional) Additional themes
 @include covalent-markdown-theme($theme);
 @include covalent-highlight-theme($theme);
+@include covalent-flavored-markdown-theme($theme);
 @include covalent-utilities();
 
 // Include flex layout classes

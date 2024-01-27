@@ -10,7 +10,7 @@ import {
 } from "fhir/r4";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
-import {ConfigService} from "../service/config.service";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-information',

@@ -1,0 +1,18 @@
+<mat-drawer-container class="page-container" autosize>
+    <mat-drawer #drawer opened="true" class="page-sidenav" mode="side">
+        <div layout="row">
+            <button mat-raised-button (click)="copy()">
+                <mat-icon>{{icon}}</mat-icon>{{iconText}}
+            </button>
+        </div>
+        <div style="height: calc(100vh - 50px)" >
+            <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
+        </div>
+    </mat-drawer>
+
+    <div >
+        <td-flavored-markdown [content]="markdown"></td-flavored-markdown>
+       <!-- <td-markdown [content]="markdown"></td-markdown> -->
+    </div>
+
+</mat-drawer-container>
