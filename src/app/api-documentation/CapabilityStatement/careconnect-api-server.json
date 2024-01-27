@@ -406,46 +406,82 @@
           "searchParam": [
 
             {
+              "extension" : [{
+                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                "valueCode" : "MAY"
+              }],
               "name": "address-postalcode",
               "type": "string",
               "documentation": "A postalCode specified in an address"
             },
             {
+              "extension" : [{
+                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                "valueCode" : "SHALL"
+              }],
               "name": "birthdate",
               "type": "date",
               "documentation": "The patient's date of birth"
             },
             {
+              "extension" : [{
+                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                "valueCode" : "MAY"
+              }],
               "name": "email",
               "type": "token",
               "documentation": "A value in an email contact"
             },
             {
+              "extension" : [{
+                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                "valueCode" : "SHALL"
+              }],
               "name": "family",
               "type": "string",
               "documentation": "A portion of the family name of the patient"
             },
             {
+              "extension" : [{
+                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                "valueCode" : "SHALL"
+              }],
               "name": "gender",
               "type": "token",
               "documentation": "Gender of the patient"
             },
             {
+              "extension" : [{
+                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                "valueCode" : "SHALL"
+              }],
               "name": "given",
               "type": "string",
               "documentation": "A portion of the given name of the patient"
             },
             {
+              "extension" : [{
+                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                "valueCode" : "SHALL"
+              }],
               "name": "identifier",
               "type": "token",
               "documentation": "A patient identifier"
             },
             {
+              "extension" : [{
+                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                "valueCode" : "SHALL"
+              }],
               "name": "name",
               "type": "string",
               "documentation": "A server defined search that may match any of the string fields in the HumanName, including family, give, prefix, suffix, suffix, and/or text"
             },
             {
+              "extension" : [{
+                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                "valueCode" : "MAY"
+              }],
               "name": "phone",
               "type": "token",
               "documentation": "A value in a phone contact"
