@@ -4,6 +4,23 @@
     height: calc(100vh - 100px);
   }
 }
+
+.page-container {
+  width: 100%;
+  height: 100%;
+}
+
+.page-sidenav {
+  padding: 5px;
+  width: 50%
+}
+.mat-card.scrollable-content {
+  overflow-y: auto;
+}
+.fullscreen {
+  height: 100%;
+}
+
 .example-full {
   width: 100%;
 }

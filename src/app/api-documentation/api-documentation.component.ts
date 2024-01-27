@@ -13,12 +13,11 @@ import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {ActivatedRoute, NavigationStart, Router} from "@angular/router";
 import {
   Bundle,
-  CapabilityStatement,
-  CapabilityStatementMessagingSupportedMessage,
-  CapabilityStatementRestResource,
-  ImplementationGuide
+  CapabilityStatement
 } from "fhir/r4";
 import {MatTableDataSource} from "@angular/material/table";
+import {MatDialog} from "@angular/material/dialog";
+import {InfoDiaglogComponent} from "../info-diaglog/info-diaglog.component";
 @Component({
   selector: 'app-api-documentation',
   templateUrl: './api-documentation.component.html',
@@ -36,7 +35,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
   editorOptions = {theme: 'vs-dark', language: 'json'};
   fileLoadedFile: EventEmitter<any> = new EventEmitter();
 
-  markdown = `This page is only designed for CapabilityStatements which include [FHIR Interactions](https://hl7.org/fhir/R4/exchange-module.html) or Open API Specification (OAS). \nEither paste in the JSON/XML/YAML resource or select a starter from the list below.`
+  markdown = `This page is only designed for CapabilityStatements which include [FHIR Interactions](https://hl7.org/fhir/R4/exchange-module.html) or Open API Specification (OAS). \nEither paste in the JSON/XML/YAML resource or select a starter from the list below. \n\n Several of the CapabilityStatements listed here are from 'Enterprise Integrations', see menu for links.`
   onInit(editor) {
     this.monacoEditor = editor
   }
@@ -55,7 +54,8 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
       private router: Router,
       private config: ConfigService,
       private _dialogService: TdDialogService,
-      private sanitizer: DomSanitizer
+      private sanitizer: DomSanitizer,
+      public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -362,4 +362,11 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     }
   }
 
+  openInfo() {
+    let dialogRef = this.dialog.open(InfoDiaglogComponent, {
+      width: '400px',
+      data:  this.markdown
+    });
+
+  }
 }

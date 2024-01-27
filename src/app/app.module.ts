@@ -39,6 +39,10 @@ import {MatRadioModule} from "@angular/material/radio";
 import {ApiDocumentationComponent} from "./api-documentation/api-documentation.component";
 import { QuestionnaireComponent } from './questionnaire/questionnaire.component';
 import {MatMenuModule} from "@angular/material/menu";
+import { DocumentComponent } from './document/document.component';
+import {MatSidenavModule} from "@angular/material/sidenav";
+import { InfoDiaglogComponent } from './info-diaglog/info-diaglog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -48,7 +52,9 @@ import {MatMenuModule} from "@angular/material/menu";
     InformationComponent,
     ResourceTestComponent,
     ApiDocumentationComponent,
-    QuestionnaireComponent
+    QuestionnaireComponent,
+    DocumentComponent,
+    InfoDiaglogComponent
   ],
     imports: [
         BrowserModule,
@@ -84,7 +90,9 @@ import {MatMenuModule} from "@angular/material/menu";
         MatExpansionModule,
         A11yModule,
         MatRadioModule,
-        MatMenuModule
+        MatMenuModule,
+        MatSidenavModule,
+        MatDialogModule
     ],
   providers: [],
   bootstrap: [AppComponent]

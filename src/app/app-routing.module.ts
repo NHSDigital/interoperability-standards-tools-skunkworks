@@ -5,6 +5,7 @@ import {TestingMainComponent} from "./testing-main/testing-main.component";
 import {InformationComponent} from "./information/information.component";
 import {ApiDocumentationComponent} from "./api-documentation/api-documentation.component";
 import {QuestionnaireComponent} from "./questionnaire/questionnaire.component";
+import {DocumentComponent} from "./document/document.component";
 
 const routes: Routes = [ {
 
@@ -13,7 +14,8 @@ const routes: Routes = [ {
         { path: '', component: ValidateComponent},
         { path: 'information', component: InformationComponent},
         { path: 'api', component: ApiDocumentationComponent},
-         { path: 'questionnaire', component: QuestionnaireComponent}
+         { path: 'questionnaire', component: QuestionnaireComponent},
+        { path: 'document', component: DocumentComponent}
       ]
 }];
 

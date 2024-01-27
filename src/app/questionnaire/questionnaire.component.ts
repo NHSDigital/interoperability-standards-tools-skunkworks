@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, ElementRef, EventEmitter, OnInit, signal, ViewChild} from '@angular/core';
 import {ConfigService} from "../service/config.service";
 import {client} from "fhirclient";
-import {Bundle, CapabilityStatement, Questionnaire} from "fhir/r4";
+import {Bundle, Questionnaire} from "fhir/r4";
 import {HttpClient} from "@angular/common/http";
 import Client from "fhirclient/lib/Client";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
@@ -9,6 +9,8 @@ import {TdDialogService} from "@covalent/core/dialogs";
 import vitals from '../questionnaire/Questionnaire/vital-signs.json'
 import nominations from '../questionnaire/Questionnaire/prescription-nomination.json'
 import {ActivatedRoute, Router} from "@angular/router";
+import {InfoDiaglogComponent} from "../info-diaglog/info-diaglog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 declare var LForms: any;
 @Component({
@@ -35,7 +37,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
               private sanitizer: DomSanitizer,
               private _dialogService: TdDialogService,
               private route: ActivatedRoute,
-              private router: Router,
+              public dialog: MatDialog
   ) {
   }
 
@@ -186,6 +188,12 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     }
   }
 
+  openInfo() {
+    let dialogRef = this.dialog.open(InfoDiaglogComponent, {
+      width: '400px',
+      data:  this.markdown
+    });
 
+  }
 
 }
