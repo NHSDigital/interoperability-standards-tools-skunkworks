@@ -5,7 +5,7 @@
   "title": "Care Connect RESTful API",
   "url": "https://fhir.nhs.uk/CapabilityStatement/INTEROPen-CareConnect-API-server",
   "date": "2019-03-26",
-  "description": "### This is NOT an official R4 version of the Care Connect RESTful API. This is experimental only.\n\n For official guidance on interoperability Open API standards including *NHS Standard Contract requirements* see [https://www.england.nhs.uk/digitaltechnology/connecteddigitalsystems/interoperability/](https://www.england.nhs.uk/digitaltechnology/connecteddigitalsystems/interoperability/) \n\n The Care Connect RESTful APIs within this site have been developed collaboratively by NHS Digital and the INTEROPen community. These APIs aim to better support the delivery of care by opening up information and data held across different clinical care settings through the use of nationally defined INTEROPen FHIR® resources. \n\n The INTEROPen vision is to create a library of nationally defined HL7® FHIR® resources and interaction patterns that implementers can adopt to simplify integration and interoperability within UK health and social care.",
+  "description": "*This is NOT an official R4 version of the Care Connect RESTful API. This is an experimental FHIR R4 conversion of the current [INTEROPen Care Connect RESTful API](https://nhsconnect.github.io/CareConnectAPI/).* \n\n For official guidance on interoperability Open API standards including *NHS Standard Contract requirements* see [https://www.england.nhs.uk/digitaltechnology/connecteddigitalsystems/interoperability/](https://www.england.nhs.uk/digitaltechnology/connecteddigitalsystems/interoperability/) \n\n The Care Connect RESTful APIs within this site have been developed collaboratively by NHS Digital and the INTEROPen community. These APIs aim to better support the delivery of care by opening up information and data held across different clinical care settings through the use of nationally defined INTEROPen FHIR® resources. \n\n The INTEROPen vision is to create a library of nationally defined HL7® FHIR® resources and interaction patterns that implementers can adopt to simplify integration and interoperability within UK health and social care.",
   "kind": "requirements",
   "fhirVersion": "4.0.1",
   "format": [
@@ -101,7 +101,7 @@
                 }
               ],
               "code": "read",
-              "documentation" : "The Binary will be returned in a native format (i.e. not contained within a FHIR resource) if no MIME type is not specified, an appropriate MIME type is included or a wild card (*/*) is included within the request header.\n\nCommon health related MIME types are listed below:\n\n| Image/Document Type |\tMIME Type |\n|------|-------|\n| html |text/html |\n| pdf | application/pdf |\n|dicom | application/dicom |\n|png | image/png |\n|jpg | image/jpeg |\n|FHIR Documents|\tapplication/xml+fhir or application/json+fhir |\n\n Although this page is describing a FHIR Binary endpoint, a Binary resource can be retrieved from any url. If a FHIR Binary endpoint is used then the resource SHALL be available as both a Binary resource and as a standard URL resource. The default behaviour is that of a URL resource\n\n For Binary resources, the result of a query are different when compared to the rest of FHIR. There are specific ways to indicate the format of the response expected by the server. This is via the client specifying the format of the response either via a _format override on the query parameter of by using a “content-type” HTTP header in the request."
+              "documentation": "The Binary will be returned in a native format (i.e. not contained within a FHIR resource) if no MIME type is not specified, an appropriate MIME type is included or a wild card (*/*) is included within the request header.\n\nCommon health related MIME types are listed below:\n\n| Image/Document Type |\tMIME Type |\n|------|-------|\n| html |text/html |\n| pdf | application/pdf |\n|dicom | application/dicom |\n|png | image/png |\n|jpg | image/jpeg |\n|FHIR Documents|\tapplication/xml+fhir or application/json+fhir |\n\n Although this page is describing a FHIR Binary endpoint, a Binary resource can be retrieved from any url. If a FHIR Binary endpoint is used then the resource SHALL be available as both a Binary resource and as a standard URL resource. The default behaviour is that of a URL resource\n\n For Binary resources, the result of a query are different when compared to the rest of FHIR. There are specific ways to indicate the format of the response expected by the server. This is via the client specifying the format of the response either via a _format override on the query parameter of by using a “content-type” HTTP header in the request."
             }
           ]
         },
@@ -223,8 +223,7 @@
               "name": "patient",
               "type": "reference",
               "documentation": "Who has the condition?"
-            }
-          ,
+            },
             {
               "extension": [
                 {
@@ -812,12 +811,12 @@
               ],
               "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
             }
-            ],
+          ],
           "type": "Observation",
           "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Observation",
           "interaction": [
             {
-                "extension": [
+              "extension": [
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
                   "valueCode": "SHOULD"
@@ -826,7 +825,7 @@
               "code": "read"
             },
             {
-                "extension": [
+              "extension": [
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
                   "valueCode": "SHOULD"
@@ -837,7 +836,7 @@
           ],
           "searchParam": [
             {
-                "extension": [
+              "extension": [
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
                   "valueCode": "SHOULD"
@@ -848,7 +847,7 @@
               "documentation": "The classification of the type of observation"
             },
             {
-                "extension": [
+              "extension": [
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
                   "valueCode": "SHOULD"
@@ -859,7 +858,7 @@
               "documentation": "The code of the observation type"
             },
             {
-                "extension": [
+              "extension": [
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
                   "valueCode": "SHALL"
@@ -870,7 +869,7 @@
               "documentation": "Obtained date/time. If the obtained element is a period, a date that falls in the period"
             },
             {
-                "extension": [
+              "extension": [
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
                   "valueCode": "SHALL"

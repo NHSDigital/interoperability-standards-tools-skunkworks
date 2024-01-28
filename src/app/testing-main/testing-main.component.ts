@@ -34,13 +34,13 @@ export class TestingMainComponent {
       newTab: true
     },
     {
-      text: 'Clinical Coding'
-    },
-    {
       text:
           'NHS Data Model and Dictionary',
       link: 'https://www.datadictionary.nhs.uk/',
       newTab: true
+    },
+    {
+      text: 'Clinical Coding'
     },
     {
       text:
@@ -66,15 +66,15 @@ export class TestingMainComponent {
       text: 'Implementation'
     },
     {
-      text: 'IHE General',
-      link: 'https://wiki.ihe.net/index.php/Category:FHIR',
+      text: 'IHE Resources',
+      link: 'https://www.ihe.net/resources/profiles/',
       newTab: true
     },
     {
       text: 'Administration',
       children: [
         {
-          text: 'IHE Patient Demographics Query (PDQm)',
+          text: 'IHE Patient Demographics Query (PDQm) (FHIR R4)',
           link: 'https://profiles.ihe.net/ITI/PDQm',
           newTab: true
         }
@@ -84,7 +84,7 @@ export class TestingMainComponent {
       text: 'Directories',
       children: [
         {
-          text: 'IHE Care Services Discovery (mCSD)',
+          text: 'IHE Care Services Discovery (mCSD) (FHIR R4)',
           link: 'https://profiles.ihe.net/ITI/mCSD',
           newTab: true
         }
@@ -94,12 +94,12 @@ export class TestingMainComponent {
       text: 'Documents (Sharing)',
       children: [
         {
-          text: 'IHE Mobile access to Health Documents (MHD)',
+          text: 'IHE Mobile access to Health Documents (MHD) (FHIR R4)',
           link: 'https://profiles.ihe.net/ITI/MHD',
           newTab: true
         },
         {
-          text: 'IHE Mobile Health Document Sharing',
+          text: 'IHE Mobile Health Document Sharing (MHDS) (FHIR R4)',
           link: 'https://profiles.ihe.net/ITI/MHDS',
           newTab: true
         },
@@ -114,17 +114,12 @@ export class TestingMainComponent {
       text: 'Data',
       children: [
         {
-          text: 'HL7 UK - UK Core Access',
-          link: 'https://build.fhir.org/ig/HL7-UK/UK-Core-Access',
-          newTab: true
-        },
-        {
-          text: 'IHE Query for Existing Data for Mobile (QEDm)',
+          text: 'IHE Query for Existing Data for Mobile (QEDm) (FHIR R4)',
           link: 'https://build.fhir.org/ig/IHE/QEDm',
           newTab: true
         },
         {
-          text: 'HL7 Structured Data Capture',
+          text: 'HL7 Structured Data Capture (FHIR R4)',
           link: 'https://build.fhir.org/ig/HL7/sdc/',
           newTab: true
         }
@@ -170,20 +165,27 @@ export class TestingMainComponent {
       text: 'Conformance'
     },
     {
-      text: 'General',
-      children:[
-
-        {
-          text: 'HL7 UK Core',
-          link: 'https://simplifier.net/guide/ukcoreversionhistory',
-          newTab: true
-        },
-        {
-          text: 'NHS England',
-          link: 'https://simplifier.net/guide/nhs-england-implementation-guide-version-history',
-          newTab: true
-        }
-      ]
+      text: 'HL7 UK Core',
+      link: 'https://simplifier.net/guide/ukcoreversionhistory',
+      newTab: true
+    },
+    {
+      text: 'NHS England',
+      link: 'https://simplifier.net/guide/nhs-england-implementation-guide-version-history',
+      newTab: true
+    },
+    {
+      text: 'Implementation'
+    },
+    {
+      text: 'HL7 UK Core Access (FHIR R4)',
+      link: 'https://build.fhir.org/ig/HL7-UK/UK-Core-Access',
+      newTab: true
+    },
+    {
+      text: 'INTEROPen RESTful API (FHIR STU3)',
+      link: 'https://nhsconnect.github.io/CareConnectAPI/',
+      newTab: true
     },
     {
       text:
@@ -235,14 +237,6 @@ export class TestingMainComponent {
         }
       ]
     },
-    {
-      text: 'Conformance and Implementation'
-    },
-    {
-      text: 'Data Standards Wales',
-      link: 'https://simplifier.net/guide/fhir-standards-wales-implementation-guide',
-      newTab: true
-    }
   ];
 
   /*
@@ -258,6 +252,26 @@ export class TestingMainComponent {
       text: 'RESTful API',
       link: 'https://hl7.org/fhir/R4/http.html',
       newTab: true
+    },
+    {
+      text: 'Code Libraries',
+      link: 'https://confluence.hl7.org/display/FHIR/Open+Source+Implementations',
+      newTab: true
+    },
+    {
+      text: 'Testing',
+      children: [
+        {
+          text: 'Validating FHIR',
+          link: 'https://hl7.org/fhir/R4/validation.html',
+          newTab: true
+        },
+        {
+          text: 'Testing FHIR',
+          link: 'https://hl7.org/fhir/R4/testing.html',
+          newTab: true
+        },
+      ]
     },
     {
       text: 'Workflow',
