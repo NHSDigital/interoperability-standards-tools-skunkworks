@@ -300,7 +300,7 @@
               "extension": [
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                  "valueCode": "SHOULD"
+                  "valueCode": "MAY"
                 }
               ],
               "name": "patient:identifier",
@@ -387,6 +387,17 @@
               "name": "patient",
               "type": "reference",
               "documentation": "The patient ro group present at the encounter"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
+              "name": "patient:identifier",
+              "type": "token",
+              "documentation": "The patient ro group present at the encounter"
             }
           ]
         },
@@ -434,6 +445,17 @@
               ],
               "name": "patient",
               "type": "reference",
+              "documentation": "The patient for the vaccination record"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
+              "name": "patient:identifier",
+              "type": "token",
               "documentation": "The patient for the vaccination record"
             },
             {
@@ -614,6 +636,17 @@
               "extension": [
                 {
                   "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
+              "name": "patient:identifier",
+              "type": "token",
+              "documentation": "Returns prescriptions for a specific patient"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
                   "valueCode": "SHOULD"
                 }
               ],
@@ -667,6 +700,17 @@
               ],
               "name": "patient",
               "type": "reference",
+              "documentation": "Returns statements for a specific patient."
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
+              "name": "patient:identifier",
+              "type": "token",
               "documentation": "Returns statements for a specific patient."
             },
             {
@@ -1256,6 +1300,17 @@
               "name": "date",
               "type": "date",
               "documentation": "Date/Period the procedure was performed"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
+              "name": "patient:identifier",
+              "type": "token",
+              "documentation": "Search by subject - a patient"
             },
             {
               "extension": [
