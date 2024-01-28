@@ -9,15 +9,15 @@ import {IMenuItem, IMenuTrigger} from "@covalent/core/dynamic-menu";
 export class TestingMainComponent {
   triggerDataStandards: IMenuTrigger = {
     icon: 'table',
-    text: 'Data Standards'
+    text: 'Data'
   };
   triggerEnterprise: IMenuTrigger = {
     icon: 'domain',
-    text: 'Enterprise Integration'
+    text: 'Enterprise'
   };
   triggerInteroperabilty: IMenuTrigger = {
     icon: 'local_fire_department',
-    text: 'Interoperability'
+    text: 'Interop'
   };
 
   triggerDeveloper: IMenuTrigger = {
