@@ -4,7 +4,7 @@
   "publisher": "NHS Digital and INTEROPen",
   "title": "Care Connect RESTful API",
   "url": "https://fhir.nhs.uk/CapabilityStatement/INTEROPen-CareConnect-API-server",
-  "date":"2019-03-26",
+  "date": "2019-03-26",
   "description": "### This is NOT an official R4 version of the Care Connect RESTful API. This is experimental only.\n\n For official guidance on interoperability Open API standards including *NHS Standard Contract requirements* see [https://www.england.nhs.uk/digitaltechnology/connecteddigitalsystems/interoperability/](https://www.england.nhs.uk/digitaltechnology/connecteddigitalsystems/interoperability/) \n\n The Care Connect RESTful APIs within this site have been developed collaboratively by NHS Digital and the INTEROPen community. These APIs aim to better support the delivery of care by opening up information and data held across different clinical care settings through the use of nationally defined INTEROPen FHIR® resources. \n\n The INTEROPen vision is to create a library of nationally defined HL7® FHIR® resources and interaction patterns that implementers can adopt to simplify integration and interoperability within UK health and social care.",
   "kind": "requirements",
   "fhirVersion": "4.0.1",
@@ -21,114 +21,321 @@
       "resource": [
         {
           "type": "AllergyIntolerance",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-AllergyIntolerance-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-AllergyIntolerance",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
           "searchParam": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "clinical-status",
               "type": "token",
               "documentation": "active | inactive | resolved"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "date",
               "type": "date",
               "documentation": "Date record was believed accurate"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "patient",
               "type": "reference",
+              "documentation": "Who the sensitivity is for"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
+              "name": "patient:identifier",
+              "type": "token",
               "documentation": "Who the sensitivity is for"
             }
           ]
         },
-
-
+        {
+          "type": "Binary",
+          "profile": "http://hl7.org/fhir/Profile/Binary",
+          "interaction": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
+              "code": "read",
+              "documentation" : "The Binary will be returned in a native format (i.e. not contained within a FHIR resource) if no MIME type is not specified, an appropriate MIME type is included or a wild card (*/*) is included within the request header.\n\nCommon health related MIME types are listed below:\n\n| Image/Document Type |\tMIME Type |\n|------|-------|\n| html |text/html |\n| pdf | application/pdf |\n|dicom | application/dicom |\n|png | image/png |\n|jpg | image/jpeg |\n|FHIR Documents|\tapplication/xml+fhir or application/json+fhir |\n\n Although this page is describing a FHIR Binary endpoint, a Binary resource can be retrieved from any url. If a FHIR Binary endpoint is used then the resource SHALL be available as both a Binary resource and as a standard URL resource. The default behaviour is that of a URL resource\n\n For Binary resources, the result of a query are different when compared to the rest of FHIR. There are specific ways to indicate the format of the response expected by the server. This is via the client specifying the format of the response either via a _format override on the query parameter of by using a “content-type” HTTP header in the request."
+            }
+          ]
+        },
         {
           "type": "CodeSystem",
           "profile": "http://hl7.org/fhir/Profile/CodeSystem",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             }
           ]
         },
-
         {
-
+          "extension": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "patient"
+                },
+                {
+                  "url": "required",
+                  "valueString": "clinical-status"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "patient"
+                },
+                {
+                  "url": "required",
+                  "valueString": "category"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            }
+          ],
           "type": "Condition",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Condition-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Condition",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "recorded-date",
               "type": "date",
               "documentation": "Date record was believed accurate"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "category",
               "type": "token",
               "documentation": "The category of the condition"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "clinical-status",
               "type": "token",
               "documentation": "The clinical status of the condition"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "patient",
               "type": "reference",
+              "documentation": "Who has the condition?"
+            }
+          ,
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
+              "name": "patient:identifier",
+              "type": "token",
               "documentation": "Who has the condition?"
             }
           ]
         },
         {
-
+          "extension": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "patient"
+                },
+                {
+                  "url": "required",
+                  "valueString": "type"
+                },
+                {
+                  "url": "required",
+                  "valueString": "period"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            }
+          ],
           "type": "DocumentReference",
-          "profile": "https://fhir.nhs.uk/STU3/StructureDefinition/GPConnect-DocumentReference-1",
+          "profile": "https://fhir.nhs.uk/STU3/StructureDefinition/GPConnect-DocumentReference",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "patient",
               "type": "reference",
               "documentation": "Who/what is the subject of the document"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
+              "name": "patient:identifier",
+              "type": "token",
+              "documentation": "Who/what is the subject of the document"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "period",
               "type": "date",
               "documentation": "Time of service that is being documented"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "setting",
               "type": "token",
               "documentation": "Additional details about where the content was created (e.g. clinical specialty)"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "type",
               "type": "token",
               "documentation": "Kind of document (LOINC if possible)"
@@ -136,90 +343,154 @@
           ]
         },
         {
-
           "type": "Encounter",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Encounter-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Encounter",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "date",
               "type": "date",
               "documentation": "A date within the period the Encounter lasted"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "patient",
               "type": "reference",
               "documentation": "The patient ro group present at the encounter"
             }
           ]
         },
-
         {
           "type": "Immunization",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Immunization-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Immunization",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "date",
               "type": "date",
               "documentation": "Vaccination  (non)-Administration Date"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "patient",
               "type": "reference",
               "documentation": "The patient for the vaccination record"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "status",
               "type": "token",
               "documentation": "Immunization event status"
             }
           ]
         },
-
         {
-
           "type": "Location",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Location-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Location",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "address-postalcode",
               "type": "string",
               "documentation": "A postal code specified in an address"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "identifier",
               "type": "token",
               "documentation": "An identifier for the location"
@@ -227,62 +498,125 @@
           ]
         },
         {
-
           "type": "Medication",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Medication-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Medication",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "code",
               "type": "token",
               "documentation": "Codes that identify this medication"
             }
           ]
         },
-
         {
-
+          "extension": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "patient"
+                },
+                {
+                  "url": "required",
+                  "valueString": "code"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            }
+          ],
           "type": "MedicationRequest",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-MedicationRequest-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationRequest",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "authoredon",
               "type": "date",
               "documentation": "Return prescriptions written on this date"
             },
-
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "medication",
               "type": "reference",
               "documentation": "Return prescriptions of this medication reference"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "patient",
               "type": "reference",
               "documentation": "Returns prescriptions for a specific patient"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "status",
               "type": "token",
               "documentation": "Status of the prescription"
@@ -290,99 +624,273 @@
           ]
         },
         {
-
           "type": "MedicationStatement",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-MedicationStatement-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-MedicationStatement",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "effective",
               "type": "date",
               "documentation": "Date when patient was taking (or not taking) the medication"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "patient",
               "type": "reference",
               "documentation": "Returns statements for a specific patient."
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "status",
               "type": "token",
               "documentation": "Return statements that match the given status"
             }
           ]
         },
-
         {
-
+          "extension": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "patient"
+                },
+                {
+                  "url": "required",
+                  "valueString": "category"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "patient"
+                },
+                {
+                  "url": "required",
+                  "valueString": "category"
+                },
+                {
+                  "url": "required",
+                  "valueString": "date"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "patient"
+                },
+                {
+                  "url": "required",
+                  "valueString": "category"
+                },
+                {
+                  "url": "required",
+                  "valueString": "code"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "patient"
+                },
+                {
+                  "url": "required",
+                  "valueString": "category"
+                },
+                {
+                  "url": "required",
+                  "valueString": "date"
+                },
+                {
+                  "url": "required",
+                  "valueString": "code"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            }
+            ],
           "type": "Observation",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Observation-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Observation",
           "interaction": [
             {
+                "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
             {
+                "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
-
           "searchParam": [
-
             {
+                "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "category",
               "type": "token",
               "documentation": "The classification of the type of observation"
             },
             {
+                "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "code",
               "type": "token",
               "documentation": "The code of the observation type"
             },
             {
+                "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "date",
               "type": "date",
               "documentation": "Obtained date/time. If the obtained element is a period, a date that falls in the period"
             },
-
             {
+                "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "patient",
               "type": "reference",
+              "documentation": "The subject that the observation is about (if patient)"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
+              "name": "patient:identifier",
+              "type": "token",
               "documentation": "The subject that the observation is about (if patient)"
             }
           ]
         },
         {
-
           "type": "Organization",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Organization-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Organization",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "identifier",
               "type": "token",
               "documentation": "Any identifier for the organization (not the accreditation issuer's identifier)"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "name",
               "type": "string",
               "documentation": "A portion of the organization's name or alias"
@@ -390,98 +898,198 @@
           ]
         },
         {
-
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+              "valueCode": "SHALL"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "name"
+                },
+                {
+                  "url": "required",
+                  "valueString": "gender"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "name"
+                },
+                {
+                  "url": "required",
+                  "valueString": "birthdate"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "family"
+                },
+                {
+                  "url": "required",
+                  "valueString": "gender"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            },
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "given"
+                },
+                {
+                  "url": "required",
+                  "valueString": "gender"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            }
+          ],
           "type": "Patient",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Patient-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Patient",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
-              "extension" : [{
-                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                "valueCode" : "MAY"
-              }],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "address-postalcode",
               "type": "string",
               "documentation": "A postalCode specified in an address"
             },
             {
-              "extension" : [{
-                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                "valueCode" : "SHALL"
-              }],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "birthdate",
               "type": "date",
               "documentation": "The patient's date of birth"
             },
             {
-              "extension" : [{
-                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                "valueCode" : "MAY"
-              }],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "email",
               "type": "token",
               "documentation": "A value in an email contact"
             },
             {
-              "extension" : [{
-                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                "valueCode" : "SHALL"
-              }],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "family",
               "type": "string",
               "documentation": "A portion of the family name of the patient"
             },
             {
-              "extension" : [{
-                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                "valueCode" : "SHALL"
-              }],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "gender",
               "type": "token",
               "documentation": "Gender of the patient"
             },
             {
-              "extension" : [{
-                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                "valueCode" : "SHALL"
-              }],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "given",
               "type": "string",
               "documentation": "A portion of the given name of the patient"
             },
             {
-              "extension" : [{
-                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                "valueCode" : "SHALL"
-              }],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "identifier",
               "type": "token",
               "documentation": "A patient identifier"
             },
             {
-              "extension" : [{
-                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                "valueCode" : "SHALL"
-              }],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "name",
               "type": "string",
               "documentation": "A server defined search that may match any of the string fields in the HumanName, including family, give, prefix, suffix, suffix, and/or text"
             },
             {
-              "extension" : [{
-                "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
-                "valueCode" : "MAY"
-              }],
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "phone",
               "type": "token",
               "documentation": "A value in a phone contact"
@@ -489,27 +1097,47 @@
           ]
         },
         {
-
           "type": "Practitioner",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Practitioner-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Practitioner",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "address-postalcode",
               "type": "string",
               "documentation": "A postalCode specified in an address"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "identifier",
               "type": "token",
               "documentation": "A practitioner's Identifier"
@@ -517,32 +1145,58 @@
           ]
         },
         {
-
           "type": "PractitionerRole",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-PractitionerRole-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-PractitionerRole",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "name": "identifier",
               "type": "token",
               "documentation": "A practitioner's Identifier"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "organization",
               "type": "reference",
               "documentation": "The identity of the organization the practitioner represents / acts on behalf of"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "practitioner",
               "type": "reference",
               "documentation": "Practitioner that is able to provide the defined services for the organation"
@@ -550,45 +1204,94 @@
           ]
         },
         {
-
+          "extension": [
+            {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                },
+                {
+                  "url": "required",
+                  "valueString": "patient"
+                },
+                {
+                  "url": "required",
+                  "valueString": "date"
+                }
+              ],
+              "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-search-parameter-combination"
+            }
+          ],
           "type": "Procedure",
-          "profile": "https://fhir.hl7.org.uk/STU3/StructureDefinition/CareConnect-Procedure-1",
+          "profile": "https://fhir.hl7.org.uk/StructureDefinition/UKCore-Procedure",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "search-type"
             }
           ],
-
           "searchParam": [
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "date",
               "type": "date",
               "documentation": "Date/Period the procedure was performed"
             },
-
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHALL"
+                }
+              ],
               "name": "patient",
               "type": "reference",
               "documentation": "Search by subject - a patient"
             },
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "MAY"
+                }
+              ],
               "name": "subject",
               "type": "reference",
               "documentation": "Search by subject"
             }
           ]
         },
-
         {
-
           "type": "ValueSet",
           "profile": "http://hl7.org/fhir/Profile/ValueSet",
           "interaction": [
             {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+                  "valueCode": "SHOULD"
+                }
+              ],
               "code": "read"
             }
           ]

@@ -16,12 +16,18 @@
                 <span class="text-upper">Open</span>
             </td-file-input>
             <span *ngIf="data !== undefined">
-                     <button mat-raised-button (click)="showOAS()">Refresh OAS</button>
-                </span>
+                <button mat-raised-button (click)="showOAS()">Refresh OAS</button>
+                 <button mat-raised-button [matMenuTriggerFor]="menu">Save</button>
+                <mat-menu #menu="matMenu">
+                    <a mat-menu-item [href]="downloadCapabilityStatement()" download="capability-statement.json">CapabilityStatement</a>
+                    <span *ngIf="oas !== undefined">
+                     <a mat-menu-item [href]="downloadOAS()" download="oas3.json">OAS</a>
+                    </span>
+                </mat-menu>
+
+            </span>
             &nbsp;
-            <span *ngIf="oas !== undefined">
-                    <a mat-raised-button [href]="downloadOAS()" download="oas3.json">Save OAS</a>
-                </span>
+
         </div>
 
 

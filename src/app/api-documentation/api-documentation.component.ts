@@ -281,15 +281,19 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
         })
   }
 
-  downloadFile(data: Response) {
-    // @ts-ignore
-    const blob = new Blob([data], { type: 'text/csv' });
-    const url= window.URL.createObjectURL(blob);
-    window.open(url);
-  }
+
 
   downloadOAS(): SafeResourceUrl {
     const data = JSON.stringify(this.oas,undefined,2);
+    const blob = new Blob([data], {
+      type: 'application/octet-stream'
+    });
+
+    return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+  }
+
+  downloadCapabilityStatement() {
+    const data = this.data
     const blob = new Blob([data], {
       type: 'application/octet-stream'
     });
@@ -365,4 +369,6 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     });
 
   }
+
+
 }
