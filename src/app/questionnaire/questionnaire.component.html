@@ -17,6 +17,9 @@
             </td-file-input>
             <span *ngIf="data !== undefined">
                      <button mat-raised-button (click)="refresh()">Refresh</button>&nbsp;
+                     <span *ngIf="openEHR">
+                            <button mat-raised-button (click)="showFHIR()">Show FHIR</button>&nbsp;
+                     </span>
                         <span *ngIf="form !== undefined">
                             <button mat-raised-button [matMenuTriggerFor]="menu">Save</button>
                             <mat-menu #menu="matMenu">

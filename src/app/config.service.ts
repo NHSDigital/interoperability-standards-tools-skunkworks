@@ -10,6 +10,8 @@ export class ConfigService {
 
   public sdcServer = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/events/FHIR/R4'
 
+  public openEHRServer = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/openehr/openFHIR/R4'
+
   getErrorMessage(error: any) {
     var errorMsg = ''
     if (error.error !== undefined){

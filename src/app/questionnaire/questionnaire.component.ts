@@ -2,7 +2,7 @@ import {AfterContentInit, Component, ElementRef, EventEmitter, OnInit, signal, V
 import {ConfigService} from "../config.service";
 import {client} from "fhirclient";
 import {Bundle, Questionnaire} from "fhir/r4";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import Client from "fhirclient/lib/Client";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {TdDialogService} from "@covalent/core/dialogs";
@@ -21,6 +21,8 @@ declare var LForms: any;
 export class QuestionnaireComponent implements AfterContentInit,OnInit {
   editorOptions = {theme: 'vs-dark', language: 'json'};
   monacoEditor: any
+
+  openEHR = false;
   @ViewChild('myFormContainer', {static: false}) mydiv: ElementRef | undefined;
   data: any;
   ctx: Client | undefined
@@ -118,8 +120,63 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
 
   refresh() {
-    this.form = JSON.parse(this.data)
+    if ((this.data as string).startsWith('{')) {
+      this.form = JSON.parse(this.data)
+      this.populateQuestionnare()
+    } else {
+      if ((this.data as string).includes('<template')) {
+        let headers = new HttpHeaders(
+        );
+        headers = headers.append('Content-Type', 'application/xml');
+        headers = headers.append('Accept', 'application/json');
+        this.http.post(this.config.openEHRServer+'/Questionnaire/$convertTemplate', this.data,{ headers}).subscribe(result => {
+              console.log(result)
 
+                this.form = result
+                this.openEHR = true
+                this.populateQuestionnare()
+
+            },
+            error => {
+
+              console.log(JSON.stringify(error))
+              this._dialogService.openAlert({
+                title: 'Alert',
+                disableClose: true,
+                message:
+                    this.config.getErrorMessage(error),
+              });
+            })
+      } else
+      if ((this.data as string).includes('<archetype')) {
+        let headers = new HttpHeaders(
+        );
+        headers = headers.append('Content-Type', 'application/xml');
+        headers = headers.append('Accept', 'application/json');
+        this.http.post(this.config.openEHRServer+'/Questionnaire/$convertArchetype', this.data,{ headers}).subscribe(result => {
+              console.log(result)
+              this.form = result
+              this.openEHR = true
+              this.populateQuestionnare()
+            },
+            error => {
+
+              console.log(JSON.stringify(error))
+              this._dialogService.openAlert({
+                title: 'Alert',
+                disableClose: true,
+                message:
+                    this.config.getErrorMessage(error),
+              });
+            })
+      }
+    }
+
+
+
+  }
+
+  populateQuestionnare() {
     LForms.Util.setFHIRContext(this.ctx)
 
     let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.form, "R4");
@@ -196,4 +253,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
   }
 
+  showFHIR() {
+    this.data = JSON.stringify(this.form, undefined, 2)
+  }
 }
