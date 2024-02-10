@@ -7,6 +7,7 @@ import Client from "fhirclient/lib/Client";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {TdDialogService} from "@covalent/core/dialogs";
 import vitals from '../questionnaire/Questionnaire/vital-signs.json'
+import permission from '../questionnaire/Questionnaire/permission.json'
 import nominations from '../questionnaire/Questionnaire/prescription-nomination.json'
 import {ActivatedRoute, Router} from "@angular/router";
 import {InfoDiaglogComponent} from "../info-diaglog/info-diaglog.component";
@@ -54,6 +55,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     });
     this.questionnaires.push(vitals as Questionnaire)
     this.questionnaires.push(nominations as Questionnaire)
+    this.questionnaires.push(permission as Questionnaire)
 
 
     this.http.get(this.config.sdcServer + '/Questionnaire').subscribe((result) => {
