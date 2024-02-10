@@ -81,10 +81,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "IOPS-Validation-UI:build:production"
+              "buildTarget": "IOPS-Validation-UI:build:production"
             },
             "development": {
-              "browserTarget": "IOPS-Validation-UI:build:development"
+              "buildTarget": "IOPS-Validation-UI:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -92,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "IOPS-Validation-UI:build"
+            "buildTarget": "IOPS-Validation-UI:build"
           }
         },
         "test": {
