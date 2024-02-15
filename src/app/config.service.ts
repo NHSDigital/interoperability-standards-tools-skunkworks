@@ -7,11 +7,16 @@ import {environment} from "../environments/environment";
 })
 export class ConfigService {
   validateUrl() : string {
-    console.log(window.location.href)
-   if (environment.isDocker ) {
-     return window.location.href + "/FHIR/R4"
-   }
-    return environment.validateUrl
+      console.log(window.location.href)
+     if (environment.isDocker ) {
+       let href=window.location.href
+       if (href.endsWith("/")) {
+         return href + "FHIR/R4"
+       } else {
+         return href + "/FHIR/R4"
+       }
+     }
+      return environment.validateUrl
   }
 
   sdcServer() : string {
