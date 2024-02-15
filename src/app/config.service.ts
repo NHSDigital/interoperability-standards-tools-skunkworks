@@ -6,10 +6,16 @@ import {environment} from "../environments/environment";
   providedIn: 'root'
 })
 export class ConfigService {
+
+
   validateUrl() : string {
       console.log(window.location.href)
      if (environment.isDocker ) {
        let href=window.location.href
+       // This is the only mutli part url present, need a better solution
+       href = href.replace("/api/","/")
+      // href = href.replace("/questionnaire/","")
+
        if (href.endsWith("/")) {
          return href + "FHIR/R4"
        } else {
