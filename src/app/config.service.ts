@@ -7,7 +7,10 @@ import {environment} from "../environments/environment";
 })
 export class ConfigService {
   validateUrl() : string {
-    console.log(environment.fhirserverbaseUrl)
+    console.log(window.location.href)
+   if (environment.isDocker ) {
+     return window.location.href + "/FHIR/R4"
+   }
     return environment.validateUrl
   }
 
