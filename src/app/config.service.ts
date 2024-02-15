@@ -7,6 +7,7 @@ import {environment} from "../environments/environment";
 })
 export class ConfigService {
   validateUrl() : string {
+    console.log(environment.fhirserverbaseUrl)
     return environment.validateUrl
   }
 
