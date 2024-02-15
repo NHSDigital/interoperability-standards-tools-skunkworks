@@ -78,7 +78,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     }
     ngOnInit(): void {
-        this.http.get(this.config.validateUrl + '/metadata').subscribe((result) => {
+        this.http.get(this.config.validateUrl() + '/metadata').subscribe((result) => {
             if (result !== undefined) {
                 this.cs = result as CapabilityStatement
             }
@@ -145,14 +145,6 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
 
 
-
-
-
-
-
-
-
-
     announceSortChange($event: Sort) {
 
     }
@@ -170,7 +162,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
             && this.resource.resourceType !== undefined
             && this.resource.resourceType !== this.resourceType) {
                 this.resourceType = this.resource.resourceType
-                const url: string = this.config.validateUrl + '/StructureDefinition?type='+this.resourceType;
+                const url: string = this.config.validateUrl() + '/StructureDefinition?type='+this.resourceType;
                 const headers = new HttpHeaders();
 
                 this.http.get<any>(url, {headers}).subscribe(bundle => {
@@ -267,7 +259,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         );
         headers = headers.append('Content-Type', 'application/xml');
         headers = headers.append('Accept', 'application/json');
-        var url: string = this.config.validateUrl + '/$convert';
+        var url: string = this.config.validateUrl() + '/$convert';
         this.http.post(url, this.data,{ headers}).subscribe(result => {
 
                 if (result !== undefined) {
@@ -297,7 +289,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         );
         headers = headers.append('Content-Type', 'application/xml');
         headers = headers.append('Accept', 'application/json');
-        var url: string = this.config.validateUrl + '/STU3/$convertR4';
+        var url: string = this.config.validateUrl() + '/STU3/$convertR4';
         this.http.post(url, this.data,{ headers}).subscribe(result => {
 
                 if (result !== undefined) {

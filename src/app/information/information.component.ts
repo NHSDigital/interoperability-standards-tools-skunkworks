@@ -37,7 +37,7 @@ export class InformationComponent implements OnInit{
       private _loadingService: TdLoadingService) { }
 
   ngOnInit(): void {
-    this.http.get(this.config.validateUrl + '/metadata').subscribe((result) => {
+    this.http.get(this.config.validateUrl() + '/metadata').subscribe((result) => {
       if (result !== undefined) {
         this.cs = result as CapabilityStatement
         if (this.cs.contained !== undefined) {

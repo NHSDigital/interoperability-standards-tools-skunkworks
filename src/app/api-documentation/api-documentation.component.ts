@@ -74,7 +74,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     this.capabilityStatements.push(careconnectAPI as CapabilityStatement)
     this.capabilityStatements.push(ukcorePatient as CapabilityStatement)
     this.oasOnly = false
-    this.http.get(this.config.validateUrl + '/CapabilityStatement').subscribe((result) => {
+    this.http.get(this.config.validateUrl() + '/CapabilityStatement').subscribe((result) => {
 
           if (result !== undefined) {
             let bundle = result as Bundle
@@ -105,7 +105,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
               }
             }
             if (!found) {
-              this.http.get(this.config.validateUrl + '/CapabilityStatement?url=' + decodeURI(urlParam as string)).subscribe((result) => {
+              this.http.get(this.config.validateUrl() + '/CapabilityStatement?url=' + decodeURI(urlParam as string)).subscribe((result) => {
                     console.log(result)
                     if (result !== undefined) {
                       let bundle = result as Bundle
@@ -183,7 +183,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
       headers = headers.append('Content-Type', 'application/json');
     }
     headers = headers.append('Accept', 'application/json');
-    var url: string = this.config.validateUrl + '/$convertOAS';
+    var url: string = this.config.validateUrl() + '/$convertOAS';
 
 
     this.http.post(url, this.data,{ headers}).subscribe(result => {
@@ -241,7 +241,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     );
     headers = headers.append('Content-Type', 'application/json');
     headers = headers.append('Accept', 'application/json');
-    var url: string = this.config.validateUrl + '/CapabilityStatement/$openapi';
+    var url: string = this.config.validateUrl() + '/CapabilityStatement/$openapi';
 
     this.http.post(url, this.data,{ headers}).subscribe(result => {
           this.viewOAS(result)
@@ -261,7 +261,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
     );
     headers = headers.append('Content-Type', 'application/xml');
     headers = headers.append('Accept', 'application/json');
-    var url: string = this.config.validateUrl + '/$convert';
+    var url: string = this.config.validateUrl() + '/$convert';
     this.http.post(url, this.data,{ headers}).subscribe(result => {
 
           if (result !== undefined) {
@@ -310,7 +310,7 @@ export class ApiDocumentationComponent implements AfterContentInit, OnInit {
       headers = headers.append('Content-Type', 'application/json');
     }
     headers = headers.append('Accept', 'application/json');
-    var url: string = this.config.validateUrl + '/$convertOAStoFHIR';
+    var url: string = this.config.validateUrl() + '/$convertOAStoFHIR';
     this.http.post(url, this.data,{ headers}).subscribe(result => {
 
           if (result !== undefined) {

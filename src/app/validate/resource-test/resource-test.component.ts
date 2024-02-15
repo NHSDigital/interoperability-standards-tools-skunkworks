@@ -75,7 +75,7 @@ export class ResourceTestComponent implements OnInit {
         headers = headers.append('Content-Type', 'application/xml');
         headers = headers.append('Accept', 'application/json');
       }
-      var url: string = this.config.validateUrl + '/$validate';
+      var url: string = this.config.validateUrl() + '/$validate';
       if (this.profile !== undefined) url = url + '?profile='+this.profile.url
 
       if (this.imposeProfiles) {

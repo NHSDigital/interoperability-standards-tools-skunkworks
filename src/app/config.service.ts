@@ -1,16 +1,22 @@
 import { Injectable } from '@angular/core';
 import {DatePipe} from "@angular/common";
+import {environment} from "../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
-  public validateUrl = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/Conformance/FHIR/R4'
-  //public validateUrl = 'http://localhost:9001/FHIR/R4'
+  validateUrl() : string {
+    return environment.validateUrl
+  }
 
-  public sdcServer = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/events/FHIR/R4'
+  sdcServer() : string {
+    return environment.sdcServer
+  }
 
-  public openEHRServer = 'https://3cdzg7kbj4.execute-api.eu-west-2.amazonaws.com/poc/openehr/openFHIR/R4'
+  openEHRServer() : string {
+    return environment.openEHRServer
+  }
 
   getErrorMessage(error: any) {
     var errorMsg = ''

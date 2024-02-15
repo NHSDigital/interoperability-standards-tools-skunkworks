@@ -31,7 +31,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   questionnaires: Questionnaire[] = [];
   form: any;
   fileLoadedFile: EventEmitter<any> = new EventEmitter();
-  markdown: string = "A tool for creating Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/) and the address of this FHIR server is `" + this.config.sdcServer + "`. For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/)";
+  markdown: string = "A tool for creating Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/) and the address of this FHIR server is `" + this.config.sdcServer() + "`. For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/)";
   file: any;
 
 
@@ -51,14 +51,14 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
   ngOnInit(): void {
     this.ctx = client({
-      serverUrl: this.config.sdcServer
+      serverUrl: this.config.sdcServer()
     });
     this.questionnaires.push(vitals as Questionnaire)
     this.questionnaires.push(nominations as Questionnaire)
     this.questionnaires.push(permission as Questionnaire)
 
 
-    this.http.get(this.config.sdcServer + '/Questionnaire').subscribe((result) => {
+    this.http.get(this.config.sdcServer() + '/Questionnaire').subscribe((result) => {
 
           if (result !== undefined) {
             let bundle = result as Bundle
@@ -84,7 +84,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
             }
           }
           if (!found) {
-            this.http.get(this.config.sdcServer + '/Questionnaire?url=' + decodeURI(urlParam as string)).subscribe((result) => {
+            this.http.get(this.config.sdcServer() + '/Questionnaire?url=' + decodeURI(urlParam as string)).subscribe((result) => {
                   if (result !== undefined) {
                     let bundle = result as Bundle
                     if (bundle.entry !== undefined && bundle.entry.length > 0) {
@@ -131,7 +131,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
         );
         headers = headers.append('Content-Type', 'application/xml');
         headers = headers.append('Accept', 'application/json');
-        this.http.post(this.config.openEHRServer+'/Questionnaire/$convertTemplate', this.data,{ headers}).subscribe(result => {
+        this.http.post(this.config.openEHRServer()+'/Questionnaire/$convertTemplate', this.data,{ headers}).subscribe(result => {
               console.log(result)
 
                 this.form = result
@@ -155,7 +155,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
         );
         headers = headers.append('Content-Type', 'application/xml');
         headers = headers.append('Accept', 'application/json');
-        this.http.post(this.config.openEHRServer+'/Questionnaire/$convertArchetype', this.data,{ headers}).subscribe(result => {
+        this.http.post(this.config.openEHRServer()+'/Questionnaire/$convertArchetype', this.data,{ headers}).subscribe(result => {
               console.log(result)
               this.form = result
               this.openEHR = true
