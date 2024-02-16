@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {IMenuItem, IMenuTrigger} from "@covalent/core/dynamic-menu";
 import {ConfigService} from "../config.service";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-testing-main',
@@ -316,6 +317,7 @@ export class TestingMainComponent {
   constructor(private config: ConfigService) {
   }
   getSwagger() {
+    if (environment.isDocker) return "/swagger-ui/index.html"
     let url = this.config.validateUrl().replace("/FHIR/R4","/swagger-ui/index.html")
     return url
   }

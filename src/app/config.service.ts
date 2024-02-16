@@ -11,7 +11,7 @@ export class ConfigService {
 
   validateUrl() : string {
 //    console.log(window.location.href)
-
+/*
     let href = window.location.href
     // remove the route from the href
     href = href.replace(this.router.url,"")
@@ -22,13 +22,10 @@ export class ConfigService {
     console.log(href)
 //    console.log(this.router.url)
 //    console.log(href)
-    if (environment.isDocker ) {
 
-       if (href.endsWith("/")) {
-         return href + "FHIR/R4"
-       } else {
-         return href + "/FHIR/R4"
-       }
+ */
+     if (environment.isDocker ) {
+         return "/FHIR/R4"
      }
       return environment.validateUrl
   }
