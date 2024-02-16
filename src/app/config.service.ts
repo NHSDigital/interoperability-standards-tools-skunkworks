@@ -14,7 +14,7 @@ export class ConfigService {
     let href = window.location.href
     // remove the route from the href
     href = href.replace(this.router.url,"")
-
+    href = href.replace('/app',"")
     if (environment.isDocker ) {
 
        if (href.endsWith("/")) {
