@@ -16,6 +16,8 @@ export class ConfigService {
     // remove the route from the href
     href = href.replace(this.router.url,"")
     console.log(href)
+    console.log(window.location.origin)
+    console.log(window.location.host)
     href = href.replace(window.location.origin,"")
     console.log(href)
 //    console.log(this.router.url)
