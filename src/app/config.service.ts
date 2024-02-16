@@ -11,12 +11,14 @@ export class ConfigService {
 
   validateUrl() : string {
     console.log(window.location.href)
-    console.log(window.location.origin)
-    console.log(window.location.host)
+   // console.log(window.location.origin)
+   // console.log(window.location.host)
     let href = window.location.href
     // remove the route from the href
     href = href.replace(this.router.url,"")
-    href = href.replace('/app',"")
+  //  href = href.replace('/app',"")
+    console.log(this.router.url)
+    console.log(href)
     if (environment.isDocker ) {
 
        if (href.endsWith("/")) {
