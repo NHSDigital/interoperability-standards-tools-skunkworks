@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {DatePipe} from "@angular/common";
 import {environment} from "../environments/environment";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +10,13 @@ export class ConfigService {
 
 
   validateUrl() : string {
-      console.log('href'+ window.location.href)
-    console.log('host'+window.location.host)
-    console.log('origin'+window.location.origin)
-     if (environment.isDocker ) {
-       let href=window.location.href
-       // This is the only mutli part url present, need a better solution
-       href = href.replace("/api/","/")
-      // href = href.replace("/questionnaire/","")
+
+    let href = window.location.href
+    // remove the route from the href
+    href = href.replace(this.router.url,"")
+
+     console.log(href)
+      if (environment.isDocker ) {
 
        if (href.endsWith("/")) {
          return href + "FHIR/R4"
@@ -54,5 +54,5 @@ export class ConfigService {
     if (utc!= null) return utc
     return date.toISOString()
   }
-  constructor() { }
+  constructor(private router : Router) { }
 }
