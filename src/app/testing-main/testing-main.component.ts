@@ -317,6 +317,8 @@ export class TestingMainComponent {
   }
   getSwagger() {
     let url = this.config.validateUrl().replace("/FHIR/R4","/swagger-ui/index.html")
+    url.replace(window.location.host,'')
+    console.log(url)
     return url
   }
 }
