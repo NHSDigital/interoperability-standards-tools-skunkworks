@@ -9,7 +9,9 @@ export class ConfigService {
 
 
   validateUrl() : string {
-      console.log(window.location.href)
+      console.log('href'+ window.location.href)
+    console.log('host'+window.location.host)
+    console.log('origin'+window.location.origin)
      if (environment.isDocker ) {
        let href=window.location.href
        // This is the only mutli part url present, need a better solution
