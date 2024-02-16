@@ -15,8 +15,7 @@ export class ConfigService {
     // remove the route from the href
     href = href.replace(this.router.url,"")
 
-     console.log(href)
-      if (environment.isDocker ) {
+    if (environment.isDocker ) {
 
        if (href.endsWith("/")) {
          return href + "FHIR/R4"

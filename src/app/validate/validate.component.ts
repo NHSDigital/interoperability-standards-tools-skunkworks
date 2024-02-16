@@ -46,7 +46,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     dataSource: MatTableDataSource<OperationOutcomeIssue> ;
     displayedColumns  = ['issue','location','details', 'diagnostic'];
 
-    imposeProfiles : any = true;
+    imposeProfiles : any = false;
     @ViewChild('hrSort') hrSort: MatSort | null | undefined;
     profile: StructureDefinition | undefined;
     profiles: StructureDefinition[] = [];
