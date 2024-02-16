@@ -10,7 +10,9 @@ export class ConfigService {
 
 
   validateUrl() : string {
-
+    console.log(window.location.href)
+    console.log(window.location.origin)
+    console.log(window.location.host)
     let href = window.location.href
     // remove the route from the href
     href = href.replace(this.router.url,"")

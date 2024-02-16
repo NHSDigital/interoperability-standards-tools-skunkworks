@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {IMenuItem, IMenuTrigger} from "@covalent/core/dynamic-menu";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-testing-main',
@@ -312,4 +313,10 @@ export class TestingMainComponent {
       newTab: true
     }
     ]
+  constructor(private config: ConfigService) {
+  }
+  getSwagger() {
+    let url = this.config.validateUrl().replace("/FHIR/R4","/swagger-ui/index.html")
+    return url
+  }
 }

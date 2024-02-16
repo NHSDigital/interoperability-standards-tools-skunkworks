@@ -50,7 +50,7 @@
                 <td-dynamic-menu [trigger]="triggerInteroperabilty" [items]="interoperability"></td-dynamic-menu>
                 <td-dynamic-menu [trigger]="triggerDataStandards" [items]="dataStandards"></td-dynamic-menu>
                 <td-dynamic-menu [trigger]="triggerDeveloper" [items]="developer"></td-dynamic-menu> -->
-                <a mat-icon-button href="/swagger-ui/index.html" target="_blank" matTooltip="OAS/Swagger documention for the API"><mat-icon>api</mat-icon></a>
+                <a mat-icon-button [href]="getSwagger()" target="_blank" matTooltip="OAS/Swagger documention for the API"><mat-icon>api</mat-icon></a>
                 <a mat-icon-button href="https://github.com/NHSDigital/IOPS-Validation-UI" target="_blank" matTooltip="Github source code"><i class="fa fa-github" style="font-size:24px"></i></a>
             </div>
         </div>
