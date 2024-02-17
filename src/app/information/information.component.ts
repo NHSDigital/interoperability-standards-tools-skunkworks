@@ -24,8 +24,8 @@ export class InformationComponent implements OnInit{
   dataSource: MatTableDataSource<CapabilityStatementRestResource> ;
   displayedColumns  = ['resource','profile','supportedProfile','imposeProfile'];
   // @ts-ignore
-  dataSourceIG: MatTableDataSource<ImplementationGuide> ;
-  displayedColumnsIG  = ['package','version'];
+  dataSourceIG: ImplementationGuide[] | undefined ;
+
   // @ts-ignore
   dataSourceMessage: MatTableDataSource<CapabilityStatementMessagingSupportedMessage> ;
   displayedColumnsMessage  = ['messageDefinition'];
@@ -41,8 +41,12 @@ export class InformationComponent implements OnInit{
       if (result !== undefined) {
         this.cs = result as CapabilityStatement
         if (this.cs.contained !== undefined) {
-          // @ts-ignore
-          this.dataSourceIG = new MatTableDataSource<ImplementationGuide>(this.cs.contained)
+          this.dataSourceIG = []
+          this.cs.contained.forEach(resource => {
+            if (resource.resourceType === 'ImplementationGuide') {
+              this.dataSourceIG?.push(resource)
+            }
+          })
         }
         if (this.cs.messaging !== undefined && this.cs.messaging.length >0) {
           this.dataSourceMessage = new MatTableDataSource<CapabilityStatementMessagingSupportedMessage>(this.cs.messaging[0].supportedMessage)

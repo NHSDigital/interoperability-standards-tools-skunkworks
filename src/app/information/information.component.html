@@ -7,32 +7,35 @@
             <span *ngIf="cs !== undefined && cs.software !== undefined">
                 {{cs.software.name}} ver. {{cs.software.version}}
             </span>
+            <span *ngIf="dataSourceIG !== undefined">
             <h2>Packages</h2>
             <br/>
-            <mat-table [dataSource]="dataSourceIG" class="mat-elevation-z8"
-                       matSort #igSort="matSort" (matSortChange)="announceSortChange($event)"
-                       matSortActive="resource" matSortDirection="desc" matSortDisableClear>
 
-                <ng-container matColumnDef="package">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Package </th>
-                    <td mat-cell *matCellDef="let resource">
-                        {{resource.packageId}}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="version">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef > Version </th>
-                    <td mat-cell *matCellDef="let resource">
-                        {{resource.version}}
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumnsIG; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumnsIG;"></tr>
-
-                <mat-row *matNoDataRow>
-                    <td class="mat-cell" colspan="7">No data matching the filter </td>
-                </mat-row>
-            </mat-table>
-
+            <mat-accordion class="example-headers-align" >
+                <mat-expansion-panel *ngFor="let resource of dataSourceIG">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <a [href]="resource.url" target="_blank">{{resource.packageId}}</a>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            {{resource.version}}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                     <mat-accordion class="example-headers-align" >
+                         <mat-expansion-panel *ngFor="let depends of resource.dependsOn">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <a [href]="depends.uri" target="_blank">{{depends.packageId}}</a>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    {{depends.version}}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                        </mat-expansion-panel>
+                     </mat-accordion>
+                </mat-expansion-panel>
+            </mat-accordion>
+             </span>
         </div>
         <div  *ngIf="dataSource!==undefined">
             <h2>Profiles</h2>
