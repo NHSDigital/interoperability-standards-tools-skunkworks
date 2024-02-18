@@ -1,12 +1,20 @@
 <mat-drawer-container class="page-container" autosize>
     <mat-drawer #drawer opened="true" class="page-sidenav" mode="side">
-        <div style="height: calc(100vh - 280px)" >
+        <h3>FHIR Documents</h3>
+        <div layout="row">
+            <button mat-raised-button (click)="openInfo()">
+                <mat-icon>info</mat-icon>
+            </button>
+            <span *ngIf="resource !== undefined">
+                   &nbsp; <button mat-raised-button color="primary" (click)="showDocument()">Show</button>
+                </span>
+        </div>
+        <div style="height: calc(100vh - 100px)" >
             <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
         </div>
     </mat-drawer>
+    <mat-card class="fullscreen scrollable-content">
+        <div [innerHTML]="html"></div>
 
-    <div >
-       Some stuff
-    </div>
-
+    </mat-card>
 </mat-drawer-container>

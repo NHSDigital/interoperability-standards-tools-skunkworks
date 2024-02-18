@@ -2,7 +2,12 @@
     <mat-card-header>
         <h3>FHIR Validation (Prototype)</h3>
     </mat-card-header>
-      <mat-card-content>
+      <mat-card-content >
+          <div *tdLoading=" 'overlayStarSyntax';
+   mode: loadingMode.Indeterminate;
+   type: loadingType.Circular;
+   strategy: loadingStrategy.Overlay;
+   color: 'accent'">
           <td-markdown>{{ markdown }}</td-markdown>
             <div layout="row">
               <td-file-input
@@ -70,14 +75,14 @@
           <span *ngIf="resources.length>0">
               <mat-accordion class="example-headers-align" multi>
                   <span *ngFor="let res of resources">
-                    <app-resource-test  [resource]="res.resource" [fileName]="res.fileName" [imposeProfiles]="imposeProfiles" [profile]="profile" (position)="setPosition($event)"></app-resource-test>
+                    <app-resource-test  [resource]="res.resource" [fileName]="res.fileName" [imposeProfiles]="imposeProfiles" [profile]="profile" (position)="setPosition($event)" (done)="resolveLoading()"></app-resource-test>
                   </span>
               </mat-accordion>
           </span>
           <span *ngIf="resources.length==0">
               <p>No results at present</p>
           </span>
-
+          </div>
       </mat-card-content>
 
 </mat-card>

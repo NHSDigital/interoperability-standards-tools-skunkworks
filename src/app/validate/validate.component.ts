@@ -87,6 +87,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
 
     validate() {
         this.clearReources()
+        this._loadingService.register('overlayStarSyntax');
         if (this.test !== undefined) {
             this.test.nativeElement.scrollIntoView({behavior: 'smooth'});
         }
@@ -331,5 +332,9 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         }
         let packageStr = 'fhir.r4.nhsengland.stu1'
         return 'https://simplifier.net/resolve?fhirVersion=R4&scope='+ packageStr  + '&canonical='+url
+    }
+
+    resolveLoading() {
+        this._loadingService.resolve('overlayStarSyntax');
     }
 }

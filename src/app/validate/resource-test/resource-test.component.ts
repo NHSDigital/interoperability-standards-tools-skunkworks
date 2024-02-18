@@ -39,22 +39,15 @@ export class ResourceTestComponent implements OnInit {
   profile: StructureDefinition | undefined;
 
   @Output() position: EventEmitter<Position> = new EventEmitter();
+  @Output() done: EventEmitter<Boolean> = new EventEmitter();
 
   @ViewChild('hrSort') hrSort: MatSort | null | undefined;
 
-  //validateUrl = 'http://localhost:9001/FHIR/R4'
-
-  loadingMode = LoadingMode;
-  loadingStrategy = LoadingStrategy;
-  loadingType = LoadingType;
-
-  overlayStarSyntax = false;
   selected= 'all'
   constructor(
       private http: HttpClient,
       private config: ConfigService,
-      private _dialogService: TdDialogService,
-      private _loadingService: TdLoadingService) { }
+      private _dialogService: TdDialogService) { }
 
   ngOnInit(): void {
     if (this.resource !== undefined) {
@@ -85,9 +78,10 @@ export class ResourceTestComponent implements OnInit {
           url = url + '&imposeProfile=true'
         }
       }
-      this._loadingService.register('overlayStarSyntax');
+
       this.http.post(url, this.data,{ headers}).subscribe(result => {
-            this._loadingService.resolve('overlayStarSyntax');
+            //this._loadingService.resolve('overlayStarSyntax');
+             this.done.emit(true)
             if (result !== undefined) {
               var parameters = result as OperationOutcome
               this.information= 0
@@ -123,7 +117,7 @@ export class ResourceTestComponent implements OnInit {
             }
           },
           error => {
-            this._loadingService.resolve('overlayStarSyntax');
+            this.done.emit(true)
             console.log(JSON.stringify(error))
             this._dialogService.openAlert({
               title: 'Alert',
