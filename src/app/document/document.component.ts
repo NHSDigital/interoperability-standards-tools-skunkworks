@@ -6,8 +6,6 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {TdDialogService} from "@covalent/core/dialogs";
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
-import {XmlParser, Xslt} from 'xslt-processor'
-import * as DOMPurify from 'dompurify';
 
 @Component({
   selector: 'app-document',
@@ -54,34 +52,10 @@ export class DocumentComponent {
     let headers = new HttpHeaders(
     );
     headers = headers.append('Content-Type', 'application/json');
-    headers = headers.append('Accept', 'application/xml');
-    var url: string = this.config.validateUrl() + '/$convert';
+    headers = headers.append('Accept', 'text/html');
+    var url: string = this.config.validateUrl() + '/Composition/$convert';
     this.http.post(url, this.data,{ responseType: 'text', headers}).subscribe(xmlString => {
-
          this.html= xmlString
-        // ideally we should use the newer xslt but the import command isn't support in the package we are using
-            this.http.get('assets/DocumentToHTML.xslt', {responseType: 'text'})
-                .subscribe(xsltString =>
-                    {
-
-                        const xslt = new Xslt();
-                        const xmlParser = new XmlParser();
-
-                        const xmlParsed = xmlParser.xmlParse(xmlString)
-                        console.log(xmlParsed)
-                        const xsltParsed =  xmlParser.xmlParse(xsltString)
-                        xslt.outputMethod = 'html'
-                        const outXmlString = xslt.xsltProcess(xmlParsed,xsltParsed);
-                        if (outXmlString === '') {
-                          console.log('No xslt output')
-                        } else {
-                          console.log('html should follow')
-                          console.log(outXmlString)
-                        }
-
-
-                    });
-
         },
         error => {
 
