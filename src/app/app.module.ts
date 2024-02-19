@@ -46,6 +46,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { MarkdownComponent } from './markdown/markdown.component';
 import {CovalentFlavoredMarkdownModule} from "@covalent/flavored-markdown";
 
+
 @NgModule({
   declarations: [
     AppComponent,
