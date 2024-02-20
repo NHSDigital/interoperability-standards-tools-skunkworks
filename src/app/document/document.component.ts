@@ -5,9 +5,10 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {DomSanitizer} from "@angular/platform-browser";
 import {TdDialogService} from "@covalent/core/dialogs";
 import {ActivatedRoute} from "@angular/router";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import ips from 'src/app/document/FHIRDocument/Bundle-IPS-examples-Bundle-01.json'
-import {Bundle, Composition, CompositionSection, FhirResource, Patient} from "fhir/r4";
+import {Bundle, Composition, CompositionSection, FhirResource, Patient, Reference} from "fhir/r4";
+import {ResourceDialogComponent} from "../resource-dialog/resource-dialog.component";
 @Component({
   selector: 'app-document',
   templateUrl: './document.component.html',
@@ -23,8 +24,10 @@ export class DocumentComponent  implements AfterContentInit {
   html = "<html>Copy FHIR document into editor</html>"
   resource: any;
   patient: Patient | undefined;
-  composition: Composition | undefined;
-  sections: CompositionSection[] = []
+
+  // @ts-ignore
+  composition: Composition;
+
 
   constructor(private config: ConfigService,
               private http: HttpClient,
@@ -45,8 +48,9 @@ export class DocumentComponent  implements AfterContentInit {
   checkType() {
     try {
       this.patient = undefined
+      // @ts-ignore
       this.composition = undefined
-      this.sections = []
+
       this.resource = JSON.parse(this.data)
       if (this.resource.resourceType === 'Bundle') {
         const bundle = this.resource as Bundle
@@ -58,7 +62,6 @@ export class DocumentComponent  implements AfterContentInit {
 
               } else if (entry.resource?.resourceType === 'Composition') {
                 this.composition = entry.resource as Composition
-                if (this.composition.section !== undefined) this.sections = this.composition.section
               }
             }
           }
@@ -71,6 +74,28 @@ export class DocumentComponent  implements AfterContentInit {
 
   onInit($event: any) {
     
+  }
+
+  select(entry: any): void {
+    if (this.resource !== undefined && this.resource.resourceType === 'Bundle') {
+      let bundle = this.resource as Bundle
+      let refs = (entry as Reference).reference?.split("/")
+      if (refs !== undefined && refs.length > 1 && bundle.entry !== undefined) {
+        for (let ent of bundle.entry) {
+          if (ent.fullUrl !== undefined && ent.fullUrl.includes(refs[1])) {
+            const dialogConfig = new MatDialogConfig();
+            let resource = ent.resource
+            dialogConfig.disableClose = true;
+            dialogConfig.autoFocus = true;
+            dialogConfig.data = {
+              id: 1,
+              resource
+            };
+            const resourceDialog: MatDialogRef<ResourceDialogComponent> = this.dialog.open(ResourceDialogComponent, dialogConfig);
+          }
+        }
+      }
+    }
   }
 
   openInfo() {

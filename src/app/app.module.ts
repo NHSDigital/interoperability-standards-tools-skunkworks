@@ -45,6 +45,9 @@ import { InfoDiaglogComponent } from './info-diaglog/info-diaglog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import { MarkdownComponent } from './markdown/markdown.component';
 import {CovalentFlavoredMarkdownModule} from "@covalent/flavored-markdown";
+import { DocumentSectionComponent } from './document/document-section/document-section.component';
+import {MatChipsModule} from "@angular/material/chips";
+import {ResourceDialogComponent} from "./resource-dialog/resource-dialog.component";
 
 
 @NgModule({
@@ -58,7 +61,9 @@ import {CovalentFlavoredMarkdownModule} from "@covalent/flavored-markdown";
     QuestionnaireComponent,
     DocumentComponent,
     InfoDiaglogComponent,
-    MarkdownComponent
+    MarkdownComponent,
+    DocumentSectionComponent,
+      ResourceDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -97,7 +102,8 @@ import {CovalentFlavoredMarkdownModule} from "@covalent/flavored-markdown";
         MatMenuModule,
         MatSidenavModule,
         MatDialogModule,
-        CovalentFlavoredMarkdownModule
+        CovalentFlavoredMarkdownModule,
+        MatChipsModule
     ],
   providers: [],
   bootstrap: [AppComponent]

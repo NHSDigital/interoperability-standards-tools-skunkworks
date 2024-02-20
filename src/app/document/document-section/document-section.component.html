@@ -1,0 +1,20 @@
+<mat-card>
+    <mat-card-header>
+        <h3>{{section.title}}</h3>
+    </mat-card-header>
+    <mat-card-content>
+        <span *ngIf="section !== undefined && section.text !== undefined">
+            <div [innerHTML]="section.text.div"></div>
+        </span>
+
+        <span *ngIf="section !== undefined && section.section !== undefined">
+            <span *ngFor="let section2 of section.section">
+                <app-document-section [section]="section2" (reference)="select($event)"></app-document-section>
+            </span>
+        </span>
+        <mat-chip-set *ngFor="let entry of section.entry">
+            <mat-chip (click)="select(entry)" >{{entry.reference}}</mat-chip>
+        </mat-chip-set>
+    </mat-card-content>
+</mat-card>
+
