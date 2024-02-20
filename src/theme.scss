@@ -1,22 +1,12 @@
 @use '@angular/material' as mat;
+
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 
-@import '@angular/material/theming';
 @import '../node_modules/@covalent/core/theming/all-theme';
 @import '../node_modules/@covalent/markdown/markdown-theme';
 @import '../node_modules/@covalent/highlight/highlight-theme';
 @import '../node_modules/@covalent/flavored-markdown/flavored-markdown-theme';
 
-// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
-//  The following line adds:
-//    1. Default typography styles for all components
-//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
-//  If you specify typography styles for the components you use elsewhere, you should delete this line.
-//  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
-@include mat.all-legacy-component-typographies();
-@include mat.legacy-core();
 
 $typography: mat.define-legacy-typography-config(
         $font-family: 'Roboto, monospace',
@@ -35,17 +25,13 @@ $theme: mat.define-light-theme((
                 accent: $accent,
                 warn: $warn,
         ),
-        typography: mat.define-legacy-typography-config(),
+        typography: mat.define-typography-config(),
         density: 0,
 ));
 
-@include mat.legacy-core-theme($theme);
-@include mat.all-component-themes($theme);
+
 @include angular-material-theme($theme);
 @include covalent-theme($theme, $typography);
-
-
-// (optional) Additional themes
 @include covalent-markdown-theme($theme);
 @include covalent-highlight-theme($theme);
 @include covalent-flavored-markdown-theme($theme);
