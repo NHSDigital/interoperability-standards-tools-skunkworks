@@ -1,20 +1,18 @@
 @use '@angular/material' as mat;
+@import '../node_modules/@covalent/core/theming/all-theme';
 
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
-
-@import '../node_modules/@covalent/core/theming/all-theme';
 @import '../node_modules/@covalent/markdown/markdown-theme';
 @import '../node_modules/@covalent/highlight/highlight-theme';
 @import '../node_modules/@covalent/flavored-markdown/flavored-markdown-theme';
 
 @include mat.all-component-typographies();
-
+@include mat.core();
 
 $typography: mat.define-legacy-typography-config(
         $font-family: 'Roboto, monospace',
         $headline: mat.define-typography-level(32px, 48px, 700)
 );
-@include mat.core();
 
 $primary: mat.define-palette(mat.$blue-palette, 700);
 $accent: mat.define-palette(mat.$orange-palette, 800, A100, A400);
@@ -32,9 +30,11 @@ $theme: mat.define-light-theme((
         density: 0,
 ));
 
+//mat.angular-material-theme($theme);
+//@include mat.angular-material-theme($theme);
 
-@include angular-material-theme($theme);
 @include mat.all-component-themes($theme);
+
 @include covalent-theme($theme, $typography);
 @include covalent-markdown-theme($theme);
 @include covalent-highlight-theme($theme);
