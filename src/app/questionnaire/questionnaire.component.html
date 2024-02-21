@@ -1,49 +1,55 @@
 <mat-drawer-container class="page-container" autosize>
     <mat-drawer #drawer opened="true" style="width:50%;" mode="side">
-        <h3>Form Definition (FHIR Questionnaire)</h3>
-        <div layout="row">
-            <button mat-raised-button (click)="openInfo()">
-                <mat-icon>info</mat-icon>
-            </button>
-            <td-file-input
-                    class="push-left-sm push-right-sm"
-                    #fileInput
-                    [(ngModel)]="file"
-                    (selectFile)="selectFileEvent($event)"
-                    accept=".json,.xml"
-            >
-                <mat-icon>folder</mat-icon>
-                <span class="text-upper">Open</span>
-            </td-file-input>
-            <span *ngIf="data !== undefined">
-                     <button mat-raised-button (click)="refresh()">Refresh</button>&nbsp;
-                     <span *ngIf="openEHR">
-                            <button mat-raised-button (click)="showFHIR()">Show FHIR</button>&nbsp;
-                     </span>
-                        <span *ngIf="form !== undefined">
-                            <button mat-raised-button [matMenuTriggerFor]="menu">Save</button>
-                            <mat-menu #menu="matMenu">
-                                <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire</a>
-                                <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse</a>
-                            </mat-menu>
-                          </span>
-                    </span>
-        </div>
-        <div layout="row" layout-align="space-between center">
-            <mat-form-field class="example-full" flex="100">
-                <mat-label>Select a FHIR Questionnaire</mat-label>
-                <mat-select name="status" [(ngModel)]="questionnaire" (ngModelChange)="applyQuestionnaire($event)">
-                    <mat-option *ngFor="let profile of questionnaires" [value]="profile">
-                        <span *ngIf="profile.title !== undefined">{{profile.title}}</span>
-                        <span *ngIf="profile.title === undefined">{{profile.name}}</span>
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+        <mat-card>
+            <mat-card-header>
+                <h2>Form Definition (FHIR Questionnaire)</h2>
+            </mat-card-header>
+            <mat-card-content>
+                <div layout="row">
+                    <button mat-raised-button (click)="openInfo()">
+                        <mat-icon>info</mat-icon>
+                    </button>
+                    <td-file-input
+                            class="push-left-sm push-right-sm"
+                            #fileInput
+                            [(ngModel)]="file"
+                            (selectFile)="selectFileEvent($event)"
+                            accept=".json,.xml"
+                    >
+                        <mat-icon>folder</mat-icon>
+                        <span class="text-upper">Open</span>
+                    </td-file-input>
+                    <span *ngIf="data !== undefined">
+                             <button mat-raised-button (click)="refresh()">Refresh</button>&nbsp;
+                             <span *ngIf="openEHR">
+                                    <button mat-raised-button (click)="showFHIR()">Show FHIR</button>&nbsp;
+                             </span>
+                                <span *ngIf="form !== undefined">
+                                    <button mat-raised-button [matMenuTriggerFor]="menu">Save</button>
+                                    <mat-menu #menu="matMenu">
+                                        <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire</a>
+                                        <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse</a>
+                                    </mat-menu>
+                                  </span>
+                            </span>
+                </div>
+                <div layout="row" layout-align="space-between center">
+                    <mat-form-field class="example-full" flex="100">
+                        <mat-label>Select a FHIR Questionnaire</mat-label>
+                        <mat-select name="status" [(ngModel)]="questionnaire" (ngModelChange)="applyQuestionnaire($event)">
+                            <mat-option *ngFor="let profile of questionnaires" [value]="profile">
+                                <span *ngIf="profile.title !== undefined">{{profile.title}}</span>
+                                <span *ngIf="profile.title === undefined">{{profile.name}}</span>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
 
-        </div>
-        <div style="height: calc(100vh - 280px)" >
-            <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
-        </div>
+                </div>
+                <div style="height: calc(100vh - 280px)" >
+                    <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </mat-drawer>
     <mat-card class="fullscreen scrollable-content">
     <div >

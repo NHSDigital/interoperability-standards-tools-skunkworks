@@ -1,17 +1,23 @@
 <mat-drawer-container class="page-container" autosize>
     <mat-drawer #drawer opened="true" style="width:50%;" mode="side">
-        <h3>FHIR Documents</h3>
-        <div layout="row">
-            <button mat-raised-button (click)="openInfo()">
-                <mat-icon>info</mat-icon>
-            </button>
-            <span *ngIf="resource !== undefined">
-                   &nbsp; <button mat-raised-button color="primary" (click)="showDocument()">Show</button>
-                </span>
-        </div>
-        <div style="height: calc(100vh - 100px)" >
-            <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
-        </div>
+            <mat-card>
+                <mat-card-header>
+                    <h2>FHIR Documents</h2>
+                </mat-card-header>
+                <mat-card-content>
+                <div layout="row">
+                        <button mat-raised-button (click)="openInfo()">
+                            <mat-icon>info</mat-icon>
+                        </button>
+                        <span *ngIf="resource !== undefined">
+                               &nbsp; <button mat-raised-button color="primary" (click)="showDocument()">Show</button>
+                            </span>
+                    </div>
+                    <div style="height: calc(100vh - 100px)" >
+                        <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
+                    </div>
+                </mat-card-content>
+            </mat-card>
     </mat-drawer>
         <div>
         <mat-card *ngIf="patient !== undefined && patient.text !== undefined">
