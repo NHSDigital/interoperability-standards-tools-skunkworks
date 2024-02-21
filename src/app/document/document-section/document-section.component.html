@@ -12,9 +12,9 @@
                 <app-document-section [section]="section2" (reference)="select($event)"></app-document-section>
             </span>
         </span>
-        <mat-chip-set *ngFor="let entry of section.entry">
-            <mat-chip (click)="select(entry)" >{{entry.reference}}</mat-chip>
-        </mat-chip-set>
+        <span *ngFor="let entry of section.entry">
+            <button mat-raised-button color="primary" (click)="select(entry)" matTooltip="This would not normally be present in a html view of the document" >{{entry.reference}}</button>
+        </span>
     </mat-card-content>
 </mat-card>
 
