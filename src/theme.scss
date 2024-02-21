@@ -7,7 +7,9 @@
 @import '../node_modules/@covalent/flavored-markdown/flavored-markdown-theme';
 
 @include mat.all-component-typographies();
+
 @include mat.core();
+
 
 $typography: mat.define-legacy-typography-config(
         $font-family: 'Roboto, monospace',
@@ -30,10 +32,16 @@ $theme: mat.define-light-theme((
         density: 0,
 ));
 
+$background: map-get($theme, background);
+
+
 //mat.angular-material-theme($theme);
 //@include mat.angular-material-theme($theme);
+@include mat.core-theme($theme);
 
 @include mat.all-component-themes($theme);
+// Setting the toolbar to the proper spec weight
+@include mat.toolbar-typography($typography);
 
 @include covalent-theme($theme, $typography);
 @include covalent-markdown-theme($theme);
@@ -43,6 +51,12 @@ $theme: mat.define-light-theme((
 
 // Include flex layout classes
 @include covalent-layout();
+
+
+.mat-app-background {
+        background-color: map-get($background, background);
+}
+
 
 body .mat-card {
         border-radius: 8px;
