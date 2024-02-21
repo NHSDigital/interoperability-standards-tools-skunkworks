@@ -77,14 +77,18 @@ export class DocumentComponent  implements AfterContentInit {
   }
 
   select(entry: any): void {
+
     if (this.resource !== undefined && this.resource.resourceType === 'Bundle') {
       let bundle = this.resource as Bundle
       let refs = (entry as Reference).reference?.split("/")
-      if (refs !== undefined && refs.length > 1 && bundle.entry !== undefined) {
+      if (bundle.entry !== undefined) {
         for (let ent of bundle.entry) {
+
           if (ent.resource !== undefined
-              && ent.resource.id === refs[1]
-              && ent.resource.resourceType === refs[0]) {
+              && (
+                  (entry.reference == ent.fullUrl)
+                  || (refs !== undefined && refs.length > 1 && ent.resource.id === refs[1] && ent.resource.resourceType === refs[0]))
+          ) {
             const dialogConfig = new MatDialogConfig();
             let resource = ent.resource
             dialogConfig.disableClose = true;
