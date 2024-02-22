@@ -8,7 +8,7 @@
   "url" : "https://profiles.ihe.net/ITI/MHD/CapabilityStatement/IHE.MHD.DocumentResponder",
   "version" : "4.2.1",
   "name" : "IHE_MHD_DocumentResponder",
-  "title" : "Document Responder (server)",
+  "title" : "IHE UK Supplement Mock - MHD Document Responder (server)",
   "status" : "active",
   "experimental" : false,
   "date" : "2023-08-02T11:14:45-05:00",
@@ -51,6 +51,8 @@
     "resource" : [{
       "type" : "DocumentReference",
       "profile" : "https://profiles.ihe.net/ITI/MHD/StructureDefinition/IHE.MHD.Query.Minimal.DocumentReference",
+      "supportedProfile" : [
+        "https://fhir.hl7.org.uk/StructureDefinition/UKCore-DocumentReference"],
       "interaction" : [{
         "code" : "read"
       },
@@ -92,6 +94,10 @@
           "documentation" : "When this document was created"
         },
         {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
           "name" : "date",
           "definition" : "http://hl7.org/fhir/SearchParameter/DocumentReference-date",
           "type" : "date",
@@ -122,15 +128,32 @@
           "documentation" : "The identifier for this DocumentReference"
         },
         {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
           "name" : "patient",
           "definition" : "http://hl7.org/fhir/SearchParameter/clinical-patient",
           "type" : "reference",
           "documentation" : "Who/what is the subject of the document"
         },
         {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
           "name" : "patient.identifier",
           "type" : "token",
           "documentation" : "An Identifier for Who/what is the subject of the document"
+        },
+        {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHOULD"
+          }],
+          "name" : "patient:identifier",
+          "type" : "token",
+          "documentation" : "An Identifier for Who/what is the subject of the document (NHS Number)"
         },
         {
           "name" : "period",
@@ -157,6 +180,10 @@
           "documentation" : "Additional details about where the content was created (e.g. clinical specialty)"
         },
         {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
+            "valueCode" : "SHALL"
+          }],
           "name" : "status",
           "definition" : "http://hl7.org/fhir/SearchParameter/DocumentReference-status",
           "type" : "token",
