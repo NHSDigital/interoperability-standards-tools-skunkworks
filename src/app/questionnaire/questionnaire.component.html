@@ -21,6 +21,7 @@
                     </td-file-input>
                     <span *ngIf="data !== undefined">
                              <button mat-raised-button (click)="refresh()">Refresh</button>&nbsp;
+                             <button mat-raised-button (click)="save()">Save</button>&nbsp;
                              <span *ngIf="openEHR">
                                     <button mat-raised-button (click)="showFHIR()">Show FHIR</button>&nbsp;
                              </span>
@@ -61,7 +62,7 @@
                         <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire</a>
                         <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse</a>
                         <span *ngIf="patientId !== undefined">
-                            <a mat-menu-item [href]="extractQuestionnaireResponse()" download="data-extraction-bundle.json">Data Extraction</a>
+                            <button mat-menu-item (click)="extractQuestionnaireResponse('data-extraction-bundle.json')" download=>Data Extraction</button>
                         </span>
                     </mat-menu>
                      <span *ngIf="patientId !== undefined && this.questionnaire !== undefined && this.questionnaire.id !== undefined">

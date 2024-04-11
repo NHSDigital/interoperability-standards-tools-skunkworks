@@ -60,16 +60,18 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     this.questionnaires.push(permission as Questionnaire)
 
 
-    this.http.get(this.config.sdcServer() + '/Questionnaire').subscribe((result) => {
+    this.http.get(this.config.sdcServer() + '/Questionnaire?_count=100').subscribe((result) => {
 
           if (result !== undefined) {
             let bundle = result as Bundle
             if (bundle.entry !== undefined) {
+              var questionnairesTemp: Questionnaire[] = [];
               for (let entry of bundle.entry) {
                 if (entry.resource !== undefined && entry.resource.resourceType === 'Questionnaire') {
-                  this.questionnaires.push(entry.resource)
+                  questionnairesTemp.push(entry.resource)
                 }
               }
+              this.questionnaires = questionnairesTemp
             }
           }
       this.route.queryParamMap.subscribe(params => {
@@ -131,7 +133,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
       id: '5bf5f51c-5394-4040-bb9d-0fd2b7823d1e',
       text: 'SMITH, Jane (Mrs)',
       action: '5bf5f51c-5394-4040-bb9d-0fd2b7823d1e'
-    },
+    }
   ];
 
 
@@ -205,18 +207,74 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
 
   populateQuestionnare() {
-    LForms.Util.setFHIRContext(this.ctx)
+    if (this.patientId == undefined) {
+      LForms.Util.setFHIRContext(this.ctx)
 
-    let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.form, "R4");
-    var newFormData = (new LForms.LFormsData(formDef));
-    try {
-      // formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', questionnaireResponse, newFormData, "R4");
-      LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
-    } catch (e) {
-      console.log(e)
-      formDef = null;
+      let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.form, "R4");
+      var newFormData = (new LForms.LFormsData(formDef));
+      try {
+        // formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', questionnaireResponse, newFormData, "R4");
+        LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
+      } catch (e) {
+        console.log(e)
+        formDef = null;
+      }
+    } else {
+      LForms.Util.setFHIRContext(this.ctx)
+      var parameters: Parameters = {
+        resourceType: "Parameters",
+        parameter: []
+      }
+      parameters.parameter?.push({
+        "name": "subject",
+        "valueReference": {
+          "reference": "Patient/" + this.patientId
+        }
+      })
+
+      parameters.parameter?.push({
+        "name": "questionnaire",
+        "resource": this.questionnaire
+      })
+      this.http.post(this.config.sdcServer() + "/Questionnaire/$populate", parameters).subscribe(result => {
+            if (result !== null) {
+              let response = result as Parameters
+              if (response.parameter !== undefined) {
+                for (var param of response.parameter) {
+                  if (param.name === 'response') {
+                    let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.questionnaire, "R4");
+                    var newFormData = (new LForms.LFormsData(formDef));
+                    try {
+                      formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', param.resource, newFormData, "R4");
+                      LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
+                    } catch (e) {
+                      console.log(e)
+                      formDef = null;
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          error => {
+            console.log(JSON.stringify(error))
+            this._dialogService.openAlert({
+              title: 'Alert',
+              disableClose: true,
+              message:
+                  this.config.getErrorMessage(error),
+            });
+          });
+
     }
   }
+
+  populateClick(event: ITdDynamicMenuLinkClickEvent) {
+    this.patientId = event.action
+    this.populateQuestionnare()
+  }
+
 
   downloadQuestionnaire(): SafeResourceUrl {
     const data = JSON.stringify(this.form, undefined, 2);
@@ -285,53 +343,11 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     this.data = JSON.stringify(this.form, undefined, 2)
   }
 
-    extractQuestionnaireResponse() {
 
-    }
 
-  storeQuestionnaireResponse() {
 
-  }
 
-  populateClick(event: ITdDynamicMenuLinkClickEvent) {
-    LForms.Util.setFHIRContext(this.ctx)
-    var parameters: Parameters = {
-      resourceType: "Parameters",
-      parameter: []
-    }
-    this.patientId = event.action
-    parameters.parameter?.push({
-      "name": "subject",
-      "valueReference": {
-        "reference": "Patient/" + event.action
-      }
-    })
 
-    parameters.parameter?.push({
-      "name": "questionnaire",
-      "resource": this.questionnaire
-    })
-    this.http.post(this.config.sdcServer() + "/Questionnaire/$populate", parameters).subscribe(result => {
-      if (result !== null) {
-        let response = result as Parameters
-          if (response.parameter !== undefined) {
-          for (var param of response.parameter) {
-            if (param.name === 'response') {
-              let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.questionnaire, "R4");
-              var newFormData = (new LForms.LFormsData(formDef));
-              try {
-                formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', param.resource, newFormData, "R4");
-                LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
-              } catch (e) {
-                console.log(e)
-                formDef = null;
-              }
-            }
-          }
-        }
-      }
-    })
-  }
   submit() {
 
     if (this.questionnaire !== undefined && this.questionnaire.id !== undefined) {
@@ -355,26 +371,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
             let newQuestionnaireResponse = result as QuestionnaireResponse
 
             if (newQuestionnaireResponse.resourceType === 'QuestionnaireResponse') {
-              // @ts-ignore
-              this.http.post(this.config.sdcServer() + '/QuestionnaireResponse/$extract', newQuestionnaireResponse).subscribe((bundle: Bundle) => {
-
-                    if (bundle !== undefined && bundle.entry !== undefined) {
-                      this.http.post(this.config.sdcServer() + '/', bundle).subscribe((bundle) => {
-
-
-                          },
-                          error => {
-                            console.log(JSON.stringify(error))
-
-                          })
-                    } else {
-
-                    }
-                  },
-                  error => {
-                    console.log(JSON.stringify(newQuestionnaireResponse))
-
-                  })
+              this.extract(newQuestionnaireResponse,undefined)
             }
           }
 
@@ -382,11 +379,109 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
             error => {
               console.log(JSON.stringify(error))
-
+              this._dialogService.openAlert({
+                title: 'Alert',
+                disableClose: true,
+                message:
+                    this.config.getErrorMessage(error),
+              });
             });
           }
 
       }
     }
 
+    extract(newQuestionnaireResponse: QuestionnaireResponse, fileName : string | undefined)
+      {
+        this.http.post(this.config.sdcServer() + '/QuestionnaireResponse/$extract', newQuestionnaireResponse).subscribe(bundleResult => {
+
+           if (bundleResult !== undefined) {
+             let bundle = bundleResult as Bundle
+             if (fileName !== undefined) {
+               this.downloadFile(fileName,bundleResult)
+             }
+             if (bundle !== undefined && bundle.entry !== undefined) {
+
+               this.http.post(this.config.sdcServer() + '/', bundle).subscribe((bundle) => {
+                   },
+                   error => {
+                     this._dialogService.openAlert({
+                       title: 'Alert',
+                       disableClose: true,
+                       message:
+                           this.config.getErrorMessage(error),
+                     });
+                     console.log(JSON.stringify(error))
+                   })
+             }
+           }
+
+            },
+            error => {
+              console.log(JSON.stringify(newQuestionnaireResponse))
+              this._dialogService.openAlert({
+                title: 'Alert',
+                disableClose: true,
+                message:
+                    this.config.getErrorMessage(error),
+              });
+            })
+      }
+  downloadFile(fileName: string, results: Object) {
+    const data = JSON.stringify(results, undefined, 2);
+    const blob = new Blob([data], {
+      type: 'application/json'
+    });
+    //const url = this.sanitizer.bypassSecurityTrustResourceUrl(
+    let url = window.URL.createObjectURL(blob);
+    // @ts-ignore
+    window.open(url);
+  }
+
+  extractQuestionnaireResponse(fileName: string) {
+
+    if (this.questionnaire !== undefined && this.questionnaire.id !== undefined) {
+      let results = LForms.Util.getFormFHIRData("QuestionnaireResponse", "R4", this.mydiv?.nativeElement)
+
+      if (results.resourceType === "QuestionnaireResponse") {
+        let questionnaireResponse: QuestionnaireResponse = results
+        questionnaireResponse.subject = {
+          reference: "Patient/" + this.patientId
+        }
+        questionnaireResponse.questionnaire = "Questionnaire/" + this.questionnaire.id
+        this.extract(questionnaireResponse, fileName)
+
+      }
+    }
+  }
+
+  save() {
+    if (this.questionnaire !== undefined) {
+      if (this.questionnaire.id !== undefined) {
+        this.http.put(this.config.sdcServer() + '/Questionnaire/'+this.questionnaire.id, this.questionnaire).subscribe((bundle) => {
+            },
+            error => {
+              this._dialogService.openAlert({
+                title: 'Alert',
+                disableClose: true,
+                message:
+                    this.config.getErrorMessage(error),
+              });
+              console.log(JSON.stringify(error))
+            })
+      } else {
+        this.http.post(this.config.sdcServer() + '/Questionnaire', this.questionnaire).subscribe((bundle) => {
+            },
+            error => {
+              this._dialogService.openAlert({
+                title: 'Alert',
+                disableClose: true,
+                message:
+                    this.config.getErrorMessage(error),
+              });
+              console.log(JSON.stringify(error))
+            })
+      }
+      }
+    }
 }
