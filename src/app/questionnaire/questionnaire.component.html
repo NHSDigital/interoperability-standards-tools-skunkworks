@@ -2,7 +2,7 @@
     <mat-drawer #drawer opened="true" style="width:50%;" mode="side">
         <mat-card>
             <mat-card-header>
-                <h2>Form Definition (FHIR Questionnaire)</h2>
+                <h2>Structured Data Capture</h2>
             </mat-card-header>
             <mat-card-content>
                 <div layout="row">
@@ -24,13 +24,13 @@
                              <span *ngIf="openEHR">
                                     <button mat-raised-button (click)="showFHIR()">Show FHIR</button>&nbsp;
                              </span>
-                                <span *ngIf="form !== undefined">
-                                    <button mat-raised-button [matMenuTriggerFor]="menu">Save</button>
-                                    <mat-menu #menu="matMenu">
-                                        <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire</a>
-                                        <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse</a>
-                                    </mat-menu>
-                                  </span>
+                        <td-dynamic-menu
+                                [trigger]="triggerPopulate"
+                                [items]="patients"
+                                (itemClicked)="populateClick($event)"
+                        ></td-dynamic-menu>
+
+
                             </span>
                 </div>
                 <div layout="row" layout-align="space-between center">
@@ -54,6 +54,21 @@
     <mat-card class="fullscreen scrollable-content">
     <div >
         <div #myFormContainer ></div>
+        <span *ngIf="form !== undefined">
+             <div layout="row" layout-align="space-between right">
+                    <button mat-raised-button [matMenuTriggerFor]="menu">Download</button>
+                    <mat-menu #menu="matMenu">
+                        <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire</a>
+                        <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse</a>
+                        <span *ngIf="patientId !== undefined">
+                            <a mat-menu-item [href]="extractQuestionnaireResponse()" download="data-extraction-bundle.json">Data Extraction</a>
+                        </span>
+                    </mat-menu>
+                     <span *ngIf="patientId !== undefined && this.questionnaire !== undefined && this.questionnaire.id !== undefined">
+                            <button mat-raised-button (click)="submit()" >Submit</button>
+                     </span>
+             </div>
+         </span>
     </div>
     </mat-card>
 </mat-drawer-container>

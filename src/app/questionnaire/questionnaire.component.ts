@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, ElementRef, EventEmitter, OnInit, signal, ViewChild} from '@angular/core';
 import {ConfigService} from "../config.service";
 import {client} from "fhirclient";
-import {Bundle, Questionnaire} from "fhir/r4";
+import {Bundle, Questionnaire, Parameters, QuestionnaireResponse} from "fhir/r4";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import Client from "fhirclient/lib/Client";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
@@ -12,6 +12,7 @@ import nominations from '../questionnaire/Questionnaire/prescription-nomination.
 import {ActivatedRoute, Router} from "@angular/router";
 import {InfoDiaglogComponent} from "../info-diaglog/info-diaglog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {IMenuItem, IMenuTrigger, ITdDynamicMenuLinkClickEvent} from "@covalent/core/dynamic-menu";
 
 declare var LForms: any;
 @Component({
@@ -33,6 +34,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   fileLoadedFile: EventEmitter<any> = new EventEmitter();
   markdown: string = "A tool for creating Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/) and the address of this FHIR server is `" + this.config.sdcServer() + "`. For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/)";
   file: any;
+  patientId;
 
 
   constructor(private config: ConfigService,
@@ -105,6 +107,33 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
 
   checkType = signal<any | null>(null);
+  triggerPopulate: IMenuTrigger = {
+    id: 'triggerSmartApps',
+    text: 'Pre-Populate',
+  };
+  patients: IMenuItem[] = [
+    {
+      id: '073eef49-81ee-4c2e-893b-bc2e4efd2630',
+      text: 'KANFELD, RACHEL (MISS)',
+      action: '073eef49-81ee-4c2e-893b-bc2e4efd2630'
+    },
+    {
+      id: '0cd25141-2987-49d2-a038-2f8946e3b8b4',
+      text: 'SMITH, FREDRICA (MRS)',
+      action: '0cd25141-2987-49d2-a038-2f8946e3b8b4'
+    },
+    {
+      id: '03c4e10a-95a2-4223-8c67-418c2c6953e1',
+      text: 'ANDREWS, Andy (Mr)',
+      action: '03c4e10a-95a2-4223-8c67-418c2c6953e1'
+    },
+    {
+      id: '5bf5f51c-5394-4040-bb9d-0fd2b7823d1e',
+      text: 'SMITH, Jane (Mrs)',
+      action: '5bf5f51c-5394-4040-bb9d-0fd2b7823d1e'
+    },
+  ];
+
 
 
   onInit(editor) {
@@ -173,9 +202,6 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
             })
       }
     }
-
-
-
   }
 
   populateQuestionnare() {
@@ -258,4 +284,109 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   showFHIR() {
     this.data = JSON.stringify(this.form, undefined, 2)
   }
+
+    extractQuestionnaireResponse() {
+
+    }
+
+  storeQuestionnaireResponse() {
+
+  }
+
+  populateClick(event: ITdDynamicMenuLinkClickEvent) {
+    LForms.Util.setFHIRContext(this.ctx)
+    var parameters: Parameters = {
+      resourceType: "Parameters",
+      parameter: []
+    }
+    this.patientId = event.action
+    parameters.parameter?.push({
+      "name": "subject",
+      "valueReference": {
+        "reference": "Patient/" + event.action
+      }
+    })
+
+    parameters.parameter?.push({
+      "name": "questionnaire",
+      "resource": this.questionnaire
+    })
+    this.http.post(this.config.sdcServer() + "/Questionnaire/$populate", parameters).subscribe(result => {
+      if (result !== null) {
+        let response = result as Parameters
+          if (response.parameter !== undefined) {
+          for (var param of response.parameter) {
+            if (param.name === 'response') {
+              let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.questionnaire, "R4");
+              var newFormData = (new LForms.LFormsData(formDef));
+              try {
+                formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', param.resource, newFormData, "R4");
+                LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
+              } catch (e) {
+                console.log(e)
+                formDef = null;
+              }
+            }
+          }
+        }
+      }
+    })
+  }
+  submit() {
+
+    if (this.questionnaire !== undefined && this.questionnaire.id !== undefined) {
+      let results = LForms.Util.getFormFHIRData("QuestionnaireResponse", "R4", this.mydiv?.nativeElement)
+
+      if (results.resourceType === "QuestionnaireResponse") {
+        let questionnaireResponse: QuestionnaireResponse = results
+        questionnaireResponse.subject = {
+          reference: "Patient/" + this.patientId
+        }
+        questionnaireResponse.questionnaire = "Questionnaire/" + this.questionnaire.id
+        this.http.post(this.config.sdcServer() + '/QuestionnaireResponse', questionnaireResponse).subscribe((result) => {
+          // this.diaglogRef.close(condition);
+          this._dialogService.openAlert({
+            title: 'Info',
+            disableClose: true,
+            message:
+                'Form submitted ok',
+          });
+          if (result !== undefined) {
+            let newQuestionnaireResponse = result as QuestionnaireResponse
+
+            if (newQuestionnaireResponse.resourceType === 'QuestionnaireResponse') {
+              // @ts-ignore
+              this.http.post(this.config.sdcServer() + '/QuestionnaireResponse/$extract', newQuestionnaireResponse).subscribe((bundle: Bundle) => {
+
+                    if (bundle !== undefined && bundle.entry !== undefined) {
+                      this.http.post(this.config.sdcServer() + '/', bundle).subscribe((bundle) => {
+
+
+                          },
+                          error => {
+                            console.log(JSON.stringify(error))
+
+                          })
+                    } else {
+
+                    }
+                  },
+                  error => {
+                    console.log(JSON.stringify(newQuestionnaireResponse))
+
+                  })
+            }
+          }
+
+        },
+
+            error => {
+              console.log(JSON.stringify(error))
+
+            });
+          }
+
+      }
+    }
+
 }
