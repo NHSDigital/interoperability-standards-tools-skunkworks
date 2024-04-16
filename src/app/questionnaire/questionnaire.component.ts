@@ -290,6 +290,14 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     let results =  LForms.Util.getFormFHIRData("QuestionnaireResponse", "R4", this.mydiv?.nativeElement)
 
     if (results.resourceType === "QuestionnaireResponse") {
+      if (this.patientId !== undefined) {
+        results.subject = {
+          "reference": "Patient/" + this.patientId
+        }
+      }
+      if (this.questionnaire !== undefined && this.questionnaire.id !== undefined) {
+        results.questionnaire = "Questionnaire/"+ this.questionnaire.id
+      }
       const data = JSON.stringify(results, undefined, 2);
       const blob = new Blob([data], {
         type: 'application/octet-stream'
