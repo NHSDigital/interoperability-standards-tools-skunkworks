@@ -59,14 +59,15 @@
              <div layout="row" layout-align="space-between right">
                     <button mat-raised-button [matMenuTriggerFor]="menu">Download</button>
                     <mat-menu #menu="matMenu">
-                        <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire</a>
-                        <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse</a>
+                        <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire (Form Definition)</a>
+                        <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse (Completed Form)</a>
+                        <button mat-menu-item (click)="viewQuestionnaireResponse('data-extraction-bundle.json')" >View QuestionnaireResponse (Completed Form)</button>
                         <span *ngIf="patientId !== undefined">
-                            <button mat-menu-item (click)="extractQuestionnaireResponse('data-extraction-bundle.json')" download=>Data Extraction</button>
+                            <button mat-menu-item (click)="extractQuestionnaireResponse('data-extraction-bundle.json')" download=>View Data Extraction</button>
                         </span>
                     </mat-menu>
                      <span *ngIf="patientId !== undefined && this.questionnaire !== undefined && this.questionnaire.id !== undefined">
-                            <button mat-raised-button (click)="submit()" >Submit</button>
+                            <button color="accent" mat-raised-button (click)="submit()" >Submit</button>
                      </span>
              </div>
          </span>

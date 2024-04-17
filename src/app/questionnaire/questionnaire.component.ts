@@ -303,7 +303,9 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
       const blob = new Blob([data], {
         type: 'application/octet-stream'
       });
-      return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+
+        return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+
     }
     return undefined
   }
@@ -447,6 +449,21 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     window.open(url);
   }
 
+  viewQuestionnaireResponse(fileName: string) {
+    if (this.questionnaire !== undefined && this.questionnaire.id !== undefined) {
+      let results = LForms.Util.getFormFHIRData("QuestionnaireResponse", "R4", this.mydiv?.nativeElement)
+
+      if (results.resourceType === "QuestionnaireResponse") {
+        let questionnaireResponse: QuestionnaireResponse = results
+        questionnaireResponse.subject = {
+          reference: "Patient/" + this.patientId
+        }
+        questionnaireResponse.questionnaire = "Questionnaire/" + this.questionnaire.id
+        this.downloadFile(fileName, questionnaireResponse)
+      }
+    }
+  }
+
   extractQuestionnaireResponse(fileName: string) {
 
     if (this.questionnaire !== undefined && this.questionnaire.id !== undefined) {
@@ -530,4 +547,6 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
       });
     }
   }
+
+
 }
