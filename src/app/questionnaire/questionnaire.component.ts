@@ -148,6 +148,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
 
   applyQuestionnaire(questionnaire: Questionnaire) {
+    this.questionnaire = questionnaire
     this.data = JSON.stringify(questionnaire, undefined, 2)
     this.refresh()
   }
