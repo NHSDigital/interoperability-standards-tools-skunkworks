@@ -464,32 +464,69 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
 
   save() {
-    if (this.questionnaire !== undefined) {
-      if (this.questionnaire.id !== undefined) {
-        this.http.put(this.config.sdcServer() + '/Questionnaire/'+this.questionnaire.id, this.questionnaire).subscribe((bundle) => {
-            },
-            error => {
-              this._dialogService.openAlert({
-                title: 'Alert',
-                disableClose: true,
-                message:
-                    this.config.getErrorMessage(error),
-              });
-              console.log(JSON.stringify(error))
-            })
+    if ((this.data as string).startsWith('{')) {
+      var newForm = JSON.parse(this.data)
+      if (newForm !== undefined) {
+        if (newForm.id !== undefined) {
+          this.http.put(this.config.sdcServer() + '/Questionnaire/' + newForm.id, newForm).subscribe((bundle) => {
+                this._dialogService.openAlert({
+                  title: 'Alert',
+                  disableClose: true,
+                  message:
+                      'Updated'
+                });
+                if (bundle !== undefined) {
+                  let questionaire = bundle as Questionnaire
+                  this.applyQuestionnaire(questionaire)
+                }
+              },
+              error => {
+                this._dialogService.openAlert({
+                  title: 'Alert',
+                  disableClose: true,
+                  message:
+                      this.config.getErrorMessage(error),
+                });
+                console.log(JSON.stringify(error))
+              })
+        } else {
+          this.http.post(this.config.sdcServer() + '/Questionnaire', newForm).subscribe((bundle) => {
+                this._dialogService.openAlert({
+                  title: 'Alert',
+                  disableClose: true,
+                  message:
+                      'Saved'
+                });
+                if (bundle !== undefined) {
+                  let questionaire = bundle as Questionnaire
+                  this.applyQuestionnaire(questionaire)
+                }
+              },
+              error => {
+                this._dialogService.openAlert({
+                  title: 'Alert',
+                  disableClose: true,
+                  message:
+                      this.config.getErrorMessage(error),
+                });
+                console.log(JSON.stringify(error))
+              })
+        }
       } else {
-        this.http.post(this.config.sdcServer() + '/Questionnaire', this.questionnaire).subscribe((bundle) => {
-            },
-            error => {
-              this._dialogService.openAlert({
-                title: 'Alert',
-                disableClose: true,
-                message:
-                    this.config.getErrorMessage(error),
-              });
-              console.log(JSON.stringify(error))
-            })
+        this._dialogService.openAlert({
+          title: 'Alert',
+          disableClose: true,
+          message:
+              'No id present in the questionnaire. Unable to save'
+        });
       }
-      }
+    } else {
+      this._dialogService.openAlert({
+        title: 'Alert',
+        disableClose: true,
+        message:
+            'Unable to process form'
+      });
     }
+  }
 }
