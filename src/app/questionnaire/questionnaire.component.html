@@ -25,19 +25,14 @@
                              <span *ngIf="openEHR">
                                     <button mat-raised-button (click)="showFHIR()">Show FHIR</button>&nbsp;
                              </span>
-                        <td-dynamic-menu
-                                [trigger]="triggerPopulate"
-                                [items]="patients"
-                                (itemClicked)="populateClick($event)"
-                        ></td-dynamic-menu>
 
 
-                            </span>
+                    </span>
                 </div>
                 <div layout="row" layout-align="space-between center">
                     <mat-form-field class="example-full" flex="100">
                         <mat-label>Select a FHIR Questionnaire</mat-label>
-                        <mat-select name="status" [(ngModel)]="questionnaire" (ngModelChange)="applyQuestionnaire($event)">
+                        <mat-select name="status" [(ngModel)]="questionnaire" (ngModelChange)="selectQuestionnaire($event)">
                             <mat-option *ngFor="let profile of questionnaires" [value]="profile">
                                 <span *ngIf="profile.title !== undefined">{{profile.title}}</span>
                                 <span *ngIf="profile.title === undefined">{{profile.name}}</span>
@@ -53,7 +48,18 @@
         </mat-card>
     </mat-drawer>
     <mat-card class="fullscreen scrollable-content">
+        <mat-card-header>
+            <button mat-raised-button [matMenuTriggerFor]="populate">Select Patient</button>
+            &nbsp; &nbsp;
+            <h2 *ngIf="patientId !== undefined">{{getPatient()}}</h2>
+        </mat-card-header>
+        <mat-menu #populate="matMenu">
+            <span *ngFor="let pat of patients">
+                <button mat-menu-item (click)="populateClick(pat)">{{pat.text}}</button>
+            </span>
+        </mat-menu>
     <div >
+
         <div #myFormContainer ></div>
         <span *ngIf="form !== undefined">
              <div layout="row" layout-align="space-between right">

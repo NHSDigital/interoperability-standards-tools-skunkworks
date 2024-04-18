@@ -32,7 +32,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   questionnaires: Questionnaire[] = [];
   form: any;
   fileLoadedFile: EventEmitter<any> = new EventEmitter();
-  markdown: string = "A tool for creating Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/) and the address of this FHIR server is `" + this.config.sdcServer() + "`. For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/)";
+  markdown: string = "A useful tool for creating/editing Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/). This server (`" + this.config.sdcServer() + "`) can be used with NLM Form Builder, use `Start with existing form`, then `Import from the FHIR Server` and add this server using `Add your FHIR server`. \n\n For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/). \n\n The component used for displaying the questionnaires is open source [LHC-Forms](https://lhncbc.github.io/lforms/)";
   file: any;
   patientId;
 
@@ -42,6 +42,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
               private sanitizer: DomSanitizer,
               private _dialogService: TdDialogService,
               private route: ActivatedRoute,
+              private router: Router,
               public dialog: MatDialog
   ) {
   }
@@ -76,7 +77,8 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
           }
       this.route.queryParamMap.subscribe(params => {
         const urlParam = params.get('url');
-
+        const patientId = params.get('id');
+        if (patientId !== undefined) this.patientId = patientId
         if (urlParam !== undefined && urlParam !== null) {
           var found = false
           for (let questionnaire of this.questionnaires) {
@@ -147,6 +149,17 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
   }
 
+  selectQuestionnaire(questionniare: Questionnaire) {
+    this.router.navigate(
+        ['/questionnaire'],
+        { queryParams: { url: questionniare.url,
+          id : this.patientId} }
+    );
+  }
+  populateClick(event: ITdDynamicMenuLinkClickEvent) {
+    this.patientId = event.action
+    if (this.questionnaire !== undefined) this.selectQuestionnaire(this.questionnaire)
+  }
   applyQuestionnaire(questionnaire: Questionnaire) {
     this.questionnaire = questionnaire
     this.data = JSON.stringify(questionnaire, undefined, 2)
@@ -271,10 +284,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     }
   }
 
-  populateClick(event: ITdDynamicMenuLinkClickEvent) {
-    this.patientId = event.action
-    this.populateQuestionnare()
-  }
+
 
 
   downloadQuestionnaire(): SafeResourceUrl {
@@ -549,4 +559,15 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
 
 
+  getPatient() {
+    console.log(this.patientId)
+    for (let patient of this.patients) {
+      console.log(patient)
+      if (this.patientId === patient.id) {
+        console.log(patient.text)
+        return patient.text
+      }
+    }
+    return undefined
+  }
 }
