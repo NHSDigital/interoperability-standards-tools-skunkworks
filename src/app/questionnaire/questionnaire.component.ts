@@ -13,6 +13,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {InfoDiaglogComponent} from "../info-diaglog/info-diaglog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {IMenuItem, IMenuTrigger, ITdDynamicMenuLinkClickEvent} from "@covalent/core/dynamic-menu";
+import {MatTabChangeEvent} from "@angular/material/tabs";
+
 
 declare var LForms: any;
 @Component({
@@ -35,7 +37,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   markdown: string = "A useful tool for creating/editing Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/). This server (`" + this.config.sdcServer() + "`) can be used with NLM Form Builder, use `Start with existing form`, then `Import from the FHIR Server` and add this server using `Add your FHIR server`. \n\n For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/). \n\n The component used for displaying the questionnaires is open source [LHC-Forms](https://lhncbc.github.io/lforms/)";
   file: any;
   patientId;
-
+  visible = 0;
 
   constructor(private config: ConfigService,
               private http: HttpClient,
@@ -84,7 +86,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
           for (let questionnaire of this.questionnaires) {
             if (decodeURI(urlParam as string) === questionnaire.url) {
               found = true
-              console.log(questionnaire)
+            //  console.log(questionnaire)
               this.data = JSON.stringify(questionnaire, undefined, 2)
               this.applyQuestionnaire(questionnaire)
             }
@@ -228,6 +230,8 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
       var newFormData = (new LForms.LFormsData(formDef));
       try {
         // formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', questionnaireResponse, newFormData, "R4");
+        console.log(this.mydiv?.nativeElement)
+        console.log(formDef)
         LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
       } catch (e) {
         console.log(e)
@@ -298,26 +302,36 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
 
   downloadQuestionnaireResponse(): SafeResourceUrl | undefined {
-    let results =  LForms.Util.getFormFHIRData("QuestionnaireResponse", "R4", this.mydiv?.nativeElement)
+    const div = this.mydiv?.nativeElement
+  //  console.log(div)
+    if (div !== undefined) {
+      try {
+        let results = LForms.Util.getFormFHIRData("QuestionnaireResponse", "R4", this.mydiv?.nativeElement)
 
-    if (results.resourceType === "QuestionnaireResponse") {
-      if (this.patientId !== undefined) {
-        results.subject = {
-          "reference": "Patient/" + this.patientId
+        if (results.resourceType === "QuestionnaireResponse") {
+          if (this.patientId !== undefined) {
+            results.subject = {
+              "reference": "Patient/" + this.patientId
+            }
+          }
+          if (this.questionnaire !== undefined && this.questionnaire.id !== undefined) {
+            results.questionnaire = "Questionnaire/" + this.questionnaire.id
+          }
+          const data = JSON.stringify(results, undefined, 2);
+          const blob = new Blob([data], {
+            type: 'application/octet-stream'
+          });
+
+          return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+
         }
       }
-      if (this.questionnaire !== undefined && this.questionnaire.id !== undefined) {
-        results.questionnaire = "Questionnaire/"+ this.questionnaire.id
+      catch(e:any){
+        const result = e.Message;
       }
-      const data = JSON.stringify(results, undefined, 2);
-      const blob = new Blob([data], {
-        type: 'application/octet-stream'
-      });
-
-        return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
-
     }
     return undefined
+
   }
 
   selectFileEvent(file: File | FileList) {
@@ -491,6 +505,25 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     }
   }
 
+  tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+    console.log('tabChangeEvent => ', tabChangeEvent);
+    console.log('index => ', tabChangeEvent.index);
+    this.visible = tabChangeEvent.index
+    if (this.visible == 0) {
+      console.log(this.data)
+      console.log(this.form)
+      console.log(this.mydiv)
+      /*
+      if ((this.data as string).startsWith('{')) {
+        this.form = JSON.parse(this.data)
+
+      }
+      this.populateQuestionnare()
+
+       */
+    }
+  }
+
   save() {
     if ((this.data as string).startsWith('{')) {
       var newForm = JSON.parse(this.data)
@@ -560,14 +593,27 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
 
   getPatient() {
-    console.log(this.patientId)
+    //console.log(this.patientId)
     for (let patient of this.patients) {
-      console.log(patient)
+    //  console.log(patient)
       if (this.patientId === patient.id) {
-        console.log(patient.text)
+       // console.log(patient.text)
         return patient.text
       }
     }
     return undefined
+  }
+
+
+  visibleOpt(number: number) {
+      this.visible = number
+  }
+
+  getWidth() {
+    if (this.visible === 1) {
+      return "width:50%;"
+    } else {
+      return "width:30%;"
+    }
   }
 }
