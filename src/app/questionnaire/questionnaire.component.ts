@@ -137,7 +137,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
   setQuestionnaire(data : any) {
     if ((data as string).startsWith('{')) {
-      this.form = JSON.parse(data)
+      this.questionnaire = JSON.parse(data)
     } else {
       if ((data as string).includes('<template')) {
         let headers = new HttpHeaders(
@@ -145,11 +145,9 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
         headers = headers.append('Content-Type', 'application/xml');
         headers = headers.append('Accept', 'application/json');
         this.http.post(this.config.openEHRServer()+'/Questionnaire/$convertTemplate', data,{ headers}).subscribe(result => {
-              console.log(result)
-
-                this.form = result
+                console.log(result)
+                this.questionnaire= result as Questionnaire
                 this.openEHR = true
-
             },
             error => {
 
@@ -169,7 +167,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
         headers = headers.append('Accept', 'application/json');
         this.http.post(this.config.openEHRServer()+'/Questionnaire/$convertArchetype', data,{ headers}).subscribe(result => {
               console.log(result)
-              this.form = result
+              this.questionnaire = result as Questionnaire
               this.openEHR = true
             },
             error => {

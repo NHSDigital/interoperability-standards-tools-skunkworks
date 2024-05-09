@@ -69,7 +69,7 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit')
+  //  console.log('ngAfterViewInit')
 
     if (this.runPopulate && this.mydiv !== undefined) {
       this.populateQuestionnare()
@@ -77,7 +77,7 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
   }
 
   ngAfterViewChecked(): void {
-    console.log('ngAfterViewChecked')
+   // console.log('ngAfterViewChecked')
 
     if (this.runPopulate && this.mydiv !== undefined) {
       this.populateQuestionnare()
@@ -128,26 +128,30 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
 
   }
 
+  populateQuestionnaireNoPopulation() {
+    LForms.Util.setFHIRContext(this.ctx)
+    let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.questionnaire, "R4");
+    var newFormData = (new LForms.LFormsData(formDef));
+    try {
+      const qr : QuestionnaireResponse = {
+        resourceType: "QuestionnaireResponse", status: 'in-progress'
+
+      }
+      formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', qr, newFormData, "R4");
+      console.log(this.mydiv?.nativeElement)
+      console.log(formDef)
+      LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
+    } catch (e) {
+      console.log(e)
+      formDef = null;
+    }
+  }
+
   populateQuestionnare() {
     this.runPopulate = false
     console.log('Running populate')
     if (this.patientId == null) {
-      LForms.Util.setFHIRContext(this.ctx)
-      let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.questionnaire, "R4");
-      var newFormData = (new LForms.LFormsData(formDef));
-      try {
-        const qr : QuestionnaireResponse = {
-          resourceType: "QuestionnaireResponse", status: 'in-progress'
-
-        }
-        formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', qr, newFormData, "R4");
-        console.log(this.mydiv?.nativeElement)
-        console.log(formDef)
-        LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
-      } catch (e) {
-        console.log(e)
-        formDef = null;
-      }
+      this.populateQuestionnaireNoPopulation()
     } else {
       LForms.Util.setFHIRContext(this.ctx)
       var parameters: Parameters = {
@@ -194,6 +198,7 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
               message:
                   this.config.getErrorMessage(error),
             });
+            this.populateQuestionnaireNoPopulation()
           });
 
     }
