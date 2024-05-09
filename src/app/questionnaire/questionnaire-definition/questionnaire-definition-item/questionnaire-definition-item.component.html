@@ -1,32 +1,76 @@
 <div *ngIf="item !== undefined" style="width: 100%" class="example-headers-align">
-    <mat-expansion-panel hideToggle>
+    <mat-expansion-panel hideToggle (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
         <mat-expansion-panel-header  [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
             <mat-panel-title >
                 {{item.text}}
             </mat-panel-title>
             <mat-panel-description>
                  <span>
-    <mat-chip-set aria-label="Item Type">
-        <span *ngIf="item.type !== undefined">
-                <mat-chip>{{ item.type }}</mat-chip>
-        </span>
-         <span *ngIf="item.required !== undefined && item.required">
-                <mat-chip style="background-color: #feebeb">Required</mat-chip>
-        </span>
-    </mat-chip-set>
-    </span>
-                <span>
-          <a *ngIf="item.code !== undefined" mat-raised-button [href]="getTerminologyUrl(item.code)" target="_blank" [matTooltip]="getTerminologyDisplay(item.code)">Coded</a>
-    </span>
+                    <mat-chip-set aria-label="Item Type">
+                        <span *ngIf="item.type !== undefined && (item.type == 'group' || !panelOpenState)">
+                                <mat-chip>{{ item.type }}</mat-chip>
+                        </span>
+                         <span *ngIf="item.required !== undefined && item.required">
+                                <mat-chip style="background-color: #feebeb">Required</mat-chip>
+                        </span>
+                        <span *ngIf="item.repeats !== undefined && item.repeats">
+                                <mat-chip>Repeats</mat-chip>
+                        </span>
+                    </mat-chip-set>
+                 </span>
             </mat-panel-description>
         </mat-expansion-panel-header>
-        <h3>Question</h3>
-        <span *ngIf="item.code !== undefined">{{getTerminologyDisplay(item.code)}}</span>
-        <h3>Answer</h3>
-        <span *ngIf="item.definition !== undefined || item.code !== undefined">
-            <h3>FHIR Resource Mapping</h3>
-            <mat-chip *ngIf="item.definition == undefined || item.code !== undefined">Observation</mat-chip> element: code
-            {{item.definition}}
+        <span *ngIf="item.type !== undefined && item.type !== 'group'">
+            <span *ngIf="item.code !== undefined">
+                <h3>Coded Question</h3>
+                {{getTerminologyDisplay(item.code)}}
+                <a *ngIf="item.code !== undefined" mat-raised-button [href]="getTerminologyUrl(item.code)" target="_blank" [matTooltip]="getTerminologyDisplay(item.code)">Onto Server</a>
+            </span>
+            <h3>Answer</h3>
+             <span *ngIf="item.type !== undefined">
+                <mat-chip>{{ item.type }}</mat-chip>
+            </span>
+            <span *ngIf="item.answerOption !== undefined && item.answerOption.length >0">
+                <br/>
+                <br/>
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+
+                    <ng-container matColumnDef="code">
+                    <th mat-header-cell *matHeaderCellDef> Code </th>
+                    <td mat-cell *matCellDef="let element"> <span *ngIf="element.valueCoding !== undefined">
+                        {{element.valueCoding.code}}
+                    </span> </td>
+                  </ng-container>
+                  <ng-container matColumnDef="display">
+                    <th mat-header-cell *matHeaderCellDef> Display </th>
+                    <td mat-cell *matCellDef="let element"> <span *ngIf="element.valueCoding !== undefined">
+                        {{element.valueCoding.display}}
+                    </span> </td>
+                  </ng-container>
+                  <ng-container matColumnDef="codesystem">
+                    <th mat-header-cell *matHeaderCellDef> CodeSystem </th>
+                    <td mat-cell *matCellDef="let element"> <span *ngIf="element.valueCoding !== undefined">
+                        {{element.valueCoding.system}}
+                    </span> </td>
+                  </ng-container>
+
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <br/>
+            </span>
+            <span *ngIf="item.definition !== undefined || item.code !== undefined">
+                <h3>FHIR Resource Mapping</h3>
+                <span *ngIf="item.definition === undefined && item.code !== undefined">
+                    <mat-chip>Observation</mat-chip> element: value
+                </span>
+                <span *ngIf="item.definition !== undefined">
+                    <mat-chip>{{getDefinitionResource(item.definition)}}</mat-chip> element: {{getDefinitionElement(item.definition)}}
+                </span>
+
+            </span>
         </span>
     </mat-expansion-panel>
 </div>

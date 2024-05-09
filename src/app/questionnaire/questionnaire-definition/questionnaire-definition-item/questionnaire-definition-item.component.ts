@@ -1,18 +1,28 @@
 import {Component, Input} from '@angular/core';
-import {QuestionnaireItem} from "fhir/r4";
+import {QuestionnaireItem, QuestionnaireItemAnswerOption} from "fhir/r4";
 import {CommonModule} from "@angular/common";
 import {Coding} from "fhir/r4";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatAnchor} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {getMatIconNameNotFoundError} from "@angular/material/icon";
+import {
+  MatCell,
+  MatColumnDef,
+  MatHeaderCell,
+  MatTable,
+  MatTableDataSource,
+  MatTableModule
+} from "@angular/material/table";
 
 @Component({
   selector: 'app-questionnaire-definition-item',
   standalone: true,
   imports: [
     MatChipsModule,
-      MatExpansionModule,
+    MatExpansionModule,
+      MatTableModule,
     CommonModule,
     MatAnchor,
     MatTooltip
@@ -24,11 +34,18 @@ export class QuestionnaireDefinitionItemComponent {
 
   @Input()
   set node(item: QuestionnaireItem) {
-
     this.item = item;
+    if (item.answerOption !== undefined) {
+      this.dataSource = new MatTableDataSource<QuestionnaireItemAnswerOption>(this.item.answerOption)
+    }
   }
 
   item: QuestionnaireItem | undefined;
+  panelOpenState = false;
+
+  displayedColumns: string[] = ['code', 'display', 'codesystem'];
+  // @ts-ignore
+  dataSource: MatTableDataSource<QuestionnaireItemAnswerOption>;
 
   getTerminologyUrl(code: Coding[]) {
     // Use base onto as NHS England and Scotland versions have issues.
@@ -44,5 +61,17 @@ export class QuestionnaireDefinitionItemComponent {
        return result
      }
      else return 'No display term present'
+  }
+
+    protected readonly getMatIconNameNotFoundError = getMatIconNameNotFoundError;
+
+  getDefinitionResource(definition: string) {
+    var resource = definition.split("#")[0]
+    var resources = resource.split("/")
+    return resources[resources.length-1]
+  }
+
+  getDefinitionElement(definition: string) {
+    return definition.split("#")[1]
   }
 }
