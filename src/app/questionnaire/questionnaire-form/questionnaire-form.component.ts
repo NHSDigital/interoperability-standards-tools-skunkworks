@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {Bundle, Parameters, Questionnaire, QuestionnaireResponse} from "fhir/r4";
@@ -10,6 +10,8 @@ import Client from "fhirclient/lib/Client";
 import {client} from "fhirclient";
 import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
+import {Subject} from "rxjs";
+
 
 declare var LForms: any;
 
@@ -26,14 +28,12 @@ declare var LForms: any;
   templateUrl: './questionnaire-form.component.html',
   styleUrl: './questionnaire-form.component.scss'
 })
-export class QuestionnaireFormComponent implements OnInit {
+export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterViewChecked {
 
   @Input()
   set patient(patientId: any | undefined) {
     this.patientId = patientId;
-    if (this.patientId !== undefined && this.questionnaire !== undefined) {
-      this.populateQuestionnare()
-    }
+    this.runPopulate = true;
   }
 
   patientId;
@@ -41,14 +41,14 @@ export class QuestionnaireFormComponent implements OnInit {
   @Input()
   set formDefinition(questionnaire: Questionnaire | undefined) {
     this.questionnaire = questionnaire;
-    if (this.patientId !== undefined && this.questionnaire !== undefined) {
-      this.populateQuestionnare()
-    }
+    this.runPopulate = true;
   }
 
   questionnaire: Questionnaire | undefined;
 
   form: any;
+
+  runPopulate = false;
 
   ctx: Client | undefined
 
@@ -61,6 +61,29 @@ export class QuestionnaireFormComponent implements OnInit {
               private _dialogService: TdDialogService,
   ) {
   }
+
+  ngOnInit(): void {
+    this.ctx = client({
+      serverUrl: this.config.sdcServer()
+    });
+  }
+
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit')
+
+    if (this.runPopulate && this.mydiv !== undefined) {
+      this.populateQuestionnare()
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    console.log('ngAfterViewChecked')
+
+    if (this.runPopulate && this.mydiv !== undefined) {
+      this.populateQuestionnare()
+    }
+  }
+
 
   downloadQuestionnaire(): SafeResourceUrl {
     const data = JSON.stringify(this.form, undefined, 2);
@@ -106,13 +129,18 @@ export class QuestionnaireFormComponent implements OnInit {
   }
 
   populateQuestionnare() {
-    if (this.patientId == undefined) {
+    this.runPopulate = false
+    console.log('Running populate')
+    if (this.patientId == null) {
       LForms.Util.setFHIRContext(this.ctx)
-
-      let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.form, "R4");
+      let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.questionnaire, "R4");
       var newFormData = (new LForms.LFormsData(formDef));
       try {
-        // formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', questionnaireResponse, newFormData, "R4");
+        const qr : QuestionnaireResponse = {
+          resourceType: "QuestionnaireResponse", status: 'in-progress'
+
+        }
+        formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', qr, newFormData, "R4");
         console.log(this.mydiv?.nativeElement)
         console.log(formDef)
         LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
@@ -292,10 +320,8 @@ export class QuestionnaireFormComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.ctx = client({
-      serverUrl: this.config.sdcServer()
-    });
-  }
+
+
+
 
 }
