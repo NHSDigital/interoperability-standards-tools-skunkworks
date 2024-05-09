@@ -26,7 +26,6 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   questionnaires: Questionnaire[] = [];
   form: any;
   fileLoadedFile: EventEmitter<any> = new EventEmitter();
-  markdown: string = "A useful tool for creating/editing Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/). This server (`" + this.config.sdcServer() + "`) can be used with NLM Form Builder, use `Start with existing form`, then `Import from the FHIR Server` and add this server using `Add your FHIR server`. \n\n For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/). \n\n The component used for displaying the questionnaires is open source [LHC-Forms](https://lhncbc.github.io/lforms/)";
   file: any;
   patientId;
 
@@ -221,15 +220,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
       };
     }
   }
-/*
-  openInfo() {
-    let dialogRef = this.dialog.open(InfoDiaglogComponent, {
-      width: '400px',
-      data:  this.markdown
-    });
 
-  }
-*/
 
   /*
   downloadFile(fileName: string, results: Object) {

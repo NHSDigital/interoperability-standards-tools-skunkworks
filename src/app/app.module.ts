@@ -50,6 +50,10 @@ import {MatChipsModule} from "@angular/material/chips";
 import {ResourceDialogComponent} from "./resource-dialog/resource-dialog.component";
 import {QuestionnaireFormComponent} from "./questionnaire/questionnaire-form/questionnaire-form.component";
 import {QuestionnaireEditComponent} from "./questionnaire/questionnaire-edit/questionnaire-edit.component";
+import {
+    QuestionnaireDefinitionComponent
+} from "./questionnaire/questionnaire-definition/questionnaire-definition.component";
+import {MatTreeModule} from "@angular/material/tree";
 
 
 @NgModule({
@@ -92,6 +96,7 @@ import {QuestionnaireEditComponent} from "./questionnaire/questionnaire-edit/que
         MatSortModule,
         MatGridListModule,
         MatIconModule,
+        MatTreeModule,
         MonacoEditorModule.forRoot(),
         CovalentDynamicMenuModule,
         MatCheckboxModule,
@@ -107,7 +112,8 @@ import {QuestionnaireEditComponent} from "./questionnaire/questionnaire-edit/que
         CovalentFlavoredMarkdownModule,
         MatChipsModule,
         QuestionnaireFormComponent,
-        QuestionnaireEditComponent
+        QuestionnaireEditComponent,
+        QuestionnaireDefinitionComponent
     ],
   providers: [],
   bootstrap: [AppComponent]

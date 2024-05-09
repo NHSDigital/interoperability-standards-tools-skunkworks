@@ -57,6 +57,12 @@
                  <app-questionnaire-edit [formDefinition]="questionnaire" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-edit>
                 </span>
             </mat-tab>
+            <mat-tab label="Definition">
+                <span *ngIf="currentTab == 2">
+                    <!-- delay activation of component until it is needed to be display -->
+                 <app-questionnaire-definition [formDefinition]="questionnaire" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-definition>
+                </span>
+            </mat-tab>
         </mat-tab-group>
     </mat-card>
 </mat-drawer-container>
