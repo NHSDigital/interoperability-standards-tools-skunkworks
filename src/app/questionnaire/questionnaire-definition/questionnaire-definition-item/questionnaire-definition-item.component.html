@@ -1,1 +1,32 @@
-{{item?.text}}
+<div *ngIf="item !== undefined" style="width: 100%" class="example-headers-align">
+    <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header  [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+            <mat-panel-title >
+                {{item.text}}
+            </mat-panel-title>
+            <mat-panel-description>
+                 <span>
+    <mat-chip-set aria-label="Item Type">
+        <span *ngIf="item.type !== undefined">
+                <mat-chip>{{ item.type }}</mat-chip>
+        </span>
+         <span *ngIf="item.required !== undefined && item.required">
+                <mat-chip style="background-color: #feebeb">Required</mat-chip>
+        </span>
+    </mat-chip-set>
+    </span>
+                <span>
+          <a *ngIf="item.code !== undefined" mat-raised-button [href]="getTerminologyUrl(item.code)" target="_blank" [matTooltip]="getTerminologyDisplay(item.code)">Coded</a>
+    </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <h3>Question</h3>
+        <span *ngIf="item.code !== undefined">{{getTerminologyDisplay(item.code)}}</span>
+        <h3>Answer</h3>
+        <span *ngIf="item.definition !== undefined || item.code !== undefined">
+            <h3>FHIR Resource Mapping</h3>
+            <mat-chip *ngIf="item.definition == undefined || item.code !== undefined">Observation</mat-chip> element: code
+            {{item.definition}}
+        </span>
+    </mat-expansion-panel>
+</div>
