@@ -1,14 +1,14 @@
 <mat-drawer-container class="page-container" autosize>
-    <mat-drawer #drawer opened="true" [style]="getWidth()" mode="side">
+    <mat-drawer #drawer opened="true" style="width: 30%;" mode="side">
         <mat-card>
             <mat-card-header>
-                <h2>Structured Data Capture</h2>
+                <h2>Questionnaires</h2>
             </mat-card-header>
             <mat-card-content>
                 <div layout="row">
-                    <button mat-raised-button (click)="openInfo()" matTooltip="Links to useful resources.">
+                   <!-- <button mat-raised-button (click)="openInfo()" matTooltip="Links to useful resources.">
                         <mat-icon>info</mat-icon>
-                    </button>
+                    </button> -->
                     <td-file-input
                             class="push-left-sm push-right-sm"
                             #fileInput
@@ -19,36 +19,18 @@
                         <mat-icon>folder</mat-icon>
                         <span class="text-upper">Open</span>
                     </td-file-input>
-                    <span *ngIf="data !== undefined">
-                             <button mat-raised-button (click)="refresh()">Refresh</button>&nbsp;
-                             <button mat-raised-button (click)="save()" matTooltip="Save the form to the database">Save</button>&nbsp;
-                             <span *ngIf="visible !== 1">
-                                  <button mat-raised-button (click)="visibleOpt(1)">Show Editor</button>&nbsp;
-                             </span>
-                            <span *ngIf="visible == 1">
-                                  <button mat-raised-button (click)="visibleOpt(0)">Hide Editor</button>&nbsp;
-                             </span>
-                             <span *ngIf="openEHR">
-                                    <button mat-raised-button (click)="showFHIR()">Show FHIR</button>&nbsp;
-                             </span>
-                    </span>
+
                 </div>
-                <div *ngIf="visible == 0" layout="row" layout-align="space-between center">
+                <div layout="row" layout-align="space-between center">
                     <mat-nav-list>
                         @for (profile of questionnaires; track profile) {
-                            <mat-list-item (click)="applyQuestionnaire(profile)">
+                            <mat-list-item (click)="selectQuestionnaire(profile)">
                                     {{ profile.title }}
                             </mat-list-item>
                         }
                     </mat-nav-list>
 
                 </div>
-                <span *ngIf="visible == 1">
-                <div style="height: calc(100vh - 280px)" >
-                    <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
-                </div>
-                </span>
-
             </mat-card-content>
         </mat-card>
     </mat-drawer>
@@ -63,32 +45,19 @@
                 <button mat-menu-item (click)="populateClick(pat)">{{pat.text}}</button>
             </span>
         </mat-menu>
-    <div >
-
-                    <div #myFormContainer ></div>
-                    <span *ngIf="form !== undefined">
-                         <div layout="row" layout-align="space-between right">
-                                <button mat-raised-button [matMenuTriggerFor]="menu">Download</button>
-                                <mat-menu #menu="matMenu">
-                                    <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire (Form Definition)</a>
-                                    <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse (Completed Form)</a>
-
-                                </mat-menu>
-                             <button mat-raised-button [matMenuTriggerFor]="showmenu">Show</button>
-                                <mat-menu #showmenu="matMenu">
-                                   <button mat-menu-item (click)="viewQuestionnaireResponse('data-extraction-bundle.json')" >QuestionnaireResponse (Completed Form)</button>
-                                    <span *ngIf="patientId !== undefined">
-                                        <button mat-menu-item (click)="extractQuestionnaireResponse('data-extraction-bundle.json')" download=>Data Extraction</button>
-                                    </span>
-                                </mat-menu>
-                                 <span *ngIf="patientId !== undefined && this.questionnaire !== undefined && this.questionnaire.id !== undefined">
-                                        <button color="accent" mat-raised-button (click)="submit()" >Submit</button>
-                                 </span>
-                         </div>
-                     </span>
-
-    </div>
-
+        <mat-tab-group (selectedTabChange)="changedTab($event)">
+            <mat-tab label="View">
+               <span *ngIf="currentTab == 0">
+                    <app-questionnaire-form [patient]="patientId" [formDefinition]="questionnaire" ></app-questionnaire-form>
+               </span>
+            </mat-tab>
+            <mat-tab label="Edit">
+                <span *ngIf="currentTab == 1">
+                    <!-- delay activation of component until it is needed to be display -->
+                 <app-questionnaire-edit [formDefinition]="questionnaire" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-edit>
+                </span>
+            </mat-tab>
+        </mat-tab-group>
     </mat-card>
 </mat-drawer-container>
 

@@ -1,0 +1,22 @@
+
+<span *ngIf="questionnaire !== undefined">
+     <div layout="row" layout-align="space-between right">
+            <button mat-raised-button [matMenuTriggerFor]="menu">Download</button>
+            <mat-menu #menu="matMenu">
+                <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire (Form Definition)</a>
+                <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse (Completed Form)</a>
+
+            </mat-menu>
+         <button mat-raised-button [matMenuTriggerFor]="showmenu">Show</button>
+            <mat-menu #showmenu="matMenu">
+               <button mat-menu-item (click)="viewQuestionnaireResponse('data-extraction-bundle.json')" >QuestionnaireResponse (Completed Form)</button>
+                <span *ngIf="patientId !== undefined">
+                    <button mat-menu-item (click)="extractQuestionnaireResponse('data-extraction-bundle.json')" download=>Data Extraction</button>
+                </span>
+            </mat-menu>
+             <span *ngIf="patientId !== undefined && this.questionnaire !== undefined && this.questionnaire.id !== undefined">
+                    <button mat-raised-button (click)="submit()" >Submit</button>
+             </span>
+     </div>
+    <div #myFormContainer ></div>
+ </span>
