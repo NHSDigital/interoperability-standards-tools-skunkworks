@@ -1,9 +1,4 @@
-<div layout="row">
-    For a more detailed view and editor see &nbsp;
-     <button mat-raised-button (click)="openInfo()" matTooltip="Links to useful resources.">
-          <mat-icon>info</mat-icon> National Laboratory of Medicine Form Builder
-     </button>
-</div>
+
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <!-- This is the tree node template for leaf nodes -->
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
@@ -22,3 +17,4 @@
         <app-questionnaire-definition-item [node]="node.data"></app-questionnaire-definition-item>
     </mat-tree-node>
 </mat-tree>
+

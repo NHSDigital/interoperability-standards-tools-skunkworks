@@ -11,6 +11,7 @@ import {client} from "fhirclient";
 import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
 import {Subject} from "rxjs";
+import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
 
 
 declare var LForms: any;
@@ -54,11 +55,19 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
 
   @ViewChild('myFormContainer', {static: false}) mydiv: ElementRef | undefined;
 
+  loadingMode = LoadingMode;
+  loadingStrategy = LoadingStrategy;
+  loadingType = LoadingType;
+
+  overlayStarSyntax = false;
+
+
   constructor(private sanitizer: DomSanitizer,
               public dialog: MatDialog,
               private config: ConfigService,
               private http: HttpClient,
               private _dialogService: TdDialogService,
+              private _loadingService: TdLoadingService
   ) {
   }
 
@@ -150,8 +159,10 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
   populateQuestionnare() {
     this.runPopulate = false
     console.log('Running populate')
+    this._loadingService.register('overlayStarSyntax');
     if (this.patientId == null) {
       this.populateQuestionnaireNoPopulation()
+      this._loadingService.resolve('overlayStarSyntax');
     } else {
       LForms.Util.setFHIRContext(this.ctx)
       var parameters: Parameters = {
@@ -180,6 +191,7 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
                     try {
                       formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', param.resource, newFormData, "R4");
                       LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
+                      this._loadingService.resolve('overlayStarSyntax');
                     } catch (e) {
                       console.log(e)
                       formDef = null;
@@ -199,6 +211,7 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
                   this.config.getErrorMessage(error),
             });
             this.populateQuestionnaireNoPopulation()
+            this._loadingService.resolve('overlayStarSyntax');
           });
 
     }
@@ -324,9 +337,5 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
       }
     }
   }
-
-
-
-
 
 }

@@ -1,5 +1,14 @@
 
 <span *ngIf="questionnaire !== undefined">
+    <div
+            *tdLoading="
+   'overlayStarSyntax';
+   mode: loadingMode.Indeterminate;
+   type: loadingType.Circular;
+   strategy: loadingStrategy.Overlay;
+   color: 'accent'
+ "
+    >
      <div layout="row" layout-align="space-between right">
             <button mat-raised-button [matMenuTriggerFor]="menu">Download</button>
             <mat-menu #menu="matMenu">
@@ -19,4 +28,5 @@
              </span>
      </div>
     <div #myFormContainer ></div>
+    </div>
  </span>

@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {IMenuItem, IMenuTrigger, ITdDynamicMenuLinkClickEvent} from "@covalent/core/dynamic-menu";
 import {MatTabChangeEvent} from "@angular/material/tabs";
+import {InfoDiaglogComponent} from "../info-diaglog/info-diaglog.component";
 
 @Component({
   selector: 'app-questionnaire',
@@ -30,6 +31,10 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   patientId;
 
   currentTab = 0;
+
+
+  markdown: string = "A useful tool for creating/editing Questionnires is [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/). This server (`" + this.config.sdcServer() + "`) can be used with NLM Form Builder, use `Start with existing form`, then `Import from the FHIR Server` and add this server using `Add your FHIR server`. \n\n For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/). \n\n The component used for displaying the questionnaires is open source [LHC-Forms](https://lhncbc.github.io/lforms/)";
+
 
   patients: IMenuItem[] = [
     {
@@ -185,6 +190,13 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
 
 
+  openInfo() {
+    let dialogRef = this.dialog.open(InfoDiaglogComponent, {
+      width: '400px',
+      data:  this.markdown
+    });
+
+  }
 
 
   selectFileEvent(file: File | FileList) {

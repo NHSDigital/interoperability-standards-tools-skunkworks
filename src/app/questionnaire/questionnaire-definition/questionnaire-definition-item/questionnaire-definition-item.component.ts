@@ -3,10 +3,10 @@ import {QuestionnaireItem, QuestionnaireItemAnswerOption} from "fhir/r4";
 import {CommonModule} from "@angular/common";
 import {Coding} from "fhir/r4";
 import {MatChipsModule} from "@angular/material/chips";
-import {MatAnchor} from "@angular/material/button";
+import {MatAnchor, MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatExpansionModule} from "@angular/material/expansion";
-import {getMatIconNameNotFoundError} from "@angular/material/icon";
+import {getMatIconNameNotFoundError, MatIconModule} from "@angular/material/icon";
 import {
   MatCell,
   MatColumnDef,
@@ -22,10 +22,12 @@ import {
   imports: [
     MatChipsModule,
     MatExpansionModule,
-      MatTableModule,
+    MatIconModule,
+    MatTableModule,
     CommonModule,
     MatAnchor,
-    MatTooltip
+    MatTooltip,
+    MatIconButton
   ],
   templateUrl: './questionnaire-definition-item.component.html',
   styleUrl: './questionnaire-definition-item.component.scss'

@@ -1,7 +1,7 @@
 <div *ngIf="item !== undefined" style="width: 100%" class="example-headers-align">
     <mat-expansion-panel hideToggle (opened)="panelOpenState = true"
                          (closed)="panelOpenState = false">
-        <mat-expansion-panel-header  [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+        <mat-expansion-panel-header style="min-height: inherit" [collapsedHeight]="'auto'" [expandedHeight]="'auto'" >
             <mat-panel-title >
                 {{item.text}}
             </mat-panel-title>
@@ -22,15 +22,24 @@
             </mat-panel-description>
         </mat-expansion-panel-header>
         <span *ngIf="item.type !== undefined && item.type !== 'group'">
-            <span *ngIf="item.code !== undefined">
-                <h3>Coded Question</h3>
-                {{getTerminologyDisplay(item.code)}}
-                <a *ngIf="item.code !== undefined" mat-raised-button [href]="getTerminologyUrl(item.code)" target="_blank" [matTooltip]="getTerminologyDisplay(item.code)">Onto Server</a>
-            </span>
-            <h3>Answer</h3>
-             <span *ngIf="item.type !== undefined">
-                <mat-chip>{{ item.type }}</mat-chip>
-            </span>
+
+            <table>
+                <tr *ngIf="item.code !== undefined">
+                    <td>Question Code</td>
+                    <td>{{getTerminologyDisplay(item.code)}}
+                        <a *ngIf="item.code !== undefined" mat-icon-button [href]="getTerminologyUrl(item.code)" target="_blank" [matTooltip]="getTerminologyDisplay(item.code)"><mat-icon>open_in_new</mat-icon></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Answer Type</td>
+                    <td>
+                        <span *ngIf="item.type !== undefined">
+                            <mat-chip>{{ item.type }}</mat-chip>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+
             <span *ngIf="item.answerOption !== undefined && item.answerOption.length >0">
                 <br/>
                 <br/>
@@ -61,16 +70,20 @@
                 </table>
                 <br/>
             </span>
-            <span *ngIf="item.definition !== undefined || item.code !== undefined">
-                <h3>FHIR Resource Mapping</h3>
-                <span *ngIf="item.definition === undefined && item.code !== undefined">
-                    <mat-chip>Observation</mat-chip> element: value
-                </span>
-                <span *ngIf="item.definition !== undefined">
-                    <mat-chip>{{getDefinitionResource(item.definition)}}</mat-chip> element: {{getDefinitionElement(item.definition)}}
-                </span>
+            <table>
 
-            </span>
+                <tr *ngIf="item.definition !== undefined || item.code !== undefined">
+                    <td>Extraction/Population Mapping</td>
+                    <td>
+                        <span *ngIf="item.definition === undefined && item.code !== undefined">
+                            <mat-chip>Observation</mat-chip> element: value
+                        </span>
+                        <span *ngIf="item.definition !== undefined">
+                            <mat-chip>{{getDefinitionResource(item.definition)}}</mat-chip> element: {{getDefinitionElement(item.definition)}}
+                        </span>
+                    </td>
+                </tr>
+            </table>
         </span>
     </mat-expansion-panel>
 </div>
