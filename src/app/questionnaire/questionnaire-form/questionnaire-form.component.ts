@@ -11,7 +11,13 @@ import {client} from "fhirclient";
 import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
 import {Subject} from "rxjs";
-import {LoadingMode, LoadingStrategy, LoadingType, TdLoadingService} from "@covalent/core/loading";
+import {
+  CovalentLoadingModule,
+  LoadingMode,
+  LoadingStrategy,
+  LoadingType,
+  TdLoadingService
+} from "@covalent/core/loading";
 
 
 declare var LForms: any;
@@ -24,7 +30,8 @@ declare var LForms: any;
     MatMenuTrigger,
     MatButton,
     MatMenuItem,
-    NgIf
+    NgIf,
+    CovalentLoadingModule
   ],
   templateUrl: './questionnaire-form.component.html',
   styleUrl: './questionnaire-form.component.scss'
