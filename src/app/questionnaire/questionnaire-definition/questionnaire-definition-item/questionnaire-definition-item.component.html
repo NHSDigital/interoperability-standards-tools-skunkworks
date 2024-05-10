@@ -3,7 +3,7 @@
                          (closed)="panelOpenState = false">
         <mat-expansion-panel-header style="min-height: inherit" [collapsedHeight]="'auto'" [expandedHeight]="'auto'" >
             <mat-panel-title >
-                {{item.text}}
+               {{item.prefix}} {{item.text}}
             </mat-panel-title>
             <mat-panel-description>
                  <span>
@@ -22,7 +22,6 @@
             </mat-panel-description>
         </mat-expansion-panel-header>
         <span *ngIf="item.type !== undefined && item.type !== 'group'">
-
             <table>
                 <tr *ngIf="item.code !== undefined">
                     <td>Question Code</td>
@@ -38,9 +37,38 @@
                         </span>
                     </td>
                 </tr>
+                <tr *ngIf="item.answerValueSet !== undefined">
+                    <td>Answer ValueSet</td>
+                    <td>
+                        <a href="{{'https://simplifier.net/resolve?fhirVersion=R4&canonical='+item.answerValueSet}}" target="_blank">{{item.answerValueSet}}</a>
+                        <span *ngIf="valueSetNotFound">
+                            &nbsp;
+                            <button mat-icon-button color="warn" matTooltip="Issue with expanding or retrieving valueset">
+                                <mat-icon>warning</mat-icon>
+                            </button>
+                        </span>
+                    </td>
+                </tr>
+                <tr *ngIf="hasUnitsAllowed()">
+                    <td>Answer Units</td>
+                    <td>
+                        <table class="mat-elevation-z8">
+                            <tr>
+                                <th>Code</th>
+                                <th>Display</th>
+                                <th>System</th>
+                            </tr>
+                            <tr *ngFor="let unit of getUnitsAllowed()">
+                                <td>{{unit.code}}</td>
+                                <td>{{unit.display}}</td>
+                                 <td>{{unit.system}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
             </table>
 
-            <span *ngIf="item.answerOption !== undefined && item.answerOption.length >0">
+            <span *ngIf="dataSource !== undefined">
                 <br/>
                 <br/>
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
@@ -49,6 +77,7 @@
                     <th mat-header-cell *matHeaderCellDef> Code </th>
                     <td mat-cell *matCellDef="let element"> <span *ngIf="element.valueCoding !== undefined">
                         {{element.valueCoding.code}}
+                        <a *ngIf="element.valueCoding.system !== undefined && element.valueCoding.system === 'http://snomed.info/sct'" mat-icon-button [href]="getTerminologyUrlbyCode(element.valueCoding.code,element.valueCoding.system)" target="_blank"><mat-icon>open_in_new</mat-icon></a>
                     </span> </td>
                   </ng-container>
                   <ng-container matColumnDef="display">
@@ -68,6 +97,7 @@
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
+                 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                 <br/>
             </span>
             <table>
