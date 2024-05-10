@@ -50,6 +50,10 @@ export class QuestionnaireDefinitionComponent {
       this.dataSource.data = this.questionnaire?.item;
     }
   }
+
+  @Input()
+  readonly = false;
+
   @Output()
   questionnaireChanged = new EventEmitter();
 

@@ -1,5 +1,5 @@
 <mat-drawer-container class="page-container" autosize>
-    <mat-drawer #drawer opened="true" style="width: 30%;" mode="side">
+    <mat-drawer #drawer [opened]="!readonly" style="width: 30%;" mode="side">
         <mat-card>
             <mat-card-header>
                 <h2>Questionnaires</h2>
@@ -43,7 +43,7 @@
             <mat-card-content>
                 <div layout="row">
                     <button mat-raised-button [matMenuTriggerFor]="populate" matTooltip="Select a patient to enable automatic form population from existing data">Select Patient</button>
-                    <button mat-raised-button matTooltip="National Laboratory of Medicine Form Builder" (click)="openInfo()">Edit</button>
+                    <button *ngIf="!readonly" mat-raised-button matTooltip="National Laboratory of Medicine Form Builder" (click)="openInfo()">Edit</button>
 
                 </div>
         <mat-menu #populate="matMenu">
@@ -56,18 +56,18 @@
             <mat-tab label="Definition">
                 <span *ngIf="currentTab == 0">
                     <!-- delay activation of component until it is needed to be display -->
-                 <app-questionnaire-definition [formDefinition]="questionnaire" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-definition>
+                 <app-questionnaire-definition [formDefinition]="questionnaire" [readonly]="readonly" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-definition>
                 </span>
             </mat-tab>
             <mat-tab label="Demonstration">
                <span *ngIf="currentTab == 1">
-                    <app-questionnaire-form [patient]="patientId" [formDefinition]="questionnaire" ></app-questionnaire-form>
+                    <app-questionnaire-form [patient]="patientId" [readonly]="readonly" [formDefinition]="questionnaire" ></app-questionnaire-form>
                </span>
             </mat-tab>
             <mat-tab label="JSON Editor">
                 <span *ngIf="currentTab == 2">
                     <!-- delay activation of component until it is needed to be display -->
-                 <app-questionnaire-edit [formDefinition]="questionnaire" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-edit>
+                 <app-questionnaire-edit [formDefinition]="questionnaire" [readonly]="readonly" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-edit>
                 </span>
             </mat-tab>
 

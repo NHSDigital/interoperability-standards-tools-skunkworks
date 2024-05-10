@@ -44,6 +44,9 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
     this.runPopulate = true;
   }
 
+  @Input()
+  readonly = false;
+
   patientId;
 
   @Input()

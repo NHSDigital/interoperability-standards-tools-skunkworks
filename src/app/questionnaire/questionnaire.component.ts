@@ -29,6 +29,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   fileLoadedFile: EventEmitter<any> = new EventEmitter();
   file: any;
   patientId;
+  readonly = true;
 
   currentTab = 0;
 
@@ -93,8 +94,14 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
             }
           }
       this.route.queryParamMap.subscribe(params => {
+
         const urlParam = params.get('url');
         const patientId = params.get('id');
+        if (urlParam !== null) {
+          this.readonly = true;
+        } else {
+          this.readonly = false;
+        }
         if (patientId !== undefined) this.patientId = patientId
         if (urlParam !== undefined && urlParam !== null) {
           var found = false
@@ -127,11 +134,12 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
 
   selectQuestionnaire(questionniare: Questionnaire) {
-    this.router.navigate(
+    this.questionnaire = questionniare
+    /*this.router.navigate(
         ['/questionnaire'],
         { queryParams: { url: questionniare.url,
           id : this.patientId} }
-    );
+    );*/
   }
   populateClick(event: ITdDynamicMenuLinkClickEvent) {
     this.patientId = event.action
@@ -232,18 +240,6 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   }
 
 
-  /*
-  downloadFile(fileName: string, results: Object) {
-    const data = JSON.stringify(results, undefined, 2);
-    const blob = new Blob([data], {
-      type: 'application/json'
-    });
-    //const url = this.sanitizer.bypassSecurityTrustResourceUrl(
-    let url = window.URL.createObjectURL(blob);
-    // @ts-ignore
-    window.open(url);
-  }
-*/
 
   getPatient() {
     //console.log(this.patientId)

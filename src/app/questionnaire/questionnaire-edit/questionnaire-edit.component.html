@@ -1,4 +1,4 @@
-<span *ngIf="data !== undefined">
+<span *ngIf="data !== undefined && !readonly">
          <button mat-raised-button (click)="save()" matTooltip="Save the form to the database">Save</button>&nbsp;
 </span>
 <div style="height: calc(100vh - 280px)" >

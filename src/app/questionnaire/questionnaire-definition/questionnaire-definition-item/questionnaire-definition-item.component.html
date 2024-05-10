@@ -102,12 +102,12 @@
             </span>
             <table>
 
-                <tr *ngIf="item.definition !== undefined || item.code !== undefined">
+                <tr *ngIf="item.definition !== undefined">
                     <td>Extraction/Population Mapping</td>
                     <td>
-                        <span *ngIf="item.definition === undefined && item.code !== undefined">
+                        <!--<span *ngIf="item.definition === undefined && item.code !== undefined">
                             <mat-chip>Observation</mat-chip> element: {{ getObservationValueType(item) }}
-                        </span>
+                        </span> -->
                         <span *ngIf="item.definition !== undefined">
                             <mat-chip>{{getDefinitionResource(item.definition)}}</mat-chip> element: {{getDefinitionElement(item.definition)}}
                         </span>

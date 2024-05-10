@@ -158,7 +158,7 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
     if (this.applyPaginator && this.paginator !== undefined) {
       this.applyPaginator = false
       if (this.dataSource.data.length > 5) {
-        console.log(this.dataSource.data.length)
+
         this.dataSource.paginator = this.paginator
       }
     }

@@ -32,6 +32,8 @@ export class QuestionnaireEditComponent {
   set formDefinition(questionnaire: Questionnaire | undefined) {
     this.data = JSON.stringify(questionnaire, undefined, 2)
   }
+  @Input()
+  readonly = false;
 
   @Output()
   questionnaireChanged = new EventEmitter();
