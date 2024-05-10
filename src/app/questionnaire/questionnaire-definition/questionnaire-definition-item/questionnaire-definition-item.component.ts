@@ -41,6 +41,15 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
   set node(item: QuestionnaireItem) {
     this.item = item;
     if (item.answerOption !== undefined) {
+
+      for (let entry of item.answerOption) {
+        if (entry.valueString !== undefined) {
+          entry.valueCoding = {
+            display: entry.valueString
+          }
+          entry.valueString = undefined
+        }
+      }
       this.dataSource = new MatTableDataSource<QuestionnaireItemAnswerOption>(this.item.answerOption)
       this.applyPaginator = true
     }
