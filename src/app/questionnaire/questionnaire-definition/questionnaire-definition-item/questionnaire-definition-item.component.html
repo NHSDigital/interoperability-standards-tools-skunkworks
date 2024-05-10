@@ -106,7 +106,7 @@
                     <td>Extraction/Population Mapping</td>
                     <td>
                         <span *ngIf="item.definition === undefined && item.code !== undefined">
-                            <mat-chip>Observation</mat-chip> element: value
+                            <mat-chip>Observation</mat-chip> element: {{ getObservationValueType(item) }}
                         </span>
                         <span *ngIf="item.definition !== undefined">
                             <mat-chip>{{getDefinitionResource(item.definition)}}</mat-chip> element: {{getDefinitionElement(item.definition)}}

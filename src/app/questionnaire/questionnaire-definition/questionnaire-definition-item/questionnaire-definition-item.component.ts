@@ -163,4 +163,39 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
       }
     }
   }
+  getObservationValueType(item: QuestionnaireItem) {
+    if (item.type === null) return undefined
+    switch (item.type) {
+      case "boolean": {
+        return "valueBoolean"
+      }
+      case "open-choice":
+      case "choice": {
+        return "valueCodeableConcept"
+      }
+      case "date":
+      case "dateTime": {
+        return "valueDateTime"
+      }
+      case "time": {
+        return "valueTime"
+      }
+      case "quantity":
+      case "decimal": {
+        return "valueQuantity"
+      }
+      case "integer":
+      {
+        return "valueInteger"
+      }
+      case "text":
+      case "string": {
+        return "valueString"
+      }
+      default: {
+        return "value[x]"
+      }
+    }
+
+  }
 }
