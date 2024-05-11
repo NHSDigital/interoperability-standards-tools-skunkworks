@@ -10,7 +10,7 @@ import Client from "fhirclient/lib/Client";
 import {client} from "fhirclient";
 import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
-import {Subject} from "rxjs";
+
 import {
   CovalentLoadingModule,
   LoadingMode,

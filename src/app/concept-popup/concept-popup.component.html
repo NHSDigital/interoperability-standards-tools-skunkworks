@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>{{data.display}}
+    <span *ngIf="data.code !== undefined">({{data.code}})</span></h2>
+<mat-dialog-content>
+   <table>
+       <tr>
+           <td>System</td>
+           <td>{{data.system}}</td>
+       </tr>
+       <tr>
+           <td>Preferred</td>
+           <td>
+                <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getPreferred()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Display</td>
+           <td>
+               <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getDisplay()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Full Name</td>
+           <td>
+               <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getFSN()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Active</td>
+           <td>
+               <span *ngIf="lookup !== undefined">
+                   <span *ngIf="getActive()">
+                       <mat-icon>done</mat-icon>
+                   </span>
+                   <span *ngIf="!getActive()">
+                       <mat-icon color="primary">warning</mat-icon>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Synonym</td>
+
+           <td>
+                 <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getSynonym()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Issues</td>
+
+           <td>
+               <span *ngIf="validateCode !== undefined">
+                   <span *ngFor="let display of getIssues()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+   </table>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button color = "primary" mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

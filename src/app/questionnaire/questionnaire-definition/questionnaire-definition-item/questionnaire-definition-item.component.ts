@@ -15,6 +15,7 @@ import {ConfigService} from "../../../config.service";
 import {HttpClient} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {MatPaginator} from "@angular/material/paginator";
+import {ConceptPopupComponent} from "../../../concept-popup/concept-popup.component";
 
 @Component({
   selector: 'app-questionnaire-definition-item',
@@ -199,5 +200,12 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
       }
     }
 
+  }
+
+  showConcept(coding:Coding) {
+
+    this.dialog.open(ConceptPopupComponent, {
+        data: coding
+      });
   }
 }

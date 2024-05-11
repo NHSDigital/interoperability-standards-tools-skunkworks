@@ -78,7 +78,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     this.questionnaires.push(vitals as Questionnaire)
     this.questionnaires.push(nominations as Questionnaire)
     this.questionnaires.push(permission as Questionnaire)
-
+ //   console.log('init')
     this.http.get(this.config.sdcServer() + '/Questionnaire?_count=100').subscribe((result) => {
 
           if (result !== undefined) {
@@ -94,7 +94,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
             }
           }
       this.route.queryParamMap.subscribe(params => {
-
+      //  console.log('params')
         const urlParam = params.get('url');
         const patientId = params.get('id');
         if (urlParam !== null) {
@@ -102,6 +102,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
         } else {
           this.readonly = false;
         }
+      //  console.log(decodeURI(urlParam as string))
         if (patientId !== undefined) this.patientId = patientId
         if (urlParam !== undefined && urlParam !== null) {
           var found = false
