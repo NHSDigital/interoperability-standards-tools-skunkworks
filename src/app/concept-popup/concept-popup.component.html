@@ -1,5 +1,10 @@
-<h2 mat-dialog-title>{{data.display}}
-    <span *ngIf="data.code !== undefined">({{data.code}})</span></h2>
+<h2 mat-dialog-title>
+    <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getDisplay()">
+                       {{display}}
+                   </span>
+               </span>
+    {{data.display}}</h2>
 <mat-dialog-content>
    <table>
        <tr>
@@ -7,14 +12,8 @@
            <td>{{data.system}}</td>
        </tr>
        <tr>
-           <td>Preferred</td>
-           <td>
-                <span *ngIf="lookup !== undefined">
-                   <span *ngFor="let display of getPreferred()">
-                       {{display}}<br/>
-                   </span>
-               </span>
-           </td>
+           <td>Concept</td>
+           <td>{{data.code}}</td>
        </tr>
        <tr>
            <td>Display</td>
@@ -27,10 +26,31 @@
            </td>
        </tr>
        <tr>
-           <td>Full Name</td>
+           <td>Category</td>
            <td>
                <span *ngIf="lookup !== undefined">
-                   <span *ngFor="let display of getFSN()">
+                   <mat-chip-set *ngFor="let display of getCategory()">
+                       <mat-chip>{{display}}</mat-chip>
+                   </mat-chip-set>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Part of</td>
+           <td>
+                <span *ngIf="parent !== undefined">
+                   <span *ngFor="let display of parent">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Synonym</td>
+
+           <td>
+                 <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getSynonym()">
                        {{display}}<br/>
                    </span>
                </span>
@@ -50,16 +70,12 @@
            </td>
        </tr>
        <tr>
-           <td>Synonym</td>
-
+           <td>More Information</td>
            <td>
-                 <span *ngIf="lookup !== undefined">
-                   <span *ngFor="let display of getSynonym()">
-                       {{display}}<br/>
-                   </span>
-               </span>
+               <a [href]="getTerminologyUrlbyCode(data.code,data.system)" target="_blank">Ontology Server (Shrimp)</a>
            </td>
        </tr>
+
        <tr>
            <td>Issues</td>
 
@@ -71,6 +87,29 @@
                </span>
            </td>
        </tr>
+
+<!--
+       <tr>
+           <td>Preferred</td>
+           <td>
+                <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getPreferred()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Full Name</td>
+           <td>
+               <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getFSN()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+-->
    </table>
 </mat-dialog-content>
 <mat-dialog-actions>

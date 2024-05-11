@@ -12,6 +12,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {ConfigService} from "../config.service";
 import {HttpClient} from "@angular/common/http";
 import {MatIcon} from "@angular/material/icon";
+import {MatChip, MatChipRow, MatChipSet} from "@angular/material/chips";
 
 @Component({
   selector: 'app-concept-popup',
@@ -24,7 +25,10 @@ import {MatIcon} from "@angular/material/icon";
     MatButton,
     NgIf,
     NgForOf,
-    MatIcon
+    MatIcon,
+    MatChipRow,
+    MatChip,
+    MatChipSet
   ],
   templateUrl: './concept-popup.component.html',
   styleUrl: './concept-popup.component.scss'
@@ -36,6 +40,7 @@ export class ConceptPopupComponent implements OnInit {
 
   lookup: Parameters | undefined
   validateCode : OperationOutcome | undefined
+  parent : string[] = []
 
   ngOnInit(): void {
     if (this.data.code !== undefined && this.data.system !== undefined) {
@@ -44,6 +49,7 @@ export class ConceptPopupComponent implements OnInit {
           (result) => {
 
             this.lookup = result as Parameters
+            this.getParents()
               }
       )
     }
@@ -52,7 +58,6 @@ export class ConceptPopupComponent implements OnInit {
           + '&code='+ this.data.code
           + '&display='+ this.data.display).subscribe(
           (result) => {
-            console.log(JSON.stringify(result))
             this.validateCode = result as OperationOutcome
           }
       )
@@ -71,6 +76,18 @@ export class ConceptPopupComponent implements OnInit {
        }
     }
     return display
+  }
+  getCategory(): string[] {
+    var display: string[] = this.getFSN()
+    var newDisplay : string[] = []
+    for (let category of display) {
+      var parts = category.split('(')
+      if (parts.length>0) {
+         var parts2 = parts[1].split(")")
+        if (parts2.length>0) newDisplay.push(parts2[0])
+      }
+    }
+    return newDisplay
   }
   getFSN(): string[] {
     var display: string[] = []
@@ -161,6 +178,14 @@ export class ConceptPopupComponent implements OnInit {
     }
     return false;
   }
+  private getCodeValue(part: ParametersParameter[]) {
+    for (let property of part) {
+      if (property.name === 'value' && property.valueCode !== undefined) {
+        return property.valueCode
+      }
+    }
+    return undefined;
+  }
   private getValue(part: ParametersParameter[]) {
     for (let property of part) {
       if (property.name === 'value' && property.valueString !== undefined) {
@@ -181,5 +206,44 @@ export class ConceptPopupComponent implements OnInit {
       }
     if (display.length == 0) display.push("No issues detected")
     return display
+  }
+/*
+  getTerminologyUrl(code: Coding[]) {
+    // Use base onto as NHS England and Scotland versions have issues.
+    //if (code.length>0 && code[0].code !== undefined) return "https://ontoserver.csiro.au/shrimp/?concept=" + code[0].code + "&valueset=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs"
+    if (code.length>0 && code[0].code !== undefined)
+    else return "https://ontoserver.csiro.au/shrimp/?concept=138875005&valueset=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs&fhir=https%3A%2F%2Fontology.nhs.uk%2Fauthoring%2Ffhir"
+  }
+  */
+  getTerminologyUrlbyCode(code : string | undefined, system : string| undefined) {
+    return "https://ontoserver.csiro.au/shrimp/?concept=" + code + "&version=http%3A%2F%2Fsnomed.info%2Fsct%2F83821000000107%2Fversion%2F20221123&valueset=http%3A%2F%2Fsnomed.info%2Fsct%2F83821000000107%3Ffhir_vs"
+    // return "https://ontoserver.csiro.au/shrimp/?concept=" + code + "&valueset=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs"
+  }
+
+  private getParents() {
+    if (this.lookup !== undefined && this.lookup.parameter !== undefined) {
+      for(let property of this.lookup.parameter) {
+        if (property.name === 'property' && property.part !== undefined) {
+          if (this.hasCode(property.part,"parent")) {
+            const code = this.getCodeValue(property.part)
+            if (code != undefined) {
+              this.http.get(this.config.validateUrl() + '/CodeSystem/\$lookup?system='+this.data.system
+                  + '&code='+ code).subscribe(
+                  (result) => {
+                    const parent = result as Parameters
+                    if (parent.parameter !== undefined) {
+                      for (let property of parent.parameter) {
+                          if (property.name == 'display') {
+                            if (property.valueString !== undefined) this.parent.push(property.valueString)
+                          }
+                      }
+                    }
+                  }
+              )
+            }
+          }
+        }
+      }
+    }
   }
 }

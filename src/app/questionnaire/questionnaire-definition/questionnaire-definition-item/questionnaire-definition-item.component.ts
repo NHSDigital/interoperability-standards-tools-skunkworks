@@ -75,16 +75,8 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
               public dialog: MatDialog
   ) {
   }
-  getTerminologyUrl(code: Coding[]) {
-    // Use base onto as NHS England and Scotland versions have issues.
-    //if (code.length>0 && code[0].code !== undefined) return "https://ontoserver.csiro.au/shrimp/?concept=" + code[0].code + "&valueset=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs"
-    if (code.length>0 && code[0].code !== undefined) return "https://ontoserver.csiro.au/shrimp/?concept=" + code[0].code + "&version=http%3A%2F%2Fsnomed.info%2Fsct%2F83821000000107%2Fversion%2F20221123&valueset=http%3A%2F%2Fsnomed.info%2Fsct%2F83821000000107%3Ffhir_vs"
-    else return "https://ontoserver.csiro.au/shrimp/?concept=138875005&valueset=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs&fhir=https%3A%2F%2Fontology.nhs.uk%2Fauthoring%2Ffhir"
-  }
-  getTerminologyUrlbyCode(code : string, system : string) {
-    return "https://ontoserver.csiro.au/shrimp/?concept=" + code + "&version=http%3A%2F%2Fsnomed.info%2Fsct%2F83821000000107%2Fversion%2F20221123&valueset=http%3A%2F%2Fsnomed.info%2Fsct%2F83821000000107%3Ffhir_vs"
-   // return "https://ontoserver.csiro.au/shrimp/?concept=" + code + "&valueset=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs"
-  }
+
+
   getTerminologyDisplay(code: Coding[]) : string {
      if (code.length>0 ) {
        var result = ""
