@@ -1,5 +1,5 @@
 <mat-drawer-container class="page-container" autosize>
-    <mat-drawer #drawer [opened]="!readonly" style="width: 30%;" mode="side">
+    <mat-drawer #drawer [opened]="!readonly" style="width: 20%;" mode="side">
         <mat-card>
             <mat-card-header>
                 <h2>Questionnaires</h2>
@@ -24,7 +24,7 @@
                 <div layout="row" layout-align="space-between center">
                     <mat-nav-list>
                         @for (profile of questionnaires; track profile) {
-                            <mat-list-item (click)="selectQuestionnaire(profile)">
+                            <mat-list-item *ngIf="profile.title !== undefined" (click)="selectQuestionnaire(profile)" [matTooltip]="profile.title">
                                     {{ profile.title }}
                             </mat-list-item>
                         }
