@@ -35,22 +35,24 @@
         </mat-card>
     </mat-drawer>
     <mat-card class="fullscreen scrollable-content">
-            <mat-card-header>
-                <h2>{{ questionnaire?.title }}
-                    <span *ngIf="patientId !== undefined"> - {{getPatient()}}</span>
-                </h2>
-            </mat-card-header>
-            <mat-card-content>
-                <div layout="row">
-                    <button mat-raised-button [matMenuTriggerFor]="populate" matTooltip="Select a patient to enable automatic form population from existing data">Select Patient</button>
-                    <button *ngIf="!readonly" mat-raised-button matTooltip="National Laboratory of Medicine Form Builder" (click)="openInfo()">Edit</button>
-
-                </div>
         <mat-menu #populate="matMenu">
             <span *ngFor="let pat of patients">
                 <button mat-menu-item (click)="populateClick(pat)">{{pat.text}}</button>
             </span>
         </mat-menu>
+            <mat-card-header>
+                <mat-toolbar style="background-color: white">
+                    {{ questionnaire?.title }}
+                    <span class="example-spacer"></span>
+                    <span *ngIf="patientId !== undefined">{{getPatient()}}</span>
+                    <button mat-icon-button [matMenuTriggerFor]="populate" matTooltip="Select a patient to enable automatic form population from existing data"><mat-icon>person</mat-icon></button>
+                    <button *ngIf="!readonly" mat-icon-button matTooltip="National Laboratory of Medicine Form Builder" (click)="openInfo()"><mat-icon>edit</mat-icon></button>
+
+                </mat-toolbar>
+            </mat-card-header>
+            <mat-card-content>
+
+
         <mat-tab-group (selectedTabChange)="changedTab($event)">
 
             <mat-tab label="Definition">

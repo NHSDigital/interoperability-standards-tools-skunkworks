@@ -54,6 +54,7 @@ import {
     QuestionnaireDefinitionComponent
 } from "./questionnaire/questionnaire-definition/questionnaire-definition.component";
 import {MatTreeModule} from "@angular/material/tree";
+import {MatToolbar} from "@angular/material/toolbar";
 
 
 @NgModule({
@@ -113,7 +114,8 @@ import {MatTreeModule} from "@angular/material/tree";
         MatChipsModule,
         QuestionnaireFormComponent,
         QuestionnaireEditComponent,
-        QuestionnaireDefinitionComponent
+        QuestionnaireDefinitionComponent,
+        MatToolbar
     ],
   providers: [],
   bootstrap: [AppComponent]
