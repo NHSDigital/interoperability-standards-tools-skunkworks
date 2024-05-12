@@ -16,7 +16,7 @@
                 <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse (Completed Form)</a>
 
             </mat-menu>
-         <button mat-raised-button [matMenuTriggerFor]="showmenu">Show</button>
+         <button mat-raised-button [matMenuTriggerFor]="showmenu">Show/Extract</button>
             <mat-menu #showmenu="matMenu">
                <button mat-menu-item (click)="viewQuestionnaireResponse('data-extraction-bundle.json')" >QuestionnaireResponse (Completed Form)</button>
                 <span *ngIf="patientId !== undefined">
