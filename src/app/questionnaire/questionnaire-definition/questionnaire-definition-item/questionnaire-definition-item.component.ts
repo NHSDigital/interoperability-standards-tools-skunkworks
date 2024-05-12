@@ -66,9 +66,10 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
-  displayedColumns: string[] = ['code', 'display', 'codesystem'];
+  displayedColumns: string[] = ['display', 'code',  'codesystem'];
   // @ts-ignore
   dataSource: MatTableDataSource<QuestionnaireItemAnswerOption>;
+
 
   constructor(private config: ConfigService,
               private http: HttpClient,

@@ -55,6 +55,9 @@ import {
 } from "./questionnaire/questionnaire-definition/questionnaire-definition.component";
 import {MatTreeModule} from "@angular/material/tree";
 import {MatToolbar} from "@angular/material/toolbar";
+import {
+    QuestionnaireInformationComponent
+} from "./questionnaire/questionnaire-information/questionnaire-information.component";
 
 
 @NgModule({
@@ -87,6 +90,7 @@ import {MatToolbar} from "@angular/material/toolbar";
         CovalentDialogsModule,
         CovalentJsonFormatterModule,
         CovalentLoadingModule,
+        CovalentDynamicFormsModule,
         MatCardModule,
         MatFormFieldModule,
         MatTableModule,
@@ -115,7 +119,8 @@ import {MatToolbar} from "@angular/material/toolbar";
         QuestionnaireFormComponent,
         QuestionnaireEditComponent,
         QuestionnaireDefinitionComponent,
-        MatToolbar
+        MatToolbar,
+        QuestionnaireInformationComponent
     ],
   providers: [],
   bootstrap: [AppComponent]

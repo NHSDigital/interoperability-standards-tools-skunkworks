@@ -4,9 +4,6 @@ import {ConfigService} from "../config.service";
 import {Bundle, Questionnaire, Parameters, QuestionnaireResponse} from "fhir/r4";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {TdDialogService} from "@covalent/core/dialogs";
-import vitals from '../questionnaire/Questionnaire/vital-signs.json'
-import permission from '../questionnaire/Questionnaire/permission.json'
-import nominations from '../questionnaire/Questionnaire/prescription-nomination.json'
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {IMenuItem, IMenuTrigger, ITdDynamicMenuLinkClickEvent} from "@covalent/core/dynamic-menu";
@@ -20,7 +17,6 @@ import {InfoDiaglogComponent} from "../info-diaglog/info-diaglog.component";
 })
 export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
-
   openEHR = false;
 
   questionnaire: Questionnaire | undefined;
@@ -32,7 +28,6 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   readonly = true;
 
   currentTab = 0;
-
 
   markdown: string = "A useful tool for creating/editing Questionnires is <a href=\"https://lhcformbuilder.nlm.nih.gov/\" target='_blank'></a> [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/). This server (`" + this.config.sdcServer() + "`) can be used with NLM Form Builder, use `Start with existing form`, then `Import from the FHIR Server` and add this server using `Add your FHIR server`. \n\n For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/). \n\n The component used for displaying the questionnaires is open source [LHC-Forms](https://lhncbc.github.io/lforms/)";
 
@@ -75,9 +70,6 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
   ngOnInit(): void {
 
-    this.questionnaires.push(vitals as Questionnaire)
-    this.questionnaires.push(nominations as Questionnaire)
-    this.questionnaires.push(permission as Questionnaire)
  //   console.log('init')
     this.http.get(this.config.sdcServer() + '/Questionnaire?_count=100').subscribe((result) => {
 
@@ -90,7 +82,19 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
                   questionnairesTemp.push(entry.resource)
                 }
               }
-              this.questionnaires = questionnairesTemp
+              this.questionnaires = questionnairesTemp.sort((n1,n2) => {
+                let date1 = ""
+                if (n1.meta != undefined && n1.meta.lastUpdated !== undefined) date1 = n1.meta.lastUpdated
+                let date2 = ""
+                if (n2.meta != undefined && n2.meta.lastUpdated !== undefined) date2 = n2.meta.lastUpdated
+                if (date1 > date2) {
+                  return -1;
+                }
+                if (date1 < date2) {
+                  return 1;
+                }
+                return 0;
+              })
             }
           }
       this.route.queryParamMap.subscribe(params => {

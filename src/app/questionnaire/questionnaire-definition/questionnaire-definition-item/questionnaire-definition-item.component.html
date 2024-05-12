@@ -1,5 +1,5 @@
 <div *ngIf="item !== undefined" style="width: 100%" class="example-headers-align">
-    <mat-expansion-panel hideToggle (opened)="panelOpenState = true"
+    <mat-expansion-panel (opened)="panelOpenState = true"
                          (closed)="panelOpenState = false">
         <mat-expansion-panel-header style="min-height: inherit" [collapsedHeight]="'auto'" [expandedHeight]="'auto'" >
             <mat-panel-title >
@@ -33,6 +33,7 @@
                     <td>Answer Type</td>
                     <td>
                         <span *ngIf="item.type !== undefined">
+                             <br/>
                             <mat-chip>{{ item.type }}</mat-chip>
                         </span>
                     </td>
@@ -52,15 +53,16 @@
                 <tr *ngIf="hasUnitsAllowed()">
                     <td>Answer Units</td>
                     <td>
+                         <br/>
                         <table class="mat-elevation-z8">
                             <tr>
-                                <th>Code</th>
                                 <th>Display</th>
+                                <th>Code</th>
                                 <th>System</th>
                             </tr>
                             <tr *ngFor="let unit of getUnitsAllowed()">
+                                  <td>{{unit.display}}</td>
                                 <td>{{unit.code}}</td>
-                                <td>{{unit.display}}</td>
                                  <td>{{unit.system}}</td>
                             </tr>
                         </table>
@@ -104,11 +106,9 @@
             <table>
 
                 <tr *ngIf="item.definition !== undefined">
-                    <td>Extraction/Population Mapping</td>
+                    <td>FHIR Resource Mapping</td>
                     <td>
-                        <!--<span *ngIf="item.definition === undefined && item.code !== undefined">
-                            <mat-chip>Observation</mat-chip> element: {{ getObservationValueType(item) }}
-                        </span> -->
+                        <br/>
                         <span *ngIf="item.definition !== undefined">
                             <mat-chip>{{getDefinitionResource(item.definition)}}</mat-chip> element: {{getDefinitionElement(item.definition)}}
                         </span>

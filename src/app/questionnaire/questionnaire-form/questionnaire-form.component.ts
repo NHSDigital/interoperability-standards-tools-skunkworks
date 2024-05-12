@@ -157,8 +157,7 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
 
       }
       formDef = LForms.Util.mergeFHIRDataIntoLForms('QuestionnaireResponse', qr, newFormData, "R4");
-      console.log(this.mydiv?.nativeElement)
-      console.log(formDef)
+
       LForms.Util.addFormToPage(formDef, this.mydiv?.nativeElement, {prepopulate: false});
     } catch (e) {
       console.log(e)
