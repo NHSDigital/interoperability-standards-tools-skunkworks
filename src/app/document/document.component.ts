@@ -29,11 +29,7 @@ export class DocumentComponent  implements AfterContentInit {
   composition: Composition;
 
 
-  constructor(private config: ConfigService,
-              private http: HttpClient,
-              private _dialogService: TdDialogService,
-              protected sanitizer: DomSanitizer,
-              private route: ActivatedRoute,
+  constructor(
               public dialog: MatDialog
   ) {
 

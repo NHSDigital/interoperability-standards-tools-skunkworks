@@ -6,7 +6,7 @@
             </mat-card-header>
             <mat-card-content>
                 <div layout="row">
-                   <!-- <button mat-raised-button (click)="openInfo()" matTooltip="Links to useful resources.">
+                   <!-- <button mat-button (click)="openInfo()" matTooltip="Links to useful resources.">
                         <mat-icon>info</mat-icon>
                     </button> -->
                     <td-file-input
@@ -15,6 +15,7 @@
                             [(ngModel)]="file"
                             (selectFile)="selectFileEvent($event)"
                             accept=".json,.xml"
+                            color = "primary"
                     >
                         <mat-icon>folder</mat-icon>
                         <span class="text-upper">Open</span>
@@ -41,12 +42,12 @@
             </span>
         </mat-menu>
             <mat-card-header>
-                <mat-toolbar style="background-color: white">
+                <mat-toolbar style="background-color: white" >
                     {{ questionnaire?.title }}
                     <span class="example-spacer"></span>
                     <span *ngIf="patientId !== undefined">{{getPatient()}}</span>
-                    <button mat-icon-button [matMenuTriggerFor]="populate" matTooltip="Select a patient to enable automatic form population from existing data"><mat-icon>person</mat-icon></button>
-                    <button *ngIf="!readonly" mat-icon-button matTooltip="National Laboratory of Medicine Form Builder" (click)="openInfo()"><mat-icon>edit</mat-icon></button>
+                    <button color = "primary" mat-icon-button [matMenuTriggerFor]="populate" matTooltip="Select a patient to enable automatic form population from existing data"><mat-icon>person</mat-icon></button>
+                    <button color = "primary" *ngIf="!readonly" mat-icon-button matTooltip="National Laboratory of Medicine Form Builder" (click)="openInfo()"><mat-icon>edit</mat-icon></button>
 
                 </mat-toolbar>
             </mat-card-header>

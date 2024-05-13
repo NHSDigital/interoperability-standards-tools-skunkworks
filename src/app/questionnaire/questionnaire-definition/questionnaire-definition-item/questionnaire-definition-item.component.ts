@@ -80,13 +80,16 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
 
   getTerminologyDisplay(code: Coding[]) : string {
      if (code.length>0 ) {
-       var result = ""
-       if (code[0].system !== undefined && code[0].system ==='http://snomed.info/sct') result += "SNOMED CT "
-       if (code[0].code !== undefined) result += code[0].code+ " "
-       if (code[0].display !== undefined) result += code[0].display+ " "
-       return result
+       return this.getTerminologyDisplayCode(code[0])
      }
      else return 'No display term present'
+  }
+  getTerminologyDisplayCode(code: Coding) : string {
+      var result = ""
+      if (code.display !== undefined) result += code.display+ " "
+      if (code.code !== undefined) result += code.code+ " "
+      if (code.system !== undefined && code.system ==='http://snomed.info/sct') result += "SNOMED CT "
+      return result
   }
 
   extractValueSet(valueSet : string) {

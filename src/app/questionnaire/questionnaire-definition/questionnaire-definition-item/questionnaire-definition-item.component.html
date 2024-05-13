@@ -19,10 +19,28 @@
                         </span>
                     </mat-chip-set>
                  </span>
+                <span></span>
+                <span>
+                    <small style="color: forestgreen;">{{item.linkId}}</small>
+                </span>
             </mat-panel-description>
         </mat-expansion-panel-header>
         <span *ngIf="item.type !== undefined && item.type !== 'group'">
             <table>
+                <tr *ngIf="item.enableWhen !== undefined">
+                    <td>Ask/Enable Question</td>
+                    <td>
+                        <span *ngFor="let when of item.enableWhen">
+                            When <small style="color: forestgreen">{{when.question}}</small> &nbsp; <mat-chip>{{when.operator}}</mat-chip>
+                            &nbsp;
+                            <span *ngIf="when.answerCoding !== undefined">
+                                {{getTerminologyDisplayCode(when.answerCoding)}}
+                                <button  mat-icon-button (click)="showConcept(when.answerCoding)" color="primary"><mat-icon>info</mat-icon></button>
+                            </span>
+                            <br/>
+                        </span>
+                    </td>
+                </tr>
                 <tr *ngIf="item.code !== undefined">
                     <td>Question Code</td>
                     <td>{{getTerminologyDisplay(item.code)}}
@@ -35,6 +53,12 @@
                         <span *ngIf="item.type !== undefined">
                              <br/>
                             <mat-chip>{{ item.type }}</mat-chip>
+                        </span>
+                        <span *ngIf="item.readOnly">
+                            <mat-chip>read only</mat-chip>
+                        </span>
+                         <span *ngIf="item.maxLength != undefined">
+                            <mat-chip>max length = {{item.maxLength}}</mat-chip>
                         </span>
                     </td>
                 </tr>

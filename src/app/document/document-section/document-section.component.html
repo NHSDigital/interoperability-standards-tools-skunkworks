@@ -13,7 +13,7 @@
             </span>
         </span>
         <span *ngFor="let entry of section.entry">
-            <button mat-raised-button color="primary" (click)="select(entry)" matTooltip="This would not normally be present in a html view of the document" >{{entry.reference}}</button>
+            <button mat-button color="primary" (click)="select(entry)" matTooltip="This would not normally be present in a html view of the document" >{{entry.reference}}</button>
         </span>
     </mat-card-content>
 </mat-card>

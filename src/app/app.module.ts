@@ -58,6 +58,9 @@ import {MatToolbar} from "@angular/material/toolbar";
 import {
     QuestionnaireInformationComponent
 } from "./questionnaire/questionnaire-information/questionnaire-information.component";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
+import {DatePipe} from "@angular/common";
 
 
 @NgModule({
@@ -91,6 +94,9 @@ import {
         CovalentJsonFormatterModule,
         CovalentLoadingModule,
         CovalentDynamicFormsModule,
+        CovalentDynamicMenuModule,
+        CovalentFileModule,
+
         MatCardModule,
         MatFormFieldModule,
         MatTableModule,
@@ -103,17 +109,17 @@ import {
         MatIconModule,
         MatTreeModule,
         MonacoEditorModule.forRoot(),
-        CovalentDynamicMenuModule,
         MatCheckboxModule,
         MatTooltipModule,
         MatListModule,
-        CovalentFileModule,
         MatExpansionModule,
         A11yModule,
         MatRadioModule,
         MatMenuModule,
         MatSidenavModule,
         MatDialogModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
         CovalentFlavoredMarkdownModule,
         MatChipsModule,
         QuestionnaireFormComponent,
@@ -122,7 +128,10 @@ import {
         MatToolbar,
         QuestionnaireInformationComponent
     ],
-  providers: [],
+    providers: [
+        DatePipe,
+        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

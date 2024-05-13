@@ -15,45 +15,19 @@
      </ng-template>
     </td-dynamic-forms>
      <table class="mat-elevation-z8">
-         <tr>
-             <th style="width: 50%">Definition Code</th>
-             <th style="width: 50%">Definition Usage</th>
-         </tr>
-     <tr>
+     <tr *ngIf="questionnaire.code !== undefined">
+         <td>Questionnaire Code</td>
          <td >
-             <span *ngIf="dataSource !== undefined">
-
-                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table" style="border-right: 1px solid #1e88e5; ">
-
-                    <ng-container matColumnDef="code">
-                        <th mat-header-cell *matHeaderCellDef> Code </th>
-                        <td mat-cell *matCellDef="let element">
-                           {{element.code}}
-                            <button *ngIf="element.system !== undefined && element.system === 'http://snomed.info/sct'"
-                                    mat-icon-button (click)="showConcept(element)" color="primary"><mat-icon>info</mat-icon></button>
-
-                        </td>
-                      </ng-container>
-                      <ng-container matColumnDef="display">
-                        <th mat-header-cell *matHeaderCellDef> Display </th>
-                        <td mat-cell *matCellDef="let element">
-                          {{element.display}}
-                        </td>
-                      </ng-container>
-                      <ng-container matColumnDef="system">
-                        <th mat-header-cell *matHeaderCellDef> CodeSystem </th>
-                        <td mat-cell *matCellDef="let element">
-                          {{element.system}}
-                         </td>
-                      </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-                <br/>
-            </span>
+                 <span *ngFor="let code of questionnaire.code">
+                        {{getTerminologyDisplayCode(code)}}
+                     <button  mat-icon-button (click)="showConcept(code)" color="primary"><mat-icon>info</mat-icon></button>
+                 </span>
         </td>
+         </tr>
+         <tr *ngIf="dataSourceUsage !== undefined && dataSourceUsage.data.length > 0">
+             <td>Usage</td>
          <td>
-            <span *ngIf="dataSourceUsage !== undefined">
+
 
                 <table mat-table [dataSource]="dataSourceUsage" class="mat-elevation-z8 demo-table">
                     <ng-container matColumnDef="context">
@@ -69,7 +43,7 @@
                         <td mat-cell *matCellDef="let element">
                             <span *ngIf="element.valueCodeableConcept !== undefined && element.valueCodeableConcept.coding !== undefined">
                             <span *ngFor="let coding of element.valueCodeableConcept.coding">
-                                       {{coding.code}}
+                                       {{getTerminologyDisplayCode(coding)}}
                                 <button *ngIf="coding.system !== undefined && coding.system === 'http://snomed.info/sct'"
                                         mat-icon-button (click)="showConcept(coding)" color="primary"><mat-icon>info</mat-icon></button>
                             </span>
@@ -77,28 +51,12 @@
                             </span>
                         </td>
                       </ng-container>
-                      <ng-container matColumnDef="display">
-                        <th mat-header-cell *matHeaderCellDef> Display </th>
-                        <td mat-cell *matCellDef="let element">
-                             <span *ngIf="element.valueCodeableConcept !== undefined && element.valueCodeableConcept.coding !== undefined">
-                                <span *ngFor="let coding of element.valueCodeableConcept.coding">
-                                           {{coding.display}}<br/>
-                                </span>
-                            </span>
-                          {{element.display}}
-                        </td>
-                      </ng-container>
-                      <ng-container matColumnDef="system">
-                        <th mat-header-cell *matHeaderCellDef> CodeSystem </th>
-                        <td mat-cell *matCellDef="let element">
-                          {{element.system}}
-                         </td>
-                      </ng-container>
+
                   <tr mat-header-row *matHeaderRowDef="displayedColumnsUsage"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumnsUsage;"></tr>
                 </table>
                 <br/>
-            </span>
+
          </td>
      </tr>
      </table>

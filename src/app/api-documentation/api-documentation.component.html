@@ -7,7 +7,7 @@
             <mat-card-content>
 
         <div layout="row">
-            <button mat-raised-button (click)="openInfo()">
+            <button mat-button color="primary" (click)="openInfo()">
                 <mat-icon>info</mat-icon>
             </button>
             <td-file-input
@@ -16,13 +16,14 @@
                     [(ngModel)]="file"
                     (selectFile)="selectFileEvent($event)"
                     accept=".json,.xml"
+                    color="primary"
             >
                 <mat-icon>folder</mat-icon>
                 <span class="text-upper">Open</span>
             </td-file-input>
             <span *ngIf="data !== undefined">
-                <button mat-raised-button (click)="showOAS()">Refresh OAS</button>
-                 <button mat-raised-button [matMenuTriggerFor]="menu">Save</button>
+                <button mat-button color="primary" (click)="showOAS()">Refresh OAS</button>
+                 <button mat-button color="primary" [matMenuTriggerFor]="menu">Save</button>
                 <mat-menu #menu="matMenu">
                     <a mat-menu-item [href]="downloadCapabilityStatement()" download="capability-statement.json">CapabilityStatement</a>
                     <span *ngIf="oas !== undefined">
@@ -47,7 +48,7 @@
                     </mat-select>
                 </mat-form-field>
                 <span *ngIf="oasInput">
-                     <button mat-raised-button color="primary" (click)="convertoFHIR()">Convert to FHIR</button>
+                     <button mat-button color="primary" (click)="convertoFHIR()">Convert to FHIR</button>
                 </span>
             </div>
 

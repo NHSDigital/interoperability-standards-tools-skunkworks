@@ -17,18 +17,19 @@
                       (selectFile)="selectFileEvent($event)"
                       accept=".json,.xml"
                       multiple
+                      color="primary"
               >
                   <mat-icon>folder</mat-icon>
                   <span class="text-upper">Browse...</span>
               </td-file-input>
               <div *ngIf="fileList !== undefined">
                   <span>Files Selected&nbsp;</span>
-                  <button mat-raised-button  (click)="clearSelection()">Clear</button>
+                  <button mat-button color="primary" (click)="clearSelection()">Clear</button>
               </div>
                 <div *ngIf="editorOptions.language === 'xml'">
 
-                    <button mat-raised-button  (click)="convertJSON()">Convert to JSON</button>
-                    <button mat-raised-button  (click)="convertSTU3JSON()">Convert STU3 to JSON</button>
+                    <button mat-button color="primary" (click)="convertJSON()">Convert to JSON</button>
+                    <button mat-button color="primary" (click)="convertSTU3JSON()">Convert STU3 to JSON</button>
 
                 </div>
                 <span *ngIf="fileList !== undefined || resource !== undefined">
@@ -56,7 +57,7 @@
 
                </form>
               &nbsp;
-                <a *ngIf="profileUrl!== undefined" mat-raised-button href="{{profileUrl}}" target="_blank">View Profile</a>
+                <a *ngIf="profileUrl!== undefined" mat-button color="primary" href="{{profileUrl}}" target="_blank">View Profile</a>
           </div>
 
           <br/>
@@ -65,7 +66,7 @@
             <ngx-monaco-editor  class="my-code-editor"  style="height: 100%;" [options]="editorOptions" [(ngModel)]="data" (ngModelChange)="checkType()" (onInit)="onInit($event)"></ngx-monaco-editor>
           </div>
           </div>
-        <!--  <button disabled mat-raised-button color="accent" (click)="validateBase()">Validate against Base FHIR</button> -->
+        <!--  <button disabled mat-button color="accent" (click)="validateBase()">Validate against Base FHIR</button> -->
 
           <br/>
 

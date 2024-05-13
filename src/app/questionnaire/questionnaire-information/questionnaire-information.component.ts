@@ -66,31 +66,53 @@ export class QuestionnaireInformationComponent {
       flex: 50,
     },
     {
-      name: 'Status',
-      placeholder: 'Input Placeholder',
+      name: 'Publisher',
+      hint: 'Name of the publisher (organization or individual)',
       type: TdDynamicElement.Input,
+      required: false,
       flex: 50,
     },
     {
+      name: 'Status',
+      placeholder: 'Input Placeholder',
+      type: TdDynamicElement.Select,
+      selections: ['draft', 'active', 'retired', 'unknown'],
+      flex: 20,
+    },
+    {
       name: 'Version',
-      hint: 'Business version of the questionnaire',
+      hint: 'Business version',
       type: TdDynamicElement.Input,
       required: false,
       flex: 30,
+    },
+    {
+      name: 'Date',
+      hint: 'Date last changed',
+      type: TdDynamicElement.Datepicker,
+      required: false,
+      flex: 25,
+    },
+    {
+      name: 'Approved',
+      hint: 'Date approved by publisher',
+      type: TdDynamicElement.Datepicker,
+      required: false,
+      flex: 25,
     },
     {
       name: 'Url',
       hint: 'Canonical identifier for this questionnaire',
       type: TdDynamicElement.Input,
       required: false,
-      flex: 70,
+      flex: 50,
     },
     {
       name: 'Derived from',
       hint: 'Instantiates protocol or definition',
       type: TdDynamicElement.Input,
       required: false,
-      flex: 70,
+      flex: 50,
     }
   ];
   /*
@@ -110,11 +132,9 @@ export class QuestionnaireInformationComponent {
   ];
   */
 
-  displayedColumns: string[] = ['display','code'];
-  displayedColumnsUsage: string[] = ['context','display','code'];
-  // @ts-ignore
-  dataSource: MatTableDataSource<Coding> =  new MatTableDataSource<Coding>([])
-  // @ts-ignore
+  displayedColumnsUsage: string[] = ['context','code'];
+
+
   dataSourceUsage: MatTableDataSource<UsageContext> = new MatTableDataSource<UsageContext>([])
   constructor(
       public dialog: MatDialog
@@ -129,27 +149,24 @@ export class QuestionnaireInformationComponent {
     }
 
     textElements[0].default = this.questionnaire?.title
+    textElements[1].default = this.questionnaire?.publisher
+    textElements[2].default = this.questionnaire?.status
+    textElements[3].default = this.questionnaire?.version
+    textElements[4].default = this.questionnaire?.date
 
-    textElements[1].default = this.questionnaire?.status
-    textElements[2].default = this.questionnaire?.version
-    textElements[3].default = this.questionnaire?.url
+    textElements[6].default = this.questionnaire?.url
     if (this.questionnaire?.derivedFrom !== undefined) {
       for (let derived of this.questionnaire.derivedFrom) {
-        if (textElements[4].default == undefined) {
-          textElements[4].default = derived
+        if (textElements[7].default == undefined) {
+          textElements[7].default = derived
         } else {
-          textElements[4].default += '\n'+derived
+          textElements[7].default += '\n'+derived
         }
       }
     }
 
     this.textElementsTitle = textElements
 
-    if (this.questionnaire !== undefined && this.questionnaire.code !== undefined && this.questionnaire.code.length >0) {
-      this.dataSource = new MatTableDataSource<Coding>(this.questionnaire.code)
-    } else {
-      this.dataSource = new MatTableDataSource<Coding>([])
-    }
 
     if (this.questionnaire !== undefined && this.questionnaire.useContext !== undefined && this.questionnaire.useContext.length >0) {
       this.dataSourceUsage = new MatTableDataSource<UsageContext>(this.questionnaire.useContext)
@@ -176,5 +193,13 @@ export class QuestionnaireInformationComponent {
     this.dialog.open(ConceptPopupComponent, {
       data: coding
     });
+  }
+
+  getTerminologyDisplayCode(code: Coding) : string {
+    var result = ""
+    if (code.display !== undefined) result += code.display+ " "
+    if (code.code !== undefined) result += code.code+ " "
+    if (code.system !== undefined && code.system ==='http://snomed.info/sct') result += "SNOMED CT "
+    return result
   }
 }

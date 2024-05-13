@@ -29,7 +29,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
   currentTab = 0;
 
-  markdown: string = "A useful tool for creating/editing Questionnires is <a href=\"https://lhcformbuilder.nlm.nih.gov/\" target='_blank'></a> [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/). This server (`" + this.config.sdcServer() + "`) can be used with NLM Form Builder, use `Start with existing form`, then `Import from the FHIR Server` and add this server using `Add your FHIR server`. \n\n For detailed description on using Questionnaire see [FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/). \n\n The component used for displaying the questionnaires is open source [LHC-Forms](https://lhncbc.github.io/lforms/)";
+  markdown: string = "A tool for creating/editing Questionnaires is \n\n <a href=\"https://lhcformbuilder.nlm.nih.gov/\" target='_blank'></a> [National Library of Medicine Form Builder](https://lhcformbuilder.nlm.nih.gov/). \n\n This server (`" + this.config.sdcServer() + "`) can be used with NLM Form Builder, use `Start with existing form`, then `Import from the FHIR Server` and add this server using `Add your FHIR server`. \n\n For detailed description on using Questionnaire see \n\n[FHIR Structured Data Capture](https://build.fhir.org/ig/HL7/sdc/). \n\n The component used for displaying the questionnaires is open source \n\n[LHC-Forms](https://lhncbc.github.io/lforms/)";
 
 
   patients: IMenuItem[] = [

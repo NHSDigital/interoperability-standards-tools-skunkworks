@@ -6,11 +6,11 @@
                 </mat-card-header>
                 <mat-card-content>
                 <div layout="row">
-                        <button mat-raised-button (click)="openInfo()">
+                        <button mat-button color="primary" (click)="openInfo()">
                             <mat-icon>info</mat-icon>
                         </button>
                         <span *ngIf="resource !== undefined">
-                               &nbsp; <button mat-raised-button color="primary" (click)="showDocument()">Show</button>
+                               &nbsp; <button mat-button color="primary" (click)="showDocument()">Show</button>
                             </span>
                     </div>
                     <div style="height: calc(100vh - 100px)" >
