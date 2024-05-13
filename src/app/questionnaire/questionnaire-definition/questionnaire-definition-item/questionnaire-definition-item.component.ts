@@ -68,7 +68,7 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
-  displayedColumns: string[] = ['display', 'code',  'codesystem'];
+  displayedColumns: string[] = ['initial', 'display', 'code',  'codesystem'];
   // @ts-ignore
   dataSource: MatTableDataSource<QuestionnaireItemAnswerOption>;
 
@@ -107,6 +107,11 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
         })
   }
 
+  getDefinitionUrl(definition: string) {
+    const resource = this.getDefinitionResource(definition)
+    const element = this.getDefinitionElement(definition).replace(resource + ".","")
+    return "https://hl7.org/fhir/R4/" + resource + "-definitions.html#" + resource + "." + element
+  }
   getDefinitionResource(definition: string) {
     var resource = definition.split("#")[0]
     var resources = resource.split("/")
@@ -184,4 +189,6 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
     }
 
   }
+
+
 }

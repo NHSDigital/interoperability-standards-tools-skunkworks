@@ -120,6 +120,12 @@
                         {{element.valueCoding.system}}
                     </span> </td>
                   </ng-container>
+                     <ng-container matColumnDef="initial">
+                    <th mat-header-cell *matHeaderCellDef> Initial Value </th>
+                    <td mat-cell *matCellDef="let element"> <span *ngIf="element.initialSelected !== undefined && element.initialSelected ">
+                        <mat-icon color="accent">done</mat-icon>
+                    </span> </td>
+                  </ng-container>
 
 
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -135,7 +141,7 @@
                     <td>
                         <br/>
                         <span *ngIf="item.definition !== undefined">
-                            <mat-chip>{{getDefinitionResource(item.definition)}}</mat-chip> element: {{getDefinitionElement(item.definition)}}
+                            <a mat-button color="primary" [href]="getDefinitionUrl(item.definition)" target="_blank">{{getDefinitionResource(item.definition)}}</a> element: {{getDefinitionElement(item.definition)}}
                         </span>
                     </td>
                 </tr>
