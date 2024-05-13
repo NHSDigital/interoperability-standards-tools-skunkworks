@@ -4,21 +4,18 @@
                 <a mat-button  color="primary" [href]="downloadQuestionnaire()" download="questionnaire.json">Download</a>
       </div>
 
-    <td-dynamic-forms [elements]="textElementsTitle">
-     <ng-template let-element ngFor [ngForOf]="textElementsTitle">
-       <ng-template let-control="control" [tdDynamicFormsError]="element.name">
-         <span *ngIf="control.touched || !control.pristine">
-           <span *ngIf="control.hasError('minlength')"
-           >Min length value: {{ element.minLength }}</span
-           >
-           <span *ngIf="control.hasError('maxlength')"
-           >Max length value: {{ element.minLength }}</span
-           >
-         </span>
-       </ng-template>
-     </ng-template>
-    </td-dynamic-forms>
-     <table class="mat-elevation-z8">
+
+
+    <h3>Description</h3>
+    <td-markdown *ngIf="questionnaire.description !== undefined" [content]="questionnaire.description"></td-markdown>
+
+    <h3>Purpose</h3>
+    <td-markdown *ngIf="questionnaire.purpose !== undefined" [content]="questionnaire.purpose"></td-markdown>
+
+     <h3>Copyright</h3>
+    <td-markdown *ngIf="questionnaire.copyright !== undefined" [content]="questionnaire.copyright"></td-markdown>
+
+           <table class="mat-elevation-z8">
      <tr *ngIf="questionnaire.code !== undefined">
          <td><h3>Questionnaire Code</h3></td>
          <td >
@@ -61,15 +58,21 @@
          </td>
      </tr>
      </table>
-
-    <h3>Description</h3>
-    <td-markdown *ngIf="questionnaire.description !== undefined" [content]="questionnaire.description"></td-markdown>
-
-    <h3>Purpose</h3>
-    <td-markdown *ngIf="questionnaire.purpose !== undefined" [content]="questionnaire.purpose"></td-markdown>
-
-     <h3>Copyright</h3>
-    <td-markdown *ngIf="questionnaire.copyright !== undefined" [content]="questionnaire.copyright"></td-markdown>
+    <br/><br/>
+    <td-dynamic-forms [elements]="textElementsTitle">
+     <ng-template let-element ngFor [ngForOf]="textElementsTitle">
+       <ng-template let-control="control" [tdDynamicFormsError]="element.name">
+         <span *ngIf="control.touched || !control.pristine">
+           <span *ngIf="control.hasError('minlength')"
+           >Min length value: {{ element.minLength }}</span
+           >
+           <span *ngIf="control.hasError('maxlength')"
+           >Max length value: {{ element.minLength }}</span
+           >
+         </span>
+       </ng-template>
+     </ng-template>
+    </td-dynamic-forms>
 
 
     <!--

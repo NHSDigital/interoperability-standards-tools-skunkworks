@@ -55,18 +55,18 @@
 
 
         <mat-tab-group (selectedTabChange)="changedTab($event)">
-
-            <mat-tab label="Definition">
-                <span *ngIf="currentTab == 0">
-                    <!-- delay activation of component until it is needed to be display -->
-                 <app-questionnaire-definition [formDefinition]="questionnaire" [readonly]="readonly" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-definition>
-                </span>
-            </mat-tab>
             <mat-tab label="Information">
-                <span *ngIf="currentTab == 1">
+                <span *ngIf="currentTab == 0">
                     <app-questionnaire-information [formDefinition]="questionnaire" [readonly]="readonly" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-information>
                 </span>
             </mat-tab>
+            <mat-tab label="Model Detail">
+                <span *ngIf="currentTab == 1">
+                   <br/>
+                 <app-questionnaire-definition [formDefinition]="questionnaire" [readonly]="readonly" (questionnaireChanged)="updateQuestionnaire($event)"></app-questionnaire-definition>
+                </span>
+            </mat-tab>
+
             <mat-tab label="Demonstration">
                <span *ngIf="currentTab == 2">
                     <app-questionnaire-form [patient]="patientId" [readonly]="readonly" [formDefinition]="questionnaire" ></app-questionnaire-form>
