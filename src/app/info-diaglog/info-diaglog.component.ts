@@ -8,7 +8,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 })
 export class InfoDiaglogComponent {
     constructor(public dialogRef: MatDialogRef<InfoDiaglogComponent>,
-                @Inject(MAT_DIALOG_DATA) public markdown: string) {}
+                @Inject(MAT_DIALOG_DATA) public data: any) {}
   ok() {
     this.dialogRef.close(true);
   }

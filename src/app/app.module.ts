@@ -48,7 +48,7 @@ import {CovalentFlavoredMarkdownModule} from "@covalent/flavored-markdown";
 import { DocumentSectionComponent } from './document/document-section/document-section.component';
 import {MatChipsModule} from "@angular/material/chips";
 import {ResourceDialogComponent} from "./resource-dialog/resource-dialog.component";
-import {QuestionnaireFormComponent} from "./questionnaire/questionnaire-form/questionnaire-form.component";
+import {QuestionnaireFormComponent} from "./questionnaire/questionnaire-form-display/questionnaire-form.component";
 import {QuestionnaireEditComponent} from "./questionnaire/questionnaire-edit/questionnaire-edit.component";
 import {
     QuestionnaireDefinitionComponent

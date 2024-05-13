@@ -9,6 +9,7 @@ import {ConfigService} from "../../config.service";
 import {HttpClient} from "@angular/common/http";
 import {TdDialogService} from "@covalent/core/dialogs";
 import {MatDialog} from "@angular/material/dialog";
+import {InfoDiaglogComponent} from "../../info-diaglog/info-diaglog.component";
 
 @Component({
   selector: 'app-questionnaire-edit',
@@ -45,7 +46,6 @@ export class QuestionnaireEditComponent {
 
   constructor(private config: ConfigService,
               private http: HttpClient,
-              private _dialogService: TdDialogService,
               public dialog: MatDialog
   ) {
   }
@@ -53,6 +53,17 @@ export class QuestionnaireEditComponent {
   onInit(editor) {
     console.log('On Init Called')
     this.monacoEditor = editor
+  }
+
+  openAlert(title : string, information : string) {
+    let dialogRef = this.dialog.open(InfoDiaglogComponent, {
+      width: '400px',
+      data:  {
+        information: information,
+        title: title
+      }
+    });
+
   }
 
   save() {
@@ -67,12 +78,7 @@ export class QuestionnaireEditComponent {
                 }
               },
               error => {
-                this._dialogService.openAlert({
-                  title: 'Alert',
-                  disableClose: true,
-                  message:
-                      this.config.getErrorMessage(error),
-                });
+                this.openAlert('Alert',this.config.getErrorMessage(error) )
                 console.log(JSON.stringify(error))
               })
         } else {
@@ -83,40 +89,22 @@ export class QuestionnaireEditComponent {
                 }
               },
               error => {
-                this._dialogService.openAlert({
-                  title: 'Alert',
-                  disableClose: true,
-                  message:
-                      this.config.getErrorMessage(error),
-                });
+                this.openAlert('Alert',this.config.getErrorMessage(error) )
                 console.log(JSON.stringify(error))
               })
         }
       } else {
-        this._dialogService.openAlert({
-          title: 'Alert',
-          disableClose: true,
-          message:
-              'No id present in the questionnaire. Unable to save'
-        });
+        this.openAlert('Alert','No id present in the questionnaire. Unable to save' )
+
       }
     } else {
-      this._dialogService.openAlert({
-        title: 'Alert',
-        disableClose: true,
-        message:
-            'Unable to process form'
-      });
+      this.openAlert('Alert','Unable to process form' )
+
     }
   }
 
   updateQuestionnaire(questionnaire : Questionnaire) {
-    this._dialogService.openAlert({
-      title: 'Alert',
-      disableClose: true,
-      message:
-          'Saved. New version = ' + questionnaire.meta?.versionId
-    });
+    this.openAlert('Information','Saved. New version = ' + questionnaire.meta?.versionId )
     this.data = JSON.stringify(questionnaire, undefined, 2)
     this.questionnaireChanged.emit(questionnaire)
   }

@@ -57,9 +57,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
 
   constructor(private config: ConfigService,
               private http: HttpClient,
-              private _dialogService: TdDialogService,
               private route: ActivatedRoute,
-              private router: Router,
               public dialog: MatDialog
   ) {
   }
@@ -170,12 +168,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
             error => {
 
               console.log(JSON.stringify(error))
-              this._dialogService.openAlert({
-                title: 'Alert',
-                disableClose: true,
-                message:
-                    this.config.getErrorMessage(error),
-              });
+              this.openAlert('Alert',this.config.getErrorMessage(error))
             })
       } else
       if ((data as string).includes('<archetype')) {
@@ -191,12 +184,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
             error => {
 
               console.log(JSON.stringify(error))
-              this._dialogService.openAlert({
-                title: 'Alert',
-                disableClose: true,
-                message:
-                    this.config.getErrorMessage(error),
-              });
+              this.openAlert('Alert',this.config.getErrorMessage(error))
             })
       }
     }
@@ -206,7 +194,19 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
   openInfo() {
     let dialogRef = this.dialog.open(InfoDiaglogComponent, {
       width: '400px',
-      data:  this.markdown
+      data: {
+        information: this.markdown
+      }
+    });
+
+  }
+  openAlert(title : string, information : string) {
+    let dialogRef = this.dialog.open(InfoDiaglogComponent, {
+      width: '400px',
+      data:  {
+        information: information,
+        title: title
+      }
     });
 
   }
@@ -234,12 +234,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
       };
       reader.onerror = function (error) {
         console.log('Error: ', error);
-        me._dialogService.openAlert({
-          title: 'Alert',
-          disableClose: true,
-          message:
-              'Failed to process file. Try smaller example?',
-        });
+        me.openAlert('Alert','Failed to process file. Try smaller example?')
       };
     }
   }

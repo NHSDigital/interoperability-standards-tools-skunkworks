@@ -74,8 +74,7 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
 
 
   constructor(private config: ConfigService,
-              private http: HttpClient,
-              public dialog: MatDialog
+              private http: HttpClient
   ) {
   }
 

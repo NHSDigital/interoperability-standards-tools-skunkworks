@@ -1,5 +1,8 @@
+<div *ngIf="data.title !== undefined" mat-dialog-title>
+    {{data.title}}
+</div>
 <div mat-dialog-content>
-    <td-markdown>{{ markdown }}</td-markdown>
+    <td-markdown>{{ data.information }}</td-markdown>
 </div>
 <div mat-dialog-actions>
     <button mat-button color="primary" (click)="ok()" >Ok</button>

@@ -61,7 +61,6 @@ export class QuestionnaireDefinitionComponent {
 
 
   constructor(
-              public dialog: MatDialog,
 
   ) {
 
