@@ -13,12 +13,18 @@ import {
   MatRow, MatRowDef, MatTable, MatTableDataSource, MatTableModule
 } from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
-import {MatIconButton} from "@angular/material/button";
+import {MatAnchor, MatIconButton} from "@angular/material/button";
 import {MatPaginator} from "@angular/material/paginator";
-import {ConceptPopupComponent} from "../../concept-popup/concept-popup.component";
+import {ConceptPopupComponent} from "../../concept/concept-popup/concept-popup.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {CovalentMarkdownModule} from "@covalent/markdown";
+import {ConceptDisplayComponent} from "../../concept/concept-display/concept-display.component";
+import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {ConfigService} from "../../config.service";
+import {HttpClient} from "@angular/common/http";
+import {TdDialogService} from "@covalent/core/dialogs";
+import {TdLoadingService} from "@covalent/core/loading";
 
 @Component({
   selector: 'app-questionnaire-information',
@@ -39,7 +45,9 @@ import {CovalentMarkdownModule} from "@covalent/markdown";
     MatTable,
     MatCardContent,
     MatCard,
-    CovalentMarkdownModule
+    CovalentMarkdownModule,
+    ConceptDisplayComponent,
+    MatAnchor
   ],
   templateUrl: './questionnaire-information.component.html',
   styleUrl: './questionnaire-information.component.scss'
@@ -136,10 +144,12 @@ export class QuestionnaireInformationComponent {
 
 
   dataSourceUsage: MatTableDataSource<UsageContext> = new MatTableDataSource<UsageContext>([])
-  constructor(
+  constructor(private sanitizer: DomSanitizer,
       public dialog: MatDialog
   ) {
   }
+
+
 
   private populateForm() {
     var textElements: ITdDynamicElementConfig[] = []
@@ -188,18 +198,15 @@ export class QuestionnaireInformationComponent {
  */
   }
 
-  showConcept(coding:Coding) {
-
-    this.dialog.open(ConceptPopupComponent, {
-      data: coding
+  downloadQuestionnaire(): SafeResourceUrl {
+    const data = JSON.stringify(this.questionnaire, undefined, 2);
+    const blob = new Blob([data], {
+      type: 'application/octet-stream'
     });
+
+    return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
   }
 
-  getTerminologyDisplayCode(code: Coding) : string {
-    var result = ""
-    if (code.display !== undefined) result += code.display+ " "
-    if (code.code !== undefined) result += code.code+ " "
-    if (code.system !== undefined && code.system ==='http://snomed.info/sct') result += "SNOMED CT "
-    return result
-  }
+
+
 }

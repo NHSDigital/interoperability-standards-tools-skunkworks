@@ -10,12 +10,6 @@
  "
     >
      <div layout="row" layout-align="space-between right">
-            <button color = "primary" mat-button [matMenuTriggerFor]="menu">Download</button>
-            <mat-menu #menu="matMenu">
-                <a mat-menu-item [href]="downloadQuestionnaire()" download="questionnaire.json">Questionnaire (Form Definition)</a>
-                <a mat-menu-item [href]="downloadQuestionnaireResponse()" download="questionnaire-response.json">QuestionnaireResponse (Completed Form)</a>
-
-            </mat-menu>
          <button color = "primary" mat-button [matMenuTriggerFor]="showmenu">Show/Extract</button>
             <mat-menu #showmenu="matMenu">
                <button mat-menu-item (click)="viewQuestionnaireResponse('data-extraction-bundle.json')" >QuestionnaireResponse (Completed Form)</button>

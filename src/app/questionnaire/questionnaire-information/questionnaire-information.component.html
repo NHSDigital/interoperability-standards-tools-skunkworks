@@ -1,5 +1,9 @@
 
 <span *ngIf="questionnaire != undefined">
+      <div layout="row" layout-align="space-between right">
+                <a mat-button  color="primary" [href]="downloadQuestionnaire()" download="questionnaire.json">Download</a>
+      </div>
+
     <td-dynamic-forms [elements]="textElementsTitle">
      <ng-template let-element ngFor [ngForOf]="textElementsTitle">
        <ng-template let-control="control" [tdDynamicFormsError]="element.name">
@@ -16,16 +20,15 @@
     </td-dynamic-forms>
      <table class="mat-elevation-z8">
      <tr *ngIf="questionnaire.code !== undefined">
-         <td>Questionnaire Code</td>
+         <td><h3>Questionnaire Code</h3></td>
          <td >
                  <span *ngFor="let code of questionnaire.code">
-                        {{getTerminologyDisplayCode(code)}}
-                     <button  mat-icon-button (click)="showConcept(code)" color="primary"><mat-icon>info</mat-icon></button>
+                      <app-concept-display [coding]="code"></app-concept-display>
                  </span>
         </td>
          </tr>
          <tr *ngIf="dataSourceUsage !== undefined && dataSourceUsage.data.length > 0">
-             <td>Usage</td>
+             <td><h3>Usage</h3></td>
          <td>
 
 
@@ -43,9 +46,7 @@
                         <td mat-cell *matCellDef="let element">
                             <span *ngIf="element.valueCodeableConcept !== undefined && element.valueCodeableConcept.coding !== undefined">
                             <span *ngFor="let coding of element.valueCodeableConcept.coding">
-                                       {{getTerminologyDisplayCode(coding)}}
-                                <button *ngIf="coding.system !== undefined && coding.system === 'http://snomed.info/sct'"
-                                        mat-icon-button (click)="showConcept(coding)" color="primary"><mat-icon>info</mat-icon></button>
+                                <app-concept-display [coding]="coding"></app-concept-display>
                             </span>
 
                             </span>

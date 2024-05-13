@@ -72,8 +72,8 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
   overlayStarSyntax = false;
 
 
-  constructor(private sanitizer: DomSanitizer,
-              public dialog: MatDialog,
+  constructor(
+      public dialog: MatDialog,
               private config: ConfigService,
               private http: HttpClient,
               private _dialogService: TdDialogService,
@@ -104,16 +104,7 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
   }
 
 
-  downloadQuestionnaire(): SafeResourceUrl {
-    const data = JSON.stringify(this.form, undefined, 2);
-    const blob = new Blob([data], {
-      type: 'application/octet-stream'
-    });
-
-    return this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
-  }
-
-
+/*
   downloadQuestionnaireResponse(): SafeResourceUrl | undefined {
     const div = this.mydiv?.nativeElement
     //  console.log(div)
@@ -146,7 +137,7 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
     return undefined
 
   }
-
+*/
   populateQuestionnaireNoPopulation() {
     LForms.Util.setFHIRContext(this.ctx)
     let formDef = LForms.Util.convertFHIRQuestionnaireToLForms(this.questionnaire, "R4");

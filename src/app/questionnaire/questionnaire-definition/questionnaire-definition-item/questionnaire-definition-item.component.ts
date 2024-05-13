@@ -15,7 +15,8 @@ import {ConfigService} from "../../../config.service";
 import {HttpClient} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {MatPaginator} from "@angular/material/paginator";
-import {ConceptPopupComponent} from "../../../concept-popup/concept-popup.component";
+import {ConceptPopupComponent} from "../../../concept/concept-popup/concept-popup.component";
+import {ConceptDisplayComponent} from "../../../concept/concept-display/concept-display.component";
 
 @Component({
   selector: 'app-questionnaire-definition-item',
@@ -30,7 +31,8 @@ import {ConceptPopupComponent} from "../../../concept-popup/concept-popup.compon
     MatTooltip,
     MatIconButton,
     MatIconAnchor,
-    MatPaginator
+    MatPaginator,
+    ConceptDisplayComponent
   ],
   templateUrl: './questionnaire-definition-item.component.html',
   styleUrl: './questionnaire-definition-item.component.scss'
@@ -77,20 +79,6 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
   ) {
   }
 
-
-  getTerminologyDisplay(code: Coding[]) : string {
-     if (code.length>0 ) {
-       return this.getTerminologyDisplayCode(code[0])
-     }
-     else return 'No display term present'
-  }
-  getTerminologyDisplayCode(code: Coding) : string {
-      var result = ""
-      if (code.display !== undefined) result += code.display+ " "
-      if (code.code !== undefined) result += code.code+ " "
-      if (code.system !== undefined && code.system ==='http://snomed.info/sct') result += "SNOMED CT "
-      return result
-  }
 
   extractValueSet(valueSet : string) {
     this.http.get(this.config.sdcServer() + '/ValueSet/\$expand?url=' + valueSet).subscribe((result) => {
@@ -196,12 +184,5 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
       }
     }
 
-  }
-
-  showConcept(coding:Coding) {
-
-    this.dialog.open(ConceptPopupComponent, {
-        data: coding
-      });
   }
 }

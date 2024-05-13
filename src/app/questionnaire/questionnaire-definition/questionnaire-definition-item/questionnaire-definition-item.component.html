@@ -34,8 +34,7 @@
                             When <small style="color: forestgreen">{{when.question}}</small> &nbsp; <mat-chip>{{when.operator}}</mat-chip>
                             &nbsp;
                             <span *ngIf="when.answerCoding !== undefined">
-                                {{getTerminologyDisplayCode(when.answerCoding)}}
-                                <button  mat-icon-button (click)="showConcept(when.answerCoding)" color="primary"><mat-icon>info</mat-icon></button>
+                                <app-concept-display [coding]="when.answerCoding"></app-concept-display>
                             </span>
                             <br/>
                         </span>
@@ -43,8 +42,8 @@
                 </tr>
                 <tr *ngIf="item.code !== undefined">
                     <td>Question Code</td>
-                    <td>{{getTerminologyDisplay(item.code)}}
-                        <button *ngIf="item.code.length > 0" mat-icon-button (click)="showConcept(item.code[0])" color="primary"><mat-icon>info</mat-icon></button>
+                    <td>
+                        <app-concept-display [coding]="item.code[0]"></app-concept-display>
                     </td>
                 </tr>
                 <tr>
@@ -86,7 +85,9 @@
                             </tr>
                             <tr *ngFor="let unit of getUnitsAllowed()">
                                   <td>{{unit.display}}</td>
-                                <td>{{unit.code}}</td>
+                                <td>
+                                    <app-concept-display [coding]="unit" codeOnly=true></app-concept-display>
+                                </td>
                                  <td>{{unit.system}}</td>
                             </tr>
                         </table>
@@ -101,11 +102,11 @@
 
                     <ng-container matColumnDef="code">
                     <th mat-header-cell *matHeaderCellDef> Code </th>
-                    <td mat-cell *matCellDef="let element"> <span *ngIf="element.valueCoding !== undefined">
-                        {{element.valueCoding.code}}
-                        <button *ngIf="element.valueCoding.system !== undefined && element.valueCoding.system === 'http://snomed.info/sct'"
-                                mat-icon-button (click)="showConcept(element.valueCoding)" color="primary"><mat-icon>info</mat-icon></button>
-                    </span> </td>
+                    <td mat-cell *matCellDef="let element">
+                        <span *ngIf="element.valueCoding !== undefined">
+                            <app-concept-display [coding]="element.valueCoding" codeOnly=true></app-concept-display>
+                        </span>
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="display">
                     <th mat-header-cell *matHeaderCellDef> Display </th>

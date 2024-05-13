@@ -1,0 +1,117 @@
+<h2 mat-dialog-title>
+    <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getDisplay()">
+                       {{display}}
+                   </span>
+               </span>
+    {{data.display}}</h2>
+<mat-dialog-content>
+   <table>
+       <tr>
+           <td>System</td>
+           <td>{{data.system}}</td>
+       </tr>
+       <tr>
+           <td>Concept</td>
+           <td>{{data.code}}</td>
+       </tr>
+       <tr>
+           <td>Display</td>
+           <td>
+               <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getDisplay()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Category</td>
+           <td>
+               <span *ngIf="lookup !== undefined">
+                   <mat-chip-set *ngFor="let display of getCategory()">
+                       <mat-chip>{{display}}</mat-chip>
+                   </mat-chip-set>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Part of</td>
+           <td>
+                <span *ngIf="parent !== undefined">
+                   <span *ngFor="let display of parent">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Synonym</td>
+
+           <td>
+                 <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getSynonym()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>Active</td>
+           <td>
+               <span *ngIf="lookup !== undefined">
+                   <span *ngIf="getActive()">
+                       <mat-icon>done</mat-icon>
+                   </span>
+                   <span *ngIf="!getActive()">
+                       <mat-icon color="primary">warning</mat-icon>
+                   </span>
+               </span>
+           </td>
+       </tr>
+       <tr>
+           <td>More Information</td>
+           <td>
+               <a [href]="getTerminologyUrlbyCode(data.code,data.system)" target="_blank">Ontology Server (Shrimp)</a>
+           </td>
+       </tr>
+
+       <tr>
+           <td>Issues</td>
+
+           <td>
+               <span *ngIf="validateCode !== undefined">
+                   <span *ngFor="let display of getIssues()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+
+<!--
+       <tr>
+           <td>Preferred</td>
+           <td>
+                <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getPreferred()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>-->
+       <tr>
+           <td>Full Name (FSN)</td>
+           <td>
+               <span *ngIf="lookup !== undefined">
+                   <span *ngFor="let display of getFSN()">
+                       {{display}}<br/>
+                   </span>
+               </span>
+           </td>
+       </tr>
+
+   </table>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button color = "primary" mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
