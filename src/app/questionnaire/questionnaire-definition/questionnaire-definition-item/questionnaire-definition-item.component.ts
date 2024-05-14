@@ -74,7 +74,7 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
   item: QuestionnaireItem | undefined;
   panelOpenState = false;
 
-  valueSetNotFound = false;
+  valueSetNotFound : string | undefined = undefined;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
@@ -115,8 +115,16 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
         }
       }
     },
-        ()=>{
-          this.valueSetNotFound = true
+        (err)=>{
+          console.log(err)
+          this.valueSetNotFound = 'Issue retrieving valueset'
+          if (err.error !== undefined) {
+            if (err.error.issue  !== undefined && err.error.issue.length > 0) {
+               if (err.error.issue[0].diagnostics !== undefined) {
+                 this.valueSetNotFound = err.error.issue[0].diagnostics
+               }
+            }
+          }
         })
   }
 

@@ -65,9 +65,9 @@
                     <td>Answer ValueSet</td>
                     <td>
                         <a href="{{'https://simplifier.net/resolve?fhirVersion=R4&canonical='+item.answerValueSet}}" target="_blank">{{item.answerValueSet}}</a>
-                        <span *ngIf="valueSetNotFound">
+                        <span *ngIf="valueSetNotFound !== undefined">
                             &nbsp;
-                            <button mat-icon-button color="warn" matTooltip="Issue with expanding or retrieving valueset">
+                            <button mat-icon-button color="warn" [matTooltip]="valueSetNotFound">
                                 <mat-icon>warning</mat-icon>
                             </button>
                         </span>
