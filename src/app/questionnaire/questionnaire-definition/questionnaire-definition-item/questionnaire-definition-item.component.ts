@@ -1,5 +1,12 @@
 import {AfterContentChecked, Component, Input, ViewChild} from '@angular/core';
-import {QuestionnaireItem, QuestionnaireItemAnswerOption, ValueSet} from "fhir/r4";
+import {
+  Duration,
+  Quantity,
+  QuestionnaireItem,
+  QuestionnaireItemAnswerOption,
+  QuestionnaireItemInitial,
+  ValueSet
+} from "fhir/r4";
 import {CommonModule} from "@angular/common";
 import {Coding} from "fhir/r4";
 import {MatChipsModule} from "@angular/material/chips";
@@ -59,6 +66,9 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
     if (item.answerValueSet !== undefined) {
       this.extractValueSet(item.answerValueSet)
     }
+    if (item.initial !== undefined && item.initial.length > 0) {
+      this.dataSourceInitial = new MatTableDataSource<QuestionnaireItemInitial>(this.item.initial)
+    }
   }
 
   item: QuestionnaireItem | undefined;
@@ -72,6 +82,9 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
   // @ts-ignore
   dataSource: MatTableDataSource<QuestionnaireItemAnswerOption>;
 
+  displayedColumnsInitial: string[] = [ 'display', 'code',  'codesystem'];
+  // @ts-ignore
+  dataSourceInitial: MatTableDataSource<QuestionnaireItemInitial>;
 
   constructor(private config: ConfigService,
               private http: HttpClient
@@ -145,6 +158,41 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
     }
   }
 
+  hasSDCExtraction() {
+    if (this.item !== undefined && this.item.extension !== undefined && this.item.extension.length>0) {
+      for (let extension of this.item.extension) {
+        if (extension.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationExtract') {
+          if (extension.valueBoolean !== undefined) return extension.valueBoolean
+        }
+      }
+    }
+    return false
+  }
+  hasSDCDuration() {
+    if (this.getSDCDuration() !== undefined) return true
+    else return false
+  }
+  getSDCDuration() :Duration[] | undefined {
+    if (this.item !== undefined && this.item.extension !== undefined && this.item.extension.length>0) {
+      var coding : Duration[] = []
+      for (let extension of this.item.extension) {
+        if (extension.url === 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-observationLinkPeriod') {
+          const code: Duration = {
+            value: extension.valueDuration?.value,
+            system: extension.valueDuration?.system,
+            code:extension.valueDuration?.code,
+            unit:extension.valueDuration?.unit
+          }
+          coding.push(code)
+        }
+      }
+      if (coding.length>0) return coding
+      else return undefined
+    } else {
+      return undefined;
+    }
+  }
+
   ngAfterContentChecked(): void {
     if (this.applyPaginator && this.paginator !== undefined) {
       this.applyPaginator = false
@@ -191,4 +239,12 @@ export class QuestionnaireDefinitionItemComponent implements AfterContentChecked
   }
 
 
+  getCodingFromQuantity(valueQuantity : Quantity) {
+    let coding : Coding = {
+      system : valueQuantity.system,
+      code: valueQuantity.code,
+      display: valueQuantity.unit
+    }
+    return coding
+  }
 }

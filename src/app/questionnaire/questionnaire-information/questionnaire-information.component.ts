@@ -13,7 +13,7 @@ import {
   MatRow, MatRowDef, MatTable, MatTableDataSource, MatTableModule
 } from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
-import {MatAnchor, MatIconButton} from "@angular/material/button";
+import {MatAnchor, MatButton, MatIconButton} from "@angular/material/button";
 import {MatPaginator} from "@angular/material/paginator";
 import {ConceptPopupComponent} from "../../concept/concept-popup/concept-popup.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -25,6 +25,7 @@ import {ConfigService} from "../../config.service";
 import {HttpClient} from "@angular/common/http";
 import {TdDialogService} from "@covalent/core/dialogs";
 import {TdLoadingService} from "@covalent/core/loading";
+import {MatChip} from "@angular/material/chips";
 
 @Component({
   selector: 'app-questionnaire-information',
@@ -47,7 +48,9 @@ import {TdLoadingService} from "@covalent/core/loading";
     MatCard,
     CovalentMarkdownModule,
     ConceptDisplayComponent,
-    MatAnchor
+    MatAnchor,
+    MatChip,
+    MatButton
   ],
   templateUrl: './questionnaire-information.component.html',
   styleUrl: './questionnaire-information.component.scss'
