@@ -1,11 +1,11 @@
 import {AfterViewChecked, AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+
 import {Bundle, Parameters, Questionnaire, QuestionnaireResponse} from "fhir/r4";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfigService} from "../../config.service";
 import {HttpClient} from "@angular/common/http";
-import {TdDialogService} from "@covalent/core/dialogs";
+
 import Client from "fhirclient/lib/Client";
 import {client} from "fhirclient";
 import {MatButton} from "@angular/material/button";
@@ -48,7 +48,7 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
   @Input()
   readonly = false;
 
-  patientId;
+  patientId = undefined;
 
   @Input()
   set formDefinition(questionnaire: Questionnaire | undefined) {
@@ -297,8 +297,12 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
 
       if (results.resourceType === "QuestionnaireResponse") {
         let questionnaireResponse: QuestionnaireResponse = results
-        questionnaireResponse.subject = {
-          reference: "Patient/" + this.patientId
+        if (this.patientId !== undefined && this.patientId !== null) {
+          questionnaireResponse.subject = {
+            reference: "Patient/" + this.patientId
+          }
+        } else {
+          questionnaireResponse.subject = undefined
         }
         questionnaireResponse.questionnaire = "Questionnaire/" + this.questionnaire.id
         this.downloadFile(fileName, questionnaireResponse)
@@ -313,8 +317,12 @@ export class QuestionnaireFormComponent implements OnInit, AfterViewInit,AfterVi
 
       if (results.resourceType === "QuestionnaireResponse") {
         let questionnaireResponse: QuestionnaireResponse = results
-        questionnaireResponse.subject = {
-          reference: "Patient/" + this.patientId
+        if (this.patientId !== undefined && this.patientId !== null) {
+          questionnaireResponse.subject = {
+            reference: "Patient/" + this.patientId
+          }
+        } else {
+          questionnaireResponse.subject = undefined
         }
         questionnaireResponse.questionnaire = "Questionnaire/" + this.questionnaire.id
         this.extract(questionnaireResponse, fileName)
