@@ -277,4 +277,13 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
     document.execCommand('copy');
     document.body.removeChild(selBox);
   }
+
+    openEditor() {
+        var popup = window.open("https://nhsdigital.github.io/formbuilder-lhcforms?referrer=" + window.location.href,"_blank")
+        console.log(popup)
+        if (this.questionnaire !== undefined) {
+          popup?.postMessage('initialQuestionnaire',JSON.stringify(this.questionnaire))
+        }
+
+    }
 }

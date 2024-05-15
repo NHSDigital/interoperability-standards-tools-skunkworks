@@ -47,7 +47,8 @@
                     <span class="example-spacer"></span>
                     <span *ngIf="patientId !== undefined">{{getPatient()}}</span>
                     <button color = "primary" mat-icon-button [matMenuTriggerFor]="populate" matTooltip="Select a patient to enable automatic form population from existing data"><mat-icon>person</mat-icon></button>
-                    <button color = "primary" *ngIf="!readonly" mat-icon-button matTooltip="National Laboratory of Medicine Form Builder" (click)="openInfo()"><mat-icon>edit</mat-icon></button>
+                    <!-- <button color = "primary" *ngIf="!readonly" mat-icon-button matTooltip="National Laboratory of Medicine Form Builder" (click)="openInfo()"><mat-icon>edit</mat-icon></button> -->
+                    <button color = "primary" *ngIf="!readonly" mat-icon-button (click)="openEditor()"><mat-icon>edit</mat-icon></button>
                     <button color = "primary" *ngIf="questionnaire !== undefined" mat-icon-button matTooltip="Copy link to clipboard" (click)="copyMessage()"><mat-icon>content_copy</mat-icon></button>
                 </mat-toolbar>
             </mat-card-header>

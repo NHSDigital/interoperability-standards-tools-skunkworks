@@ -120,6 +120,7 @@ import {DatePipe} from "@angular/common";
         MatDialogModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatNativeDateModule,
         CovalentFlavoredMarkdownModule,
         MatChipsModule,
         QuestionnaireFormComponent,

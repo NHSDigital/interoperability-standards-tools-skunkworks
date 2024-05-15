@@ -7,6 +7,7 @@ import {ApiDocumentationComponent} from "./api-documentation/api-documentation.c
 import {QuestionnaireComponent} from "./questionnaire/questionnaire.component";
 import {DocumentComponent} from "./document/document.component";
 import {MarkdownComponent} from "./markdown/markdown.component";
+import {EclBuilderComponent} from "./ecl-builder/ecl-builder.component";
 
 const routes: Routes = [ {
 
@@ -15,9 +16,10 @@ const routes: Routes = [ {
         { path: '', component: ValidateComponent},
         { path: 'information', component: InformationComponent},
         { path: 'api', component: ApiDocumentationComponent},
-         { path: 'questionnaire', component: QuestionnaireComponent},
+        { path: 'questionnaire', component: QuestionnaireComponent},
         { path: 'document', component: DocumentComponent},
-         { path: 'markdown', component: MarkdownComponent }
+        { path: 'ecl', component: EclBuilderComponent},
+        { path: 'markdown', component: MarkdownComponent }
       ]
 }];
 
