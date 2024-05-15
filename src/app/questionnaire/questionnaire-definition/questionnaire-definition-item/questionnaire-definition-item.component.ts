@@ -20,9 +20,7 @@ import {
 } from "@angular/material/table";
 import {ConfigService} from "../../../config.service";
 import {HttpClient} from "@angular/common/http";
-import {MatDialog} from "@angular/material/dialog";
 import {MatPaginator} from "@angular/material/paginator";
-import {ConceptPopupComponent} from "../../../concept/concept-popup/concept-popup.component";
 import {ConceptDisplayComponent} from "../../../concept/concept-display/concept-display.component";
 
 @Component({
