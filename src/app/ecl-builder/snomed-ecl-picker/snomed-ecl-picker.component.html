@@ -1,0 +1,40 @@
+<div layout="row">
+    <mat-form-field *ngIf="item.position > 0">
+        <mat-label>Operator</mat-label>
+        <mat-select required [(ngModel)]="andor"  (selectionChange)="selected($event)">
+            <mat-option value="AND">And</mat-option>
+            <mat-option value="OR">Or</mat-option>
+        </mat-select>
+    </mat-form-field>
+    &nbsp;
+    <mat-form-field>
+        <mat-label>Operator</mat-label>
+        <mat-select required [(ngModel)]="operator"  (selectionChange)="selected($event)">
+            <mat-option value=" ">  Self</mat-option>
+            <mat-option value="<"> &lt; Descendant of</mat-option>
+            <mat-option value="<<"> &lt;&lt; Descendant or Self of</mat-option>
+            <mat-option value="<!"> &lt;! Child of</mat-option>
+            <mat-option value=">"> &gt; Ancestor of</mat-option>
+            <mat-option value=">>"> &gt;&gt; Ancestor or Self of</mat-option>
+            <mat-option value=">!"> &gt;! Parent of</mat-option>
+            <mat-option value="^"> ^ Member of</mat-option>
+        </mat-select>
+    </mat-form-field>
+    &nbsp;
+    <mat-form-field class="example-half-width">
+        <input #searchBox matInput required placeholder="Search.." (keyup)="searchType(searchBox.value)" [(ngModel)]="concept" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="getDisplay">
+            <mat-option *ngFor="let concept of types$ | async"  [value]="concept" >
+                {{getDisplay(concept)}}
+            </mat-option>
+        </mat-autocomplete>
+        <mat-hint align="end">Kind of document (SNOMED CT if possible)</mat-hint>
+    </mat-form-field>
+    &nbsp;
+    <button mat-icon-button color="accent" (click)="add()" >
+        <mat-icon>add</mat-icon>
+    </button>
+    <button mat-icon-button *ngIf="item.position>0" color="warn" (click)="remove()" >
+        <mat-icon>remove</mat-icon>
+    </button>
+</div>

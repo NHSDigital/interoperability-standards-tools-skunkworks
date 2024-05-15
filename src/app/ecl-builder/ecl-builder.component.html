@@ -13,6 +13,10 @@
                       cdkAutosizeMinRows="5"
                       cdkAutosizeMaxRows="5"></textarea>
         </mat-form-field>
+        <span *ngFor="let ecl of statements">
+            <app-snomed-ecl-picker [ecl]="ecl" (eclAdded)="addEcl($event)"></app-snomed-ecl-picker>
+        </span>
+
         <button mat-button color="accent" (click)="execute()">Execute</button>
         {{answerValueSetURI}}
         <span *ngIf="dataSource !== undefined">
