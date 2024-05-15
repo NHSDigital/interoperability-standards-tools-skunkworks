@@ -282,6 +282,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
         var popup = window.open("https://nhsdigital.github.io/formbuilder-lhcforms?referrer=" + window.location.href,"_blank")
         console.log(popup)
         if (this.questionnaire !== undefined) {
+          localStorage.setItem('initialQuestionnaire',JSON.stringify(this.questionnaire))
           popup?.postMessage('initialQuestionnaire',JSON.stringify(this.questionnaire))
         }
 
