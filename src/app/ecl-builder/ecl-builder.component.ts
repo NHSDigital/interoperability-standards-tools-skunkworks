@@ -32,10 +32,11 @@ import {
 import {MatSelectModule} from "@angular/material/select";
 import {SnomedEclPickerComponent} from "./snomed-ecl-picker/snomed-ecl-picker.component";
 import eclModel from "../eclModel"
+import {MatCheckbox} from "@angular/material/checkbox";
 
 @Component({
-  selector: 'app-ecl-builder',
-  standalone: true,
+    selector: 'app-ecl-builder',
+    standalone: true,
     imports: [
         MatCard,
         MatLabel,
@@ -66,20 +67,21 @@ import eclModel from "../eclModel"
         MatAutocompleteTrigger,
         NgForOf,
         MatIconButton,
-        SnomedEclPickerComponent
+        SnomedEclPickerComponent,
+        MatCheckbox
     ],
-  templateUrl: './ecl-builder.component.html',
-  styleUrl: './ecl-builder.component.scss'
+    templateUrl: './ecl-builder.component.html',
+    styleUrl: './ecl-builder.component.scss'
 })
-export class EclBuilderComponent  {
+export class EclBuilderComponent {
 
-    displayedColumns: string[] = ['code', 'display', ];
+    displayedColumns: string[] = ['code', 'display',];
 
     statements: eclModel[] = [
         {
             position: 0,
             action: undefined,
-            operator: undefined,
+            operator: " ",
             concept: undefined,
             andor: undefined
         }
@@ -91,13 +93,15 @@ export class EclBuilderComponent  {
     ecl: string = '';
     answerValueSetURI: string | undefined
     canExecute = false;
-
+    excludeStatements: eclModel[] = [];
+    excluded: boolean = false;
 
     constructor(private config: ConfigService,
                 private http: HttpClient,
                 public dialog: MatDialog
     ) {
     }
+
     execute() {
         this.dataSource = new MatTableDataSource<Coding>([]);
         if (this.ecl !== undefined) {
@@ -107,12 +111,12 @@ export class EclBuilderComponent  {
             var index = 0
             ecls.forEach(value => {
                 if ((index % 2) == 0) {
-                    worker += value.replace(' ','')
+                    worker += value.replace(' ', '')
                 }
                 index++
             })
 
-            this.answerValueSetURI = 'http://snomed.info/sct/900000000000207008?fhir_vs=ecl%2F'+encodeURI(worker)
+            this.answerValueSetURI = 'http://snomed.info/sct/900000000000207008?fhir_vs=ecl%2F' + encodeURI(worker)
 
             this.http.get(this.config.sdcServer() + '/ValueSet/\$expand?url=' + this.answerValueSetURI).subscribe((result) => {
                     const valueSet = result as ValueSet
@@ -136,14 +140,15 @@ export class EclBuilderComponent  {
                 },
                 (error) => {
                     console.log(error)
-                    this.openAlert('Alert',this.config.getErrorMessage(error) )
+                    this.openAlert('Alert', this.config.getErrorMessage(error))
                 })
         }
     }
-    openAlert(title : string, information : string) {
+
+    openAlert(title: string, information: string) {
         let dialogRef = this.dialog.open(InfoDiaglogComponent, {
             width: '400px',
-            data:  {
+            data: {
                 information: information,
                 title: title
             }
@@ -152,48 +157,68 @@ export class EclBuilderComponent  {
     }
 
 
-    addEcl(ecl: eclModel) {
-        console.log(ecl)
-        if (ecl.action !== undefined) {
-            var index = 0
-            var newEcl : eclModel[] = []
-            for (let eclStatement of this.statements) {
+    addEcl(ecl: eclModel, exclude: boolean) {
 
-                if (eclStatement.position === ecl.position) {
-                    if (ecl.action === 'update' ) {
-                           eclStatement.operator = ecl.operator
-                           eclStatement.concept = ecl.concept
+
+        var canExecute = true
+        var eclStatementMaster = ''
+        for (let statementType of ['include', 'exclude']) {
+            var newEcl: eclModel[] = []
+            var index = 0
+            var eclStatement = ''
+            var statements = this.statements
+
+            if (statementType === 'exclude') statements = this.excludeStatements
+
+            for (let eclStatement of statements) {
+                if ((exclude && statementType === 'exclude') ||
+                    (!exclude && statementType === 'include')) {
+
+                    if (eclStatement.position === ecl.position) {
+                        console.log('me match')
+                        if (ecl.action === 'update') {
+                            eclStatement.operator = ecl.operator
+                            eclStatement.concept = ecl.concept
                             eclStatement.position = index
 
-                        newEcl.push(eclStatement)
-                        index++
-                    } else if (ecl.action === 'remove') {
-                        // leave item out of the new list
-                    } else if (ecl.action === 'add') {
+                            newEcl.push(eclStatement)
+                            index++
+                        } else if (ecl.action === 'remove') {
+                            // leave item out of the new list
+                        } else if (ecl.action === 'add') {
+                            newEcl.push(eclStatement)
+                            index++
+                        }
+                    } else {
+                        console.log('me NO match')
                         newEcl.push(eclStatement)
                         index++
                     }
+                    if (ecl.action === 'add') {
+                        newEcl.push({
+                            position: index,
+                            action: undefined,
+                            operator: " ",
+                            concept: undefined,
+                            andor: 'AND'
+                        })
+                    }
                 } else {
+                    // no processing should have occured
                     newEcl.push(eclStatement)
                     index++
                 }
             }
-            if (ecl.action === 'add') {
-                newEcl.push( {
-                    position: index,
-                    action: undefined,
-                    operator: undefined,
-                    concept: undefined,
-                    andor: 'AND'
-                })
-            }
 
-            this.statements = newEcl
-            var eclStatement = ''
-            var index  = 0
-            var canExecute = true
+            if (statementType === "include")
+                this.statements = newEcl
+            else
+                this.excludeStatements = newEcl
 
-            for (let statement of this.statements) {
+            var index = 0
+
+
+            for (let statement of statements) {
                 if (statement.andor !== undefined) {
                     if (index > 0) {
                         eclStatement += statement.andor + ' '
@@ -206,7 +231,7 @@ export class EclBuilderComponent  {
                 if (statement.operator !== undefined) {
                     eclStatement += statement.operator + ' '
                 } else {
-                    canExecute  = false
+                    canExecute = false
                 }
                 if (statement.concept !== undefined) {
                     if (statement.concept.code !== undefined) {
@@ -221,20 +246,31 @@ export class EclBuilderComponent  {
                 index++
             }
 
-            this.ecl = eclStatement
-            this.canExecute = canExecute
-
+            if (this.excluded) {
+                if (statementType === "include") {
+                    eclStatementMaster = "(" + eclStatement + ")"
+                } else {
+                    eclStatementMaster += " MINUS (" + eclStatement + ")"
+                }
+            } else {
+                if (statementType === "include") eclStatementMaster = eclStatement
+                // No else as excluded not present
+            }
         }
+
+        this.ecl = eclStatementMaster
+        this.canExecute = canExecute
+
 
     }
 
     searchType() {
         var ecl = this.ecl
-        var newEclList : eclModel[] = []
+        var newEclList: eclModel[] = []
         var index = 0
         while (ecl.length > 0) {
-            console.log('Iteration Start')
-            var eclModel : eclModel = {
+
+            var eclModel: eclModel = {
                 action: undefined, andor: undefined, concept: {
                     code: undefined,
                     display: undefined
@@ -249,27 +285,42 @@ export class EclBuilderComponent  {
                 ecl = this.remove(ecl, 'AND ')
                 eclModel.andor = 'AND'
             }
-            console.log(ecl)
+
             var worker = ecl.split('OR')[0].split('AND')[0]
-            console.log(worker)
+
             ecl = this.remove(ecl, worker)
 
             if (worker.startsWith('>>')) {
                 worker = this.remove(worker, '>>')
                 eclModel.operator = '>>'
             }
+            if (worker.startsWith('>!')) {
+                worker = this.remove(worker, '>!')
+                eclModel.operator = '>!'
+            }
+            if (worker.startsWith('>')) {
+                worker = this.remove(worker, '>')
+                eclModel.operator = '>'
+            }
             if (worker.startsWith('<<')) {
                 worker = this.remove(worker, '<<')
                 eclModel.operator = '<<'
+            }
+            if (worker.startsWith('<!')) {
+                worker = this.remove(worker, '<!')
+                eclModel.operator = '<!'
             }
             if (worker.startsWith('<')) {
                 worker = this.remove(worker, '<')
                 eclModel.operator = '<'
             }
+            if (worker.startsWith('^')) {
+                worker = this.remove(worker, '^')
+                eclModel.operator = '^'
+            }
 
-            console.log(worker)
             var concept = worker.trim().split(' ')[0].split('|')[0]
-            console.log(concept)
+
             if (concept !== '') {
                 var code = concept
                 var display = worker.trim().split('|')[1]
@@ -278,23 +329,43 @@ export class EclBuilderComponent  {
                     display: display
                 }
             }
-            console.log('Iteration Finish')
-            console.log(ecl)
-            console.log(worker)
+
             ecl = ecl.trim()
 
             index++
             newEclList.push(eclModel)
         }
-        console.log(newEclList)
+
         this.statements = newEclList
     }
-    remove(str: string, substring : string) {
-        var position = str.lastIndexOf(substring,0) + substring.length
-        console.log(position)
+
+    remove(str: string, substring: string) {
+        var position = str.lastIndexOf(substring, 0) + substring.length
         var retStr = str.substring(position)
-        console.log("Orig="+str)
-        console.log("Ret="+retStr)
         return retStr
+    }
+
+    exclude($event: MouseEvent) {
+
+        if (this.excluded) {
+            this.excludeStatements = [
+                {
+                    position: 0,
+                    action: undefined,
+                    operator: " ",
+                    concept: undefined,
+                    andor: undefined
+                }
+            ]
+        } else {
+            this.excludeStatements = []
+        }
+        this.addEcl({
+            position: -1,
+            action: undefined,
+            operator: " ",
+            concept: undefined,
+            andor: undefined
+        }, false)
     }
 }

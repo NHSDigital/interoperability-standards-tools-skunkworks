@@ -23,7 +23,19 @@
         <br/>
         <h3>Include</h3>
         <span *ngFor="let ecl of statements">
-            <app-snomed-ecl-picker [ecl]="ecl" (eclAdded)="addEcl($event)" [count]="statements.length"></app-snomed-ecl-picker>
+            <app-snomed-ecl-picker [ecl]="ecl" (eclAdded)="addEcl($event,false)" [count]="statements.length"></app-snomed-ecl-picker>
+        </span>
+        <table>
+            <tr>
+                <td><h3>Exclude</h3></td>
+                <td><section class="example-section">
+                    <mat-checkbox class="example-margin" [(ngModel)]="excluded" (click)="exclude($event)">Exclude</mat-checkbox>
+                </section></td>
+            </tr>
+        </table>
+
+        <span *ngFor="let ecl of excludeStatements">
+            <app-snomed-ecl-picker [ecl]="ecl" (eclAdded)="addEcl($event,true)" [count]="excludeStatements.length"></app-snomed-ecl-picker>
         </span>
 
 
