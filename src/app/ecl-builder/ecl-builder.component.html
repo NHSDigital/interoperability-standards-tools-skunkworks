@@ -1,26 +1,35 @@
-<mat-card xmlns="http://www.w3.org/1999/html">
-    <mat-card-header>
+<mat-card xmlns="http://www.w3.org/1999/html" class="fullscreen">
+    <mat-card-header >
         <h2>ECL Builder</h2>
     </mat-card-header>
     <mat-card-content>
-        Investigation into <a href="https://browser.ihtsdotools.org/?perspective=full&conceptId1=404684003&edition=MAIN/2024-05-01&release=&languages=en" target="_blank">SNOMED CT ECL Builder</a>
+        <p>Investigation into <a href="https://browser.ihtsdotools.org/?perspective=full&conceptId1=404684003&edition=MAIN/2024-05-01&release=&languages=en" target="_blank">SNOMED CT ECL Builder</a>
         Due to auth issues with NHS E shrimp version
-
+        </p>
         <mat-form-field style="width: 100%">
             <mat-label>Enter an ECL query</mat-label>
             <textarea matInput [(ngModel)]="ecl"
                       cdkTextareaAutosize
                       cdkAutosizeMinRows="5"
-                      cdkAutosizeMaxRows="5"></textarea>
+                      cdkAutosizeMaxRows="5"  (keyup)="searchType()" ></textarea>
         </mat-form-field>
+        <table>
+            <tr>
+                <td>SNOMED Answer ValueSet Uri</td>
+                <td>{{answerValueSetURI}}</td>
+            </tr>
+        </table>
+        <button mat-button [color]="canExecute ? 'primary' : 'warn'" (click)="execute()" [disabled]="!canExecute">Execute</button>
+        <br/>
+        <h3>Include</h3>
         <span *ngFor="let ecl of statements">
-            <app-snomed-ecl-picker [ecl]="ecl" (eclAdded)="addEcl($event)"></app-snomed-ecl-picker>
+            <app-snomed-ecl-picker [ecl]="ecl" (eclAdded)="addEcl($event)" [count]="statements.length"></app-snomed-ecl-picker>
         </span>
 
-        <button mat-button color="accent" (click)="execute()">Execute</button>
-        {{answerValueSetURI}}
+
         <span *ngIf="dataSource !== undefined">
                 <br/>
+                <h3>Results</h3>
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
 
                     <ng-container matColumnDef="code">

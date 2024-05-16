@@ -61,6 +61,8 @@ export class SnomedEclPickerComponent implements OnInit {
     this.operator = ecl.operator
     this.andor = ecl.andor
   }
+  @Input()
+  count = 1
 
   item : eclModel = {
     position: 0,
@@ -85,7 +87,7 @@ export class SnomedEclPickerComponent implements OnInit {
   }
 
   searchType(term: string) {
-    console.log(term)
+
     if (term.length > 3) {
       this.searchTypes.next(term);
     }
@@ -98,7 +100,10 @@ export class SnomedEclPickerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.addTypeHandler()
+  }
 
+  addTypeHandler()  {
     this.types$ = this.searchTypes.pipe(
         debounceTime(300),
         distinctUntilChanged(),
@@ -120,11 +125,14 @@ export class SnomedEclPickerComponent implements OnInit {
   handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.log('term search ERROR');
+      /*
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
 
       // TODO: better job of transforming error for user consumption
       console.log(`${operation} failed: ${error.message}`);
+      */
+      this.addTypeHandler()
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

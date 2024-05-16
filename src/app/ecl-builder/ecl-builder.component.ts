@@ -88,8 +88,9 @@ export class EclBuilderComponent  {
     dataSource: MatTableDataSource<Coding> = new MatTableDataSource<Coding>([]);
 
     @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
-    ecl: any;
+    ecl: string = '';
     answerValueSetURI: string | undefined
+    canExecute = false;
 
 
     constructor(private config: ConfigService,
@@ -111,7 +112,6 @@ export class EclBuilderComponent  {
                 index++
             })
 
-            console.log(worker)
             this.answerValueSetURI = 'http://snomed.info/sct/900000000000207008?fhir_vs=ecl%2F'+encodeURI(worker)
 
             this.http.get(this.config.sdcServer() + '/ValueSet/\$expand?url=' + this.answerValueSetURI).subscribe((result) => {
@@ -187,15 +187,26 @@ export class EclBuilderComponent  {
                     andor: 'AND'
                 })
             }
-            console.log(newEcl)
+
             this.statements = newEcl
             var eclStatement = ''
+            var index  = 0
+            var canExecute = true
+
             for (let statement of this.statements) {
                 if (statement.andor !== undefined) {
-                    eclStatement += statement.andor + ' '
+                    if (index > 0) {
+                        eclStatement += statement.andor + ' '
+                    } else {
+                        statement.andor = undefined
+                    }
+                } else {
+                    if (index > 0) canExecute = false
                 }
                 if (statement.operator !== undefined) {
                     eclStatement += statement.operator + ' '
+                } else {
+                    canExecute  = false
                 }
                 if (statement.concept !== undefined) {
                     if (statement.concept.code !== undefined) {
@@ -204,10 +215,86 @@ export class EclBuilderComponent  {
                     if (statement.concept.display !== undefined) {
                         eclStatement += '|' + statement.concept.display + '| '
                     }
+                } else {
+                    canExecute = false
                 }
+                index++
             }
+
             this.ecl = eclStatement
+            this.canExecute = canExecute
+
         }
 
+    }
+
+    searchType() {
+        var ecl = this.ecl
+        var newEclList : eclModel[] = []
+        var index = 0
+        while (ecl.length > 0) {
+            console.log('Iteration Start')
+            var eclModel : eclModel = {
+                action: undefined, andor: undefined, concept: {
+                    code: undefined,
+                    display: undefined
+                }, operator: undefined, position: index
+            }
+
+            if (ecl.startsWith('OR ')) {
+                ecl = this.remove(ecl, 'OR ')
+                eclModel.andor = 'OR'
+            }
+            if (ecl.startsWith('AND ')) {
+                ecl = this.remove(ecl, 'AND ')
+                eclModel.andor = 'AND'
+            }
+            console.log(ecl)
+            var worker = ecl.split('OR')[0].split('AND')[0]
+            console.log(worker)
+            ecl = this.remove(ecl, worker)
+
+            if (worker.startsWith('>>')) {
+                worker = this.remove(worker, '>>')
+                eclModel.operator = '>>'
+            }
+            if (worker.startsWith('<<')) {
+                worker = this.remove(worker, '<<')
+                eclModel.operator = '<<'
+            }
+            if (worker.startsWith('<')) {
+                worker = this.remove(worker, '<')
+                eclModel.operator = '<'
+            }
+
+            console.log(worker)
+            var concept = worker.trim().split(' ')[0].split('|')[0]
+            console.log(concept)
+            if (concept !== '') {
+                var code = concept
+                var display = worker.trim().split('|')[1]
+                eclModel.concept = {
+                    code: code,
+                    display: display
+                }
+            }
+            console.log('Iteration Finish')
+            console.log(ecl)
+            console.log(worker)
+            ecl = ecl.trim()
+
+            index++
+            newEclList.push(eclModel)
+        }
+        console.log(newEclList)
+        this.statements = newEclList
+    }
+    remove(str: string, substring : string) {
+        var position = str.lastIndexOf(substring,0) + substring.length
+        console.log(position)
+        var retStr = str.substring(position)
+        console.log("Orig="+str)
+        console.log("Ret="+retStr)
+        return retStr
     }
 }

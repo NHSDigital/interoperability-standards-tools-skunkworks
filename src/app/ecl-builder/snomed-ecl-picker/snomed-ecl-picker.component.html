@@ -28,13 +28,13 @@
                 {{getDisplay(concept)}}
             </mat-option>
         </mat-autocomplete>
-        <mat-hint align="end">Kind of document (SNOMED CT if possible)</mat-hint>
+        <mat-hint align="end">SNOMED CT</mat-hint>
     </mat-form-field>
     &nbsp;
     <button mat-icon-button color="accent" (click)="add()" >
         <mat-icon>add</mat-icon>
     </button>
-    <button mat-icon-button *ngIf="item.position>0" color="warn" (click)="remove()" >
+    <button mat-icon-button *ngIf="count > 1" color="warn" (click)="remove()" >
         <mat-icon>remove</mat-icon>
     </button>
 </div>
