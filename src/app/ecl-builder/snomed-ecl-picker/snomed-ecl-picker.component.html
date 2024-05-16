@@ -30,6 +30,9 @@
         </mat-autocomplete>
         <mat-hint align="end">SNOMED CT</mat-hint>
     </mat-form-field>
+    <span *ngIf="concept !== undefined">
+        <button mat-icon-button (click)="showConcept()" color="primary"><mat-icon>info</mat-icon></button>
+    </span>
     &nbsp;
     <button mat-icon-button color="accent" (click)="add()" >
         <mat-icon>add</mat-icon>

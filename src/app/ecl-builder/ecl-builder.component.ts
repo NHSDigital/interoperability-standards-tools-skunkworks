@@ -102,21 +102,25 @@ export class EclBuilderComponent {
     ) {
     }
 
+    getAnswerValueSetUri() {
+        var worker = ''
+        // remove comments
+        let ecls = this.ecl.split('|')
+        var index = 0
+        ecls.forEach(value => {
+            if ((index % 2) == 0) {
+                worker += value.replace(' ', '')
+            }
+            index++
+        })
+
+        this.answerValueSetURI = 'http://snomed.info/sct/900000000000207008?fhir_vs=ecl%2F' + encodeURI(worker)
+    }
+
     execute() {
         this.dataSource = new MatTableDataSource<Coding>([]);
         if (this.ecl !== undefined) {
-            var worker = ''
-            // remove comments
-            let ecls = this.ecl.split('|')
-            var index = 0
-            ecls.forEach(value => {
-                if ((index % 2) == 0) {
-                    worker += value.replace(' ', '')
-                }
-                index++
-            })
-
-            this.answerValueSetURI = 'http://snomed.info/sct/900000000000207008?fhir_vs=ecl%2F' + encodeURI(worker)
+            this.getAnswerValueSetUri()
 
             this.http.get(this.config.sdcServer() + '/ValueSet/\$expand?url=' + this.answerValueSetURI).subscribe((result) => {
                     const valueSet = result as ValueSet
@@ -260,12 +264,13 @@ export class EclBuilderComponent {
 
         this.ecl = eclStatementMaster
         this.canExecute = canExecute
-
-
+        this.getAnswerValueSetUri()
+        if (canExecute) this.execute()
     }
 
     searchType() {
         var ecl = this.ecl
+        var canExecute = true
         var newEclList: eclModel[] = []
         var index = 0
         while (ecl.length > 0) {
@@ -274,7 +279,7 @@ export class EclBuilderComponent {
                 action: undefined, andor: undefined, concept: {
                     code: undefined,
                     display: undefined
-                }, operator: undefined, position: index
+                }, operator: " ", position: index
             }
 
             if (ecl.startsWith('OR ')) {
@@ -302,6 +307,7 @@ export class EclBuilderComponent {
                 worker = this.remove(worker, '>')
                 eclModel.operator = '>'
             }
+
             if (worker.startsWith('<<')) {
                 worker = this.remove(worker, '<<')
                 eclModel.operator = '<<'
@@ -314,6 +320,7 @@ export class EclBuilderComponent {
                 worker = this.remove(worker, '<')
                 eclModel.operator = '<'
             }
+
             if (worker.startsWith('^')) {
                 worker = this.remove(worker, '^')
                 eclModel.operator = '^'
@@ -328,6 +335,8 @@ export class EclBuilderComponent {
                     code: code,
                     display: display
                 }
+            } else {
+                canExecute = false
             }
 
             ecl = ecl.trim()
@@ -337,6 +346,9 @@ export class EclBuilderComponent {
         }
 
         this.statements = newEclList
+        this.canExecute = canExecute
+        this.getAnswerValueSetUri()
+        if (canExecute) this.execute()
     }
 
     remove(str: string, substring: string) {

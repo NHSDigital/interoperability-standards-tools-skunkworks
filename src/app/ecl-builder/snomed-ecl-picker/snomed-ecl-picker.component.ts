@@ -18,6 +18,7 @@ import {ConfigService} from "../../config.service";
 import {HttpClient} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import eclModel from "../../eclModel";
+import {ConceptPopupComponent} from "../../concept/concept-popup/concept-popup.component";
 
 
 
@@ -50,7 +51,7 @@ export class SnomedEclPickerComponent implements OnInit {
   types$: Observable<ValueSetExpansionContains[]> | undefined;
   private searchTypes = new Subject<string>();
   operator: string | undefined = " ";
-  addEnabled = false;
+
   concept: any;
   andor: string | undefined = undefined
 
@@ -199,5 +200,16 @@ export class SnomedEclPickerComponent implements OnInit {
       andor: undefined
     }
     this.eclAdded.emit(ecl)
+  }
+
+  showConcept() {
+
+    this.dialog.open(ConceptPopupComponent, {
+      data: {
+        system : 'http://snomed.info/sct',
+        code : this.concept.code,
+        display: this.concept.display
+      }
+    });
   }
 }
