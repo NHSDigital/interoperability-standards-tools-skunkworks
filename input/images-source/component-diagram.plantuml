@@ -1,0 +1,27 @@
+@startuml
+
+
+component "FHIR Tools Application" as tool
+
+interface  "FHIR RESTful API" as iAWSFHIRWorks
+note right
+Security Facade and
+Structured Data Capture Services
+end note
+
+component "Clinical Data Repository" as AWSFHIRWorks
+note right
+AWS FHIRWorks
+end note
+
+interface "FHIR RESTful API" as iValidate
+component "FHIR Validation Service" as validate
+
+tool -- iAWSFHIRWorks
+tool -- iValidate
+
+iAWSFHIRWorks -- AWSFHIRWorks
+iValidate -- validate
+
+
+@enduml
