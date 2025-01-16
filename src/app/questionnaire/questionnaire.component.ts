@@ -156,6 +156,7 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
       this.questionnaire = JSON.parse(data)
     } else {
       if ((data as string).includes('<template')) {
+        /*
         let headers = new HttpHeaders(
         );
         headers = headers.append('Content-Type', 'application/xml');
@@ -170,8 +171,11 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
               console.log(JSON.stringify(error))
               this.openAlert('Alert',this.config.getErrorMessage(error))
             })
+
+         */
       } else
       if ((data as string).includes('<archetype')) {
+        /*
         let headers = new HttpHeaders(
         );
         headers = headers.append('Content-Type', 'application/xml');
@@ -186,6 +190,8 @@ export class QuestionnaireComponent implements AfterContentInit,OnInit {
               console.log(JSON.stringify(error))
               this.openAlert('Alert',this.config.getErrorMessage(error))
             })
+
+         */
       }
     }
   }

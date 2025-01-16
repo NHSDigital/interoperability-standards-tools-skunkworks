@@ -34,10 +34,6 @@ export class ConfigService {
     return environment.sdcServer
   }
 
-  openEHRServer() : string {
-    return environment.openEHRServer
-  }
-
   getErrorMessage(error: any) {
     var errorMsg = ''
     if (error.error !== undefined){
